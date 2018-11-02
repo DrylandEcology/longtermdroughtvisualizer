@@ -1,0 +1,8 @@
+library(DBI)
+library(RSQLite)
+drv <- dbDriver('SQLite')
+con <- dbConnect(drv, "/Volumes/Data/CDI/dbWeatherData_Livneh_WesternUS.sqlite3")
+dbListTables(con)
+x <- dbReadTable(con,"Sites")
+write.csv(x, row.names = FALSE, "cells_from_CAAnnuals_DB.csv")
+getwd()
