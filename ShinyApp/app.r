@@ -406,7 +406,7 @@ server <- function(input, output, session) {
         scale_color_manual(values=colors2) +
         theme(legend.position=c(.5,0.07), legend.title=element_blank(),legend.direction="horizontal")
       
-      # BOX PLOT - only if futtre == 1
+      # BOX PLOT - only if future == 1
       if(input$future == 1) {
         dataBP$Season <- factor(dataBP$Season, levels = c('Winter', 'Spring', 'Summer', 'Fall'))
       

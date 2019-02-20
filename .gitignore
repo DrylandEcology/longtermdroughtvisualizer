@@ -2,3 +2,15 @@
 .Rhistory
 .RData
 .Ruserdata
+
+**/3_Runs
+**/4_Simulations
+**/SWRuns_InputMaster_fill_v11.csv
+**/SWRuns_InputData_ExperimentalDesign_v08.csv
+**/SWRuns_InputData_SoilLayers_v9.csv
+**/SWRuns_InputData_prod_v11.csv
+**/SWRuns_InputData_soils_v12.csv
+**/SWRuns_InputData_cloud_v10.csv
+**/SFSW2_project_descriptions_backup.rds
+**/SFSW2_project_descriptions_OneSite.rds
+**/cluster.txt

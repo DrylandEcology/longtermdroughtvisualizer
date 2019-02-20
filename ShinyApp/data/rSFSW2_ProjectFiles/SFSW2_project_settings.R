@@ -44,15 +44,14 @@ opt_behave <- list(
 #------ Options for parallel framework
 opt_parallel <- list(
   # Should job be run in parallel
-  parallel_runs = !interactive() &&
-    !SFSW2_prj_meta[["opt_platform"]][["no_parallel"]],
+  parallel_runs = TRUE,
 
   # Number of cores/workers/slaves if job is run in parallel
   num_cores = if (identical(SFSW2_prj_meta[["opt_platform"]][["host"]],
     "local")) {
-      2
+      6
     } else if (identical(SFSW2_prj_meta[["opt_platform"]][["host"]], "hpc")) {
-      39
+      6
     },
   # Parallel_backend:
   #   - "socket" = "cluster" (via package 'parallel') or
