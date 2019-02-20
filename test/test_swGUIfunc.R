@@ -4,7 +4,7 @@ devtools::load_all(pkg = '~/Documents/Git/rSFSW2/')
 devtools::load_all(pkg = '~/Documents/Git/rSOILWAT2/')
 
 library(rSFSW2)
-setwd("/Users/candrews/Desktop/CDI_SOILWATGUI/ShinyBegin/runSWwithUIs/")
+setwd("/Users/candrews/Documents/Git/longtermdroughtsimulator/ShinyApp")
 source("functions/swGUIfuncv2.R")
 source("functions/MiscFunctions.R")
 
@@ -29,7 +29,9 @@ source("functions/MiscFunctions.R")
 #debug(create_job_df)
 #debug(rSFSW2::create_dbWork)
 
-delete_test_output2("/Users/candrews/Desktop/CDI_SOILWATGUI/ShinyBegin/runSWwithUIs/data/rSFSW2_ProjectFiles/")
+debug(rSOILWAT2::swYears_StartYear)
+
+delete_test_output2(file.path(getwd(), "data/rSFSW2_ProjectFiles"))
 
 #### Inputs
 fmetaP <- "data/rSFSW2_ProjectFiles/SFSW2_project_descriptions.rds"
@@ -42,9 +44,8 @@ clay <- 0.33
 comp <- 1
 
 
-set_execute_SW(lat, lng, futuresim, 
+set_execute_SW(lat, lng, futuresim,
                soils, sand, clay,
                comp, trees, shrubs, grasses, forbs, bg)
 
-#delete_test_output2("/Users/candrews/Desktop/CDI_SOILWATGUI/ShinyBegin/runSWwithUIs/data/rSFSW2_ProjectFiles/")
-
+#delete_test_output2(file.path(getwd(), "data/rSFSW2_ProjectFiles"))

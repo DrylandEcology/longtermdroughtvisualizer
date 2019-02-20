@@ -28,7 +28,7 @@ project_paths <- list(
   dir_prj = dir_prj <- {
     # path to simulation project
     temp <- if (identical(opt_platform[["host"]], "local")) {
-      "/Users/candrews/Desktop/CDI_SOILWATGUI/ShinyBegin/runSWwithUIs/data/rSFSW2_ProjectFiles"
+      file.path(getwd(), "data/rSFSW2_ProjectFiles")
     } else if (identical(opt_platform[["host"]], "hpc")) {
       getwd()
     }
@@ -120,7 +120,7 @@ fnames_in <- list(
 
   # Database with daily weather data
   fdbWeather = if (identical(opt_platform[["host"]], "local")) {
-    "~/Desktop/CDI_SOILWATGUI/BUILD_HISTORICAL_WEATHERDB/1_Data_SWInput/dbWeatherData_Livneh_WesternUS.sqlite3"
+  file.path("/Volumes/Samsung_T5/CDI/AZ_dbWeatherData.sqlite3")
     } else if (identical(opt_platform[["host"]], "hpc")) {
       file.path(project_paths[["dir_prj"]], "..", "dbWeatherData.sqlite3")
     },

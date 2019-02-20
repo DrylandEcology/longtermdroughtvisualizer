@@ -28,7 +28,7 @@ project_paths <- list(
   dir_prj = dir_prj <- {
     # path to simulation project
     temp <- if (identical(opt_platform[["host"]], "local")) {
-      "/Users/candrews/Desktop/CDI_SOILWATGUI/ShinyBegin/runSWwithUIs/data/rSFSW2_ProjectFiles"
+      file.path(getwd(), "data/rSFSW2_ProjectFiles")
       } else if (identical(opt_platform[["host"]], "hpc")) {
         getwd()
       }

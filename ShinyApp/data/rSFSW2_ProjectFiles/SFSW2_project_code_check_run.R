@@ -4,13 +4,13 @@ t_job_start <- Sys.time()
 ################################################################################
 #------ 1) LOAD AN EXISTING SIMULATION PROJECT ------------------
 SFSW2_prj_meta <- readRDS("data/rSFSW2_ProjectFiles/SFSW2_project_descriptions_Onesite.rds")
-dir_prj <- ("~/Desktop/CDI_SOILWATGUI/ShinyBegin/runSWwithUIs/data/rSFSW2_ProjectFiles")
+dir_prj <- file.path(getwd(), "data/rSFSW2_ProjectFiles")
 
 #------ Turn on/off actions to be carried out by simulation framework
 actions <- list(
   # Input checking
   check_inputs = FALSE,
-  
+
   # Simulation runs
   # "sim_create", "sim_execute", and "sim_aggregate" can be used individually if
   # "saveRsoilwatInput" and/or "saveRsoilwatOutput" are true
@@ -21,7 +21,7 @@ actions <- list(
   #   - Calculate aggregated response variables from  SOILWAT2 output and store
   #     results in temporary text files on disk (formerly, "aggregate')
   sim_aggregate = TRUE,
-  
+
   # Output handling
   #   - Copy simulation results from temporary text files to a output
   #     SQL-database (formerly, 'concatenate')
@@ -68,13 +68,13 @@ SFSW2_prj_inputs <- temp[["SFSW2_prj_inputs"]]
 #------ 4) ATTEMPT TO CHECK INPUT DATA -----------------------------------------
 
 if (isTRUE(actions[["check_inputs"]])) {
-  
+
   temp <- check_rSFSW2_project_input_data(SFSW2_prj_meta, SFSW2_prj_inputs,
                                           opt_chunks, opt_verbosity)
-  
+
   SFSW2_prj_meta <- temp[["SFSW2_prj_meta"]]
   SFSW2_prj_inputs <- temp[["SFSW2_prj_inputs"]]
-  
+
   if (isTRUE(opt_verbosity[["verbose"]]) &&
       !all(stats::na.exclude(SFSW2_prj_meta[["input_status"]][, "checked"]))) {
     warning("'SFSW2_prj_meta[['input_status']]': some input tracker checks ",
@@ -89,13 +89,8 @@ if (isTRUE(actions[["check_inputs"]])) {
 #------ 5) RUN SIMULATION EXPERIMENT (REPEAT UNTIL COMPLETE) -------------------
 
 if (any(unlist(actions[c("sim_create", "sim_execute", "sim_aggregate")]))) {
-  
+
   SFSW2_prj_meta <- simulate_SOILWAT2_experiment(SFSW2_prj_meta,
                                                  SFSW2_prj_inputs, opt_behave, opt_parallel, opt_chunks, opt_out_run,
                                                  opt_verbosity)
 }
-
-
-
-
-

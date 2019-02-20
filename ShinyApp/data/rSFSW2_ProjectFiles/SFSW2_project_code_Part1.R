@@ -35,11 +35,12 @@ library("rSFSW2")
 # If code is run non-interactively or if this is a test project:
 # then current working directory must be folder of projects,
 # e.g., rSFSW2_tools/Test_projects/TestPrj4
-dir_prj <- ("~/Desktop/CDI_SOILWATGUI/ShinyBegin/runSWwithUIs/data/rSFSW2_ProjectFiles")
+mainPath <- getwd()
+dir_prj <- file.path(mainPath, "data/rSFSW2_ProjectFiles")
 
 
 SFSW2_prj_meta <- init_rSFSW2_project(
   fmetar = file.path(dir_prj, "SFSW2_project_descriptions.R"), update = TRUE,
   verbose = TRUE, print.debug = FALSE)
 
-setwd('~/Desktop/CDI_SOILWATGUI/ShinyBegin/runSWwithUIs/')
+setwd(mainPath)
