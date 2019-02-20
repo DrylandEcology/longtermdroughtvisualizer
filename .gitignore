@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+*.Rproj
 
 **/3_Runs
 **/4_Simulation
@@ -14,3 +15,4 @@
 **/SFSW2_project_descriptions_backup.rds
 **/SFSW2_project_descriptions_OneSite.rds
 **/cluster.txt
+**/.DS_Store
