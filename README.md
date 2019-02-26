@@ -28,8 +28,8 @@ conditions are presented for exploration.
 
 Application source code was written exclusively in R. Functionality for soil-water modelling relies on 
 two R packages: [rSOILWAT2](https://github.com/DrylandEcology/rSOILWAT2),a R plugin for the C based code of SOILWAT2,
-and [rSFSW2](https://github.com/DrylandEcology/rSFSW2),a wrapper for rSOILWAT2 that gather and formats inputs for model use.
-The GUI uses **shiny** code, a Java plug-in for R.
+and [rSFSW2](https://github.com/DrylandEcology/rSFSW2), a wrapper for rSOILWAT2 that gather and formats inputs for model use.
+The GUI portion of this model was developed using *shiny* code, a Java plug-in for R.
 
 
 ### App Deployment
