@@ -85,6 +85,9 @@
       mkdir /srv/shiny-server/apps
       git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/apps
 
+      # ensure that shiny server service file installed in the correct place
+      cd
+      cp /opt/shiny-server/config/systemd/shiny-server.service /etc/systemd/system
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'
