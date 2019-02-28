@@ -9,6 +9,10 @@
       echo "pr-jhensleigh ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
       echo "pr-npayton-mccauslin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+      # setup development account
+      useradd devel
+      printf "%s\n" ltdsdev ltdsdev | passwd devel
+
       # install R
       yum install -y R
 
@@ -16,7 +20,6 @@
       yum install -y git
 
       #install development packages so that some R packages will install
-
       # # png
       yum install -y libpng-devel
 
@@ -26,7 +29,7 @@
       yum -y install proj-epsg.x86_64 proj-nad.x86_64
 
       # # rgeos
-      yum -y nstall geos geos-devel
+      yum -y install geos geos-devel
 
       # # ncdf4
       yum -y install netcdf-devel
@@ -79,6 +82,9 @@
       R CMD INSTALL rSFSW2
 
       # clone and isnstall Shiny App Code!
+      mkdir /srv/shiny-server/apps
+      git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/apps
+
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'
