@@ -85,12 +85,10 @@
       git clone -b master --single-branch https://github.com/DrylandEcology/rSFSW2
       R CMD INSTALL rSFSW2
 
-      # clone and isnstall Shiny App Code
-      mkdir /srv/shiny-server/longtermdroughtsimulator
+      # clone and install Shiny App Code
       git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/
 
       # ensure that shiny server service file installed in the correct place
-      cd
       cp /opt/shiny-server/config/systemd/shiny-server.service /etc/systemd/system
 
       echo END
