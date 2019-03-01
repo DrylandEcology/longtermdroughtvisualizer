@@ -40,6 +40,9 @@
       # # Devtools
       yum -y install openssl-devel
 
+      # # AWS
+      yum -y install libxml2-devel
+
       # install RStudio-Server
       wget https://download2.rstudio.org/rstudio-server-rhel-1.1.463-x86_64.rpm
       yum install -y --nogpgcheck rstudio-server-rhel-1.1.463-x86_64.rpm
@@ -72,6 +75,7 @@
       R -e "install.packages('rgeos', repos='http://cran.rstudio.com/')"
       R -e "install.packages('ncdf4', repos='http://cran.rstudio.com/')"
       R -e "install.packages('RCurl', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('gridGraphics', repos='http://cran.rstudio.com/')"
 
       # clone and install rSOILWAT2
       git clone -b master --single-branch --recursive https://github.com/DrylandEcology/rSOILWAT2.git rSOILWAT2
@@ -81,9 +85,9 @@
       git clone -b master --single-branch https://github.com/DrylandEcology/rSFSW2
       R CMD INSTALL rSFSW2
 
-      # clone and isnstall Shiny App Code!
-      mkdir /srv/shiny-server/apps
-      git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/apps
+      # clone and isnstall Shiny App Code
+      mkdir /srv/shiny-server/longtermdroughtsimulator
+      git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/
 
       # ensure that shiny server service file installed in the correct place
       cd

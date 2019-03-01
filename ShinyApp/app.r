@@ -18,11 +18,11 @@ source("functions/MiscFunctions.R")
 source("functions/getOutputs.R")
 source("functions/diagwl2.R")
 
-devtools::load_all(pkg = '~/Documents/Git/rSFSW2/')
-devtools::load_all(pkg = '~/Documents/Git/rSOILWAT2/')
+#devtools::load_all(pkg = '~/Documents/Git/rSFSW2/')
+#devtools::load_all(pkg = '~/Documents/Git/rSOILWAT2/')
 
-my_names <- list( 'CanESM2' = 'CanESM2', 
-                'CESM1-CAM5' = 'CESM1-CAM5',  'CNRM-CM5' = 'CNRM-CM5', 
+my_names <- list( 'CanESM2' = 'CanESM2',
+                'CESM1-CAM5' = 'CESM1-CAM5',  'CNRM-CM5' = 'CNRM-CM5',
                 'CSIRO-Mk3-6-0' = 'CSIRO-Mk3-6-0', 'FGOALS-g2' = 'FGOALS-g2',
                 'HadGEM2-ES' = 'HadGEM2-ES', 'GISS-E2-R' = 'GISS-E2-R',
                 'inmcm4' = 'inmcm4', 'IPSL-CM5A-MR' = 'IPSL-CM5A-MR',
@@ -45,22 +45,22 @@ ui <- fluidPage(
 # Sidebar layout with site-by-site definitions ----
       tabPanel("Site-by-site",
          sidebarLayout(position = "left",
-            
+
             # IDEA: site-by-site: choose 4 Inputs - These inputs actually control what will be simulated
             # # (1) Site location, (2) whether or not you want future simulations, (3) soil type (4) Vegetation
-            
+
             # Sidebar panel for user inputs ----
             sidebarPanel(
-                         
+
                          ####################################################################
                          ######## ------------------- LOCATIONS  -----------------  #########
                          ####################################################################
-                         
+
                          ## Location: Choose a location by entering coordinates or clicking on a map ----
                          h4("Site Location"),
-                         
-                         leafletOutput("locMap"),#, height = 250, width = 250), 
-                         
+
+                         leafletOutput("locMap"),#, height = 250, width = 250),
+
                          fluidRow(
                                splitLayout(
                                 numericInput("lat", "lat", "35.1983", min = 25, max = 49),
@@ -68,14 +68,14 @@ ui <- fluidPage(
                            )
                          ),
                          br(), # break
-                         
+
                          ####################################################################
                          ######## ------------------- FUTURE ----------------------  ########
                          ####################################################################
-                         
-                         
+
+
                          ### Checkbox for future simulations ----
-                         radioButtons("future", label = h4("Future Simulations?"), 
+                         radioButtons("future", label = h4("Future Simulations?"),
                                       choices =  list("Yes" = 1, "No" = 2),
                                       selected = 1,
                                       inline = TRUE), # side-by-side
@@ -83,14 +83,14 @@ ui <- fluidPage(
                          ####################################################################
                          ######## ------------------- SOILS ----------------------  #########
                          ####################################################################
-                         
+
                          # TO DO -> Texture Triangle, not inputs
-                         
-                         radioButtons("soils", label = h4("Extract or Choose Soils?"), 
+
+                         radioButtons("soils", label = h4("Extract or Choose Soils?"),
                                             choices = list('Extract' = 1, 'Choose' = 2),
                                             inline = TRUE, # side-by-side
                                             selected = 2),
-                         
+
                          conditionalPanel(
                            condition = "input.soils == 2",
                            ### input slots for soil that appear of select == TRUE
@@ -101,20 +101,20 @@ ui <- fluidPage(
                                 numericInput("clay", "clay", "33", min = 0, max = 100)
                              )
                            )
-                         
+
                          ),
-                         
+
                          br(),
-                         
+
                          ####################################################################
                          ######## -------------------- VEG -----------------------  #########
                          ####################################################################
-                         
-                         radioButtons("comp", label = h4("Estimate or Choose Comp?"), 
+
+                         radioButtons("comp", label = h4("Estimate or Choose Comp?"),
                                       choices = list('Estimate' = 1, 'Choose' = 2),
                                       inline = TRUE, # side-by-side
                                       selected = 1),
-                         
+
                          conditionalPanel(
                            condition = "input.comp == 2",
                            fluidRow(
@@ -126,21 +126,21 @@ ui <- fluidPage(
                                numericInput("bg", "bareground", "0.0", min = 0, max = 1)
                              )
                            )
-                           
+
                          ),
 
                          br(),
-                         
+
                          ####################################################################
                          ######## -------------------- GO! -----------------------  #########
                          ####################################################################
-                         
+
                          ## Just need this once for "... textInput"
                          verbatimTextOutput("value"),
-                         
+
                          actionButton("simulate", label = "Simulate!")
             ), # end of side bar panel
-            
+
             # Main panel for outputs ----
             mainPanel("Welcome to the long-term drought simulator!")
             ) # end of side bar layout
@@ -158,7 +158,7 @@ uiOutput("creationPool", style = "display: none;")
 
 # Define server logic ----
 server <- function(input, output, session) {
-  
+
   # Important! : creationPool should be hidden to avoid elements flashing before they are moved.
   #              But hidden elements are ignored by shiny, unless this option below is set.
   output$creationPool <- renderUI({})
@@ -168,73 +168,73 @@ server <- function(input, output, session) {
   addTabToTabset <- function(Panels, tabsetName){
     titles <- lapply(Panels, function(Panel){return(Panel$attribs$title)})
     Panels <- lapply(Panels, function(Panel){Panel$attribs$title <- NULL; return(Panel)})
-    
+
     output$creationPool <- renderUI({Panels})
     session$sendCustomMessage(type = "addTabToTabset", message = list(titles = titles, tabsetName = tabsetName))
   }
-  # End Important 
+  # End Important
   #################################################################################################
   ######## ------------------------------ UI Reactivity ---------------------------------  ########
   #################################################################################################
-  
+
   # Leaflet map ---------------------------------------
-  output$locMap <- renderLeaflet({ 
+  output$locMap <- renderLeaflet({
     m <- leaflet() %>%
       addTiles() %>%
       setView(lng = input$lng, lat = input$lat , zoom = 9) %>%
       addMarkers(input$lng, input$lat)
     })
-  
+
   # Click functionality -----------------------------------------------------------
-  
+
   observeEvent(input$locMap_click, { # input$MAPID_event = input$locMap_click
 
     proxy <- leafletProxy("locMap")
-    
+
     #### 1 - Allow for visualization of click ----------------------------------
     click <- input$locMap_click
 
     proxy %>% clearMarkers() %>%
       setView(lng = click$lng, lat = click$lat , zoom = 9) %>%
       addMarkers(click$lng, click$lat)
-    
+
     #### 2 - Allow for click lat/long to update numeric lat/long  --------------
-    
+
     updateNumericInput(session, "lat",  value = round(input$locMap_click$lat, 4))
     updateNumericInput(session, "lng", value = round(input$locMap_click$lng, 4))
 
   })
-  
-  
+
+
 
   #################################################################################################
   ######## ---------------------------- SIMULATION!  ------------------------------------  ########
   #################################################################################################
-  
+
   run <- reactiveValues() # set up list of values which will store simulation/function output
-  
+
   observeEvent(input$simulate, {
-    
+
     begintime <- proc.time() # start timer clock
     showModal(modalDialog("calculation running!"))
-    
+
     run$SW_out <- set_execute_SW(input$lat, input$lng, input$future, input$soils, input$sand, input$clay,
                                  input$comp, input$trees, input$shrubs, input$grasses, input$forbs, input$bg) # the actual calculation
-    
+
     #print(run$SWout) - What is the point of the run object. Do I need it? will I access
     run$outs <- get_output()
-    
+
     endtime <- proc.time() - begintime
     showModal(modalDialog(paste("calculation finished in", round(unname(endtime[3]), 0), "seconds")))
-    
+
     ##################################################################################################
     ######## --------------------------------- Output UI  ---------------------------------  ########
     #################################################################################################
-    insertTab(inputId = "mainTabset", 
+    insertTab(inputId = "mainTabset",
               tabPanel(title = "Mean annual patterns", value = "outputs1",
                        sidebarLayout(position = "left",
                                      sidebarPanel(
-                                       
+
                                        # If future is turned on
                                        conditionalPanel(
                                          condition = "input.future == 1",
@@ -243,50 +243,50 @@ server <- function(input, output, session) {
                                                      c("RCP 4.5" = "RCP45",
                                                        "RCP 8.5" = "RCP85"))
                                        ),
-                                       
+
                                        # DO you want to add a specific year?
-                                       radioButtons("yearButton", label = h4("Individual year?"), 
+                                       radioButtons("yearButton", label = h4("Individual year?"),
                                                     choices = list('Yes' = 1, 'No' = 2),
                                                     inline = TRUE, # side-by-side
                                                     selected = 2),
-                                       
+
                                        conditionalPanel(
                                          condition = "input.yearButton == 1",
-                                         
+
                                          # Select a specific year ----------
-                                         numericInput("years2", label = "Select a year:", 
-                                                      min = 1916, max = 2015, 
+                                         numericInput("years2", label = "Select a year:",
+                                                      min = 1916, max = 2015,
                                                       value = c(2012))
                                        ),
-                                       
+
                                        # If future is turned on
                                        conditionalPanel(
-                                         condition = "input.future == 1", 
-                                         
+                                         condition = "input.future == 1",
+
                                          # DO you want to add a GCM?
-                                         radioButtons("gcmsButton", label = h4("Individual GCM?"), 
+                                         radioButtons("gcmsButton", label = h4("Individual GCM?"),
                                                       choices = list('Yes' = 1, 'No' = 2),
                                                       inline = TRUE, # side-by-side
                                                       selected = 2),
-                                         
+
                                          conditionalPanel(
                                            condition = "input.gcmsButton == 1",
-                                           
+
                                            # Select GCMs --------------------
                                            selectInput("gcms2", "",
                                                        c(my_names)))
                                        )
                                      ), # end of sidebar layout
-                                     
+
                                      # Main panel for outputs ----
                                      mainPanel("",
-                                               plotOutput("WL_DSM_Plots", height = 700, width = 700)    
+                                               plotOutput("WL_DSM_Plots", height = 700, width = 700)
                                      )
                        ) # end of sidebarlayout
-              ), # end of tab              
+              ), # end of tab
               target = "Site-by-site", position = 'after')
-    
-    insertTab(inputId = "mainTabset", 
+
+    insertTab(inputId = "mainTabset",
               tabPanel(title = "Long-term past and future", value = "outputs2",
                        sidebarLayout(position = "left",
                                      sidebarPanel(
@@ -301,69 +301,69 @@ server <- function(input, output, session) {
                                                      "Temp" = "avg_C",
                                                      "Precip" = "ppt")),
                                        #Years
-                                       sliderInput("years", label = "years", min = 1916, max = 2015, 
+                                       sliderInput("years", label = "years", min = 1916, max = 2015,
                                                    value = c(1916, 2015), sep = ""),
-                                       
+
                                        # If future is turned on
                                        conditionalPanel(
                                          condition = "input.future == 1",
                                        # GCMs
                                          my_checkboxGroupInput("gcms", "GCMS:",
                                                                choices = my_names,
-                                                               selected= my_selected, 
+                                                               selected= my_selected,
                                                                colors= my_colors)
-                                       ) 
+                                       )
                                      ), # end of sidebar layout
 
-                                     
+
                                      # Main panel for outputs ----
                                      mainPanel("Long-Term Historical Perspectives",
-                                               plotOutput("TS_BP_Plots",  height = 700, width = 700)    
-                                                          #hover = "plot_hover"), # for hovering specific years 
+                                               plotOutput("TS_BP_Plots",  height = 700, width = 700)
+                                                          #hover = "plot_hover"), # for hovering specific years
                                                #verbatimTextOutput("info")
                                      )
                        ) # end of sidebarlayout
-              ), # end of tab              
+              ), # end of tab
               target = "outputs1", position = 'after')
-    
-    
+
+
     updateTabsetPanel(session, "mainTabset", selected = "outputs1")
-    
+
   })
-  
+
   #################################################################################################
   #################################################################################################
   ######## ---------------------------- Output Reactivity  -----------------------------  ########
   #################################################################################################
   #################################################################################################
-  
+
   #################################################################################################
   ######## ---------------- - - - - - - -----  Tab 1  ---- - - - - - - - -----------------  ########
   #################################################################################################
-  
+
   output$TS_BP_Plots <- renderPlot({
-    
+
     req(input$years) #input$years doesn't initally have values .. need this
     data <- run$outs
     data <- data[[1]]
-    
+
     # Var value from drop down / select Input - get variable ------------------------------------
     data <- data[data$variable %in% c(input$variables), ]
-    
+
     # Time Series controls ----------------------------------------------------------------------
     ## Years from slider input --------
     data2 <- data[data$Year %in% c(input$years[1]:input$years[2]), ]
     dataTS <- formatDataTS(data = data2, variable = input$variables, time = input$times)
     dataRM <- getroll(dataTS, input$times)
-    
+
     # Boxplot controls ----------------------------------------------------------------------
     ## GCMs from checkbox input --------
     load('data/fillGCM.RData')
     fillScale <- scale_fill_manual(name = "GCM",values = fillGCM, guide = FALSE)
-    
+
     data3 <- data[data$GCM %in% c('Current', input$gcms), ]
     dataBP <- formatDataBP(data = data3, variable = input$variables, time = input$times)
-    
+
     # PLOTTING    --------------------------------------------------------------------------------
     if(input$times == 'Annual'){
       # TIME SERIES PLOT
@@ -375,24 +375,24 @@ server <- function(input, output, session) {
         )+
       theme_bw()+
       uniformTheme
-      
+
       # BOX PLOT - only if future == 1
       if(input$future == 1){
         BOXPLOT <- ggplot(dataBP, aes(RCP, value, fill = fct_reorder(scenario, value, median))) +
           #bplots
           geom_boxplot(lwd=.8,position=position_dodge(.9)) +
           #shading and coloring
-          fillScale + 
+          fillScale +
           #other
           theme_bw()+
-          uniformTheme +   
-          theme(legend.position = "bottom", 
+          uniformTheme +
+          theme(legend.position = "bottom",
                 strip.background = element_rect(fill="white"),
-                strip.text = element_text(size =10)) + 
+                strip.text = element_text(size =10)) +
           facet_grid(. ~ TP, scales = 'free', space = 'free_x')
       }
     }
-    
+
     if(input$times == 'Season'){
       # TIME SERIES PLOT
       TREND <- ggplot(dataTS, aes(Year, value, color = Season))+
@@ -405,26 +405,26 @@ server <- function(input, output, session) {
         uniformTheme +
         scale_color_manual(values=colors2) +
         theme(legend.position=c(.5,0.07), legend.title=element_blank(),legend.direction="horizontal")
-      
+
       # BOX PLOT - only if future == 1
       if(input$future == 1) {
         dataBP$Season <- factor(dataBP$Season, levels = c('Winter', 'Spring', 'Summer', 'Fall'))
-      
+
         BOXPLOT <- ggplot(dataBP, aes(RCP, value,  fill = fct_reorder(scenario, value, median))) +
           #bplots
           geom_boxplot(lwd=.8,position=position_dodge(.9)) +
           #shading and coloring
-          fillScale + 
+          fillScale +
           #other
           theme_bw()+
           uniformTheme +
-          theme(legend.position = "bottom", 
+          theme(legend.position = "bottom",
                 strip.background = element_rect(fill="white"))+#,
-                #strip.text = element_text(size =10)) + 
+                #strip.text = element_text(size =10)) +
           facet_grid(Season ~ TP, scales = 'free', space = 'free_x')
       }
     }
-    
+
     if(input$future == 1){
       if(input$times == 'Annual'){
         grid.arrange(TREND, BOXPLOT, nrow =2)
@@ -437,62 +437,62 @@ server <- function(input, output, session) {
     }
 
   }) #end of TS and BP Plots / Tab 1 Plots
-  
+
   ######### Hover ----- workup
-  
+
   output$info <- renderText({
-   
+
      xy_str <- function(e) {
       if(is.null(e)) return("NULL\n")
       paste0("year =", e$x, 0, ", y =", e$y, "\n")
     }
-    
+
      paste0(
        "hover: ", xy_str(input$plot_hover)
      )
-     
+
   }) # end of tab 1 hover
-  
+
   #################################################################################################
   ######## ---------------- - - - - - - -----  Tab 2  ---- - - - - - - - ----------------  ########
   #################################################################################################
   output$WL_DSM_Plots <- renderPlot({
-    
+
     req(input$years) #input$years doesn't initally have values .. need this
     data <- run$outs
-    
+
     # Walter-Leith controls ----------------------------------------------------------------------
     dataWL <- formatDataWL(data = data[[1]], future = input$future)
-    
+
     # Daily Soil Moisture Plot controls ----------------------------------------------------------
     dataDSM <- formatDataDSM(data = data[[2]], RCP = input$RCP)
-    
+
     # PLOTTING    --------------------------------------------------------------------------------
     # Walter-Leith Plot ----------------------------------
     diagwl2(dataWL[[1]], RCP = input$RCP,
             Year = input$yearButton, YearChoice = input$years2,
             GCM = input$gcmsButton, GCMc = input$gcms2,
-            FUTURE50 = input$future, FUTURE90 = input$future, 
+            FUTURE50 = input$future, FUTURE90 = input$future,
             data[[1]], dataWL[[3]], dataWL[[2]],
-            est='',alt=NA, per='',margen=c(0.1, .5, 0.4, .2))  
-    
+            est='',alt=NA, per='',margen=c(0.1, .5, 0.4, .2))
+
     grid.echo()
     WL_Plot <- grid.grab()
-    
+
     # Daily Soil Moisture Plot ----------------------------------
     if(input$future == 1) {
-      
+
       RibbonDF <-  dataDSM[[2]][dataDSM[[2]]$TP %in% c('Near', 'Late'), ]
 
       DSM_Plot <-  ggplot() +
             geom_line(data = dataDSM[[2]], aes(Day, median, color=as.factor(TP)),size=1.1)+
             geom_ribbon(data = RibbonDF, aes(x = Day, ymin = min, ymax = max,fill = as.factor(TP)),
-                       alpha=0.2) + 
+                       alpha=0.2) +
             #LEGEND
             scale_color_manual(values=c('black','#b8ae23','#a223b8'),name="",labels=c('Current','Near', 'Long-term'))+
             scale_fill_manual(values=c('#b8ae23','#a223b8'),name="",labels=c('Near', 'Long-term'),guide=FALSE) +
-            theme_bw()+ 
-            theme_DSM + 
+            theme_bw()+
+            theme_DSM +
             #AXES
             labs(
               y = 'soil water potential (-MPa)',
@@ -503,13 +503,13 @@ server <- function(input, output, session) {
             coord_cartesian(ylim = c(dataDSM[[3]],0)) +
         #FORMATTING
         uniformTheme
-     
-      # EXTRA Lines (Ind. Years and GCMs.) 
+
+      # EXTRA Lines (Ind. Years and GCMs.)
       if(input$gcmsButton == 2 && input$yearButton == 1){
         yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
         DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
       }
-      
+
       if(input$gcmsButton == 1 & input$yearButton == 2) {
         GCMLineDat <- dataDSM[[1]][dataDSM[[1]]$GCM %in% input$gcms2, ]
         GCMLineDat_near <- GCMLineDat[GCMLineDat$TP == 'Near', ]
@@ -521,15 +521,15 @@ server <- function(input, output, session) {
       }
 
     } else {
-      
+
       dataDSM[[2]] <- dataDSM[[2]][dataDSM[[2]]$TP == 'Current',]
-      
+
       DSM_Plot <-  ggplot() +
         geom_line(data =  dataDSM[[2]],aes(Day, median, color=as.factor(TP)),size=1.1)+
         #LEGEND
         scale_color_manual(values=c('black'),name="",labels=c('Current'))+
-        theme_bw()+ 
-        theme_DSM + 
+        theme_bw()+
+        theme_DSM +
         #AXES
         labs(
           y = 'soil water potential (-MPa)',
@@ -540,20 +540,18 @@ server <- function(input, output, session) {
         coord_cartesian(ylim = c(dataDSM[[3]],0)) +
         #FORMATTING
         uniformTheme
-      
+
       if(input$yearButton == 1){
         yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
         DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
       }
-      
+
     }
-    
+
     grid.arrange(WL_Plot, DSM_Plot)
-    
+
   }) #end of Tab 2 Plots
 
 }
 # Run the app ----
 shinyApp(ui = ui, server = server)
-
-
