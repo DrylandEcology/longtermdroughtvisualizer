@@ -86,10 +86,11 @@
       R CMD INSTALL rSFSW2
 
       # clone and install Shiny App Code
-      git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/
+      git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/longtermdroughtsimulator
 
       # ensure that shiny server service file installed in the correct place
       cp /opt/shiny-server/config/systemd/shiny-server.service /etc/systemd/system
+      systemctl restart shiny-server
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'
