@@ -70,124 +70,146 @@
   <body>
     <div class="container">
       <h1 class="centered">Long-term Drought Simulator</h1>
-      <div class="row">
-        <div class="col-sm-6">
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">How to #1</a>
-                        </h4>
-                    </div>
-                    <div id="collapseOne" class="panel-collapse collapse in">
-                        <div class="panel-body">
-                            <p>HTML stands for HyperText Markup Language. HTML is the standard markup language for describing the structure of web pages. <a href="https://www.tutorialrepublic.com/html-tutorial/" target="_blank">Learn more.</a></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">How to #2</a>
-                        </h4>
-                    </div>
-                    <div id="collapseTwo" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <p>Bootstrap is a sleek, intuitive, and powerful front-end framework for faster and easier web development. It is a collection of CSS and HTML conventions. <a href="https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/" target="_blank">Learn more.</a></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">How to #3</a>
-                        </h4>
-                    </div>
-                    <div id="collapseThree" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <p>CSS stands for Cascading Style Sheet. CSS allows you to specify various style properties for a given HTML element such as colors, backgrounds, fonts etc. <a href="https://www.tutorialrepublic.com/css-tutorial/" target="_blank">Learn more.</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        	<p><strong>Note:</strong> Click on the above text to expand or collapse 'how to' tips.</p>
-          <br><h3>Status</h3>
-          <div id="feedback">
-            Input simulation configuration...
-          </div>
-        </div>
-          <div class="col-sm-6">
-            <div id="greyBack">
-              <div id='map'>
-              <script>
-                //var latLong = [document.getElementById("latMap").value, document.getElementById("longMap").value];
-                var latLong = [35.1983, -111.6513];
-                var map = L.map('map').setView([35.1983, -111.6513], 9);
-                var layerGroup = L.layerGroup().addTo(map);
-                L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(map);
-
-                var marker = L.marker(latLong, {draggable: true}).addTo(layerGroup);
-                marker.on('drag', function(e){
-                  document.getElementById("latMap").value = marker.getLatLng().lat;
-                  document.getElementById("longMap").value = marker.getLatLng().lng;
-                })
-              </script>
-            </div>
-          </div>
-          <h3 class="centered">Simulation Configuration</h3><hr>
-          <div class="col-sm-6">
-              <label for="latMap">Lat</label>
-              <input type="number" id="latMap" name="latMap" value="35.1983" min="25" max="49" step=".1" onchange="changeMarkerXY()" >
-              <!-- Future Simulations Options -->
-              <br><br>Future Simulations? <br>
-              <input type="radio" name="futureSim" value="futureTrue"> Yes
-              <input type="radio" name="futureSim" value="futureFalse"> No
-              <br><br>
-
-              <!-- Soils Composition -->
-              Extract or Choose Soils? <br>
-              <input type="radio" name="chooseSoils" value="chooseFalse"> Extract
-              <input type="radio" name="chooseSoils" value="chooseTrue"> Choose
-              <br><br>
-              <div id="chooseSoils">
-                <label for="sand">sand</label>
-                <input type="number" id="sand" name="sand" value="34" min="0" max="100" step="1" onchange="adjustSilt()">
-                <br><label for="clay">clay</label>
-                <input type="number" id="clay" name="clay" value="33" min="0" max="100" step="1" onchange="adjustSilt()">
-                <br><label for="silt">silt</label>
-                <input type="number" id="silt" name="silt" value="33" min="0" max="100" step="1" disabled>
-              </div>
-              <br>
-            </div>
+      <!-- Navigational tabs -->
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+        <li><a data-toggle="tab" href="#tab2">Mean Annual Patterns</a></li>
+        <li><a data-toggle="tab" href="#tab3">Tab 3</a></li>
+      </ul>
+      <!-- Home tab content -->
+      <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+          <div class="row">
             <div class="col-sm-6">
-              <label for="longMap">Long</label>
-              <input type="number" id="longMap" name="longMap" value="-111.6513" min="-120" max="-12" step=".1" onchange="changeMarkerXY()">
-              <br><br>
-              <!-- Veg Composition -->
-              Estimate or Choose Comp? <br>
-              <input type="radio" name="chooseComp" value="chooseCompFalse"> Estimate
-              <input type="radio" name="chooseComp" value="chooseCompTrue"> Choose
-              <br><br>
-              <div id="chooseComp">
-                <label for="trees">trees</label>
-                <input type="number" id="trees" name="trees" value="20" min="0" max="100" step="1">
-                <br><label for="shrubs">shrubs</label>
-                <input type="number" id="shrubs" name="shrubs" value="20" min="0" max="100" step="1">
-                <br><label for="grasses">grasses</label>
-                <input type="number" id="grasses" name="grasses" value="20" min="0" max="100" step="1">
-                <br><label for="forbs">forbs</label>
-                <input type="number" id="forbs" name="forbs" value="20" min="0" max="100" step="1">
-                <br><label for="bareground">bareground</label>
-                <input type="number" id="bareground" name="bareground" value="20" min="0" max="100" step="1">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">How to #1</a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <p>HTML stands for HyperText Markup Language. HTML is the standard markup language for describing the structure of web pages. <a href="https://www.tutorialrepublic.com/html-tutorial/" target="_blank">Learn more.</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">How to #2</a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <p>Bootstrap is a sleek, intuitive, and powerful front-end framework for faster and easier web development. It is a collection of CSS and HTML conventions. <a href="https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/" target="_blank">Learn more.</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">How to #3</a>
+                            </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <p>CSS stands for Cascading Style Sheet. CSS allows you to specify various style properties for a given HTML element such as colors, backgrounds, fonts etc. <a href="https://www.tutorialrepublic.com/css-tutorial/" target="_blank">Learn more.</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            	<p><strong>Note:</strong> Click on the above text to expand or collapse 'how to' tips.</p>
+              <br><h3>Status</h3>
+              <div id="feedback">
+                Input simulation configuration...
               </div>
-              <br><br>
+            </div>
+              <div class="col-sm-6">
+                <div id="greyBack">
+                  <div id='map'>
+                  <script>
+                    //var latLong = [document.getElementById("latMap").value, document.getElementById("longMap").value];
+                    var latLong = [35.1983, -111.6513];
+                    var map = L.map('map').setView([35.1983, -111.6513], 9);
+                    var layerGroup = L.layerGroup().addTo(map);
+                    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(map);
+
+                    var marker = L.marker(latLong, {draggable: true}).addTo(layerGroup);
+                    marker.on('drag', function(e){
+                      document.getElementById("latMap").value = marker.getLatLng().lat;
+                      document.getElementById("longMap").value = marker.getLatLng().lng;
+                    })
+                  </script>
+                </div>
+              </div>
+              <h3 class="centered">Simulation Configuration</h3><hr>
+              <div class="col-sm-6">
+                  <label for="latMap">Lat</label>
+                  <input type="number" id="latMap" name="latMap" value="35.1983" min="25" max="49" step=".1" onchange="changeMarkerXY()" >
+                  <!-- Future Simulations Options -->
+                  <br><br>Future Simulations? <br>
+                  <input type="radio" name="futureSim" value="futureTrue"> Yes
+                  <input type="radio" name="futureSim" value="futureFalse"> No
+                  <br><br>
+
+                  <!-- Soils Composition -->
+                  Extract or Choose Soils? <br>
+                  <input type="radio" name="chooseSoils" value="chooseFalse"> Extract
+                  <input type="radio" name="chooseSoils" value="chooseTrue"> Choose
+                  <br><br>
+                  <div id="chooseSoils">
+                    <label for="sand">sand</label>
+                    <input type="number" id="sand" name="sand" value="34" min="0" max="100" step="1" onchange="adjustSilt()">
+                    <br><label for="clay">clay</label>
+                    <input type="number" id="clay" name="clay" value="33" min="0" max="100" step="1" onchange="adjustSilt()">
+                    <br><label for="silt">silt</label>
+                    <input type="number" id="silt" name="silt" value="33" min="0" max="100" step="1" disabled>
+                  </div>
+                  <br>
+                </div>
+                <div class="col-sm-6">
+                  <label for="longMap">Long</label>
+                  <input type="number" id="longMap" name="longMap" value="-111.6513" min="-120" max="-12" step=".1" onchange="changeMarkerXY()">
+                  <br><br>
+                  <!-- Veg Composition -->
+                  Estimate or Choose Comp? <br>
+                  <input type="radio" name="chooseComp" value="chooseCompFalse"> Estimate
+                  <input type="radio" name="chooseComp" value="chooseCompTrue"> Choose
+                  <br><br>
+                  <div id="chooseComp">
+                    <label for="trees">trees</label>
+                    <input type="number" id="trees" name="trees" value="20" min="0" max="100" step="1">
+                    <br><label for="shrubs">shrubs</label>
+                    <input type="number" id="shrubs" name="shrubs" value="20" min="0" max="100" step="1">
+                    <br><label for="grasses">grasses</label>
+                    <input type="number" id="grasses" name="grasses" value="20" min="0" max="100" step="1">
+                    <br><label for="forbs">forbs</label>
+                    <input type="number" id="forbs" name="forbs" value="20" min="0" max="100" step="1">
+                    <br><label for="bareground">bareground</label>
+                    <input type="number" id="bareground" name="bareground" value="20" min="0" max="100" step="1">
+                  </div>
+                  <br><br>
+
+              </div>
+            </div>
           </div>
+          <button id="simBtn" onclick="sendToR()"> Simulate </button>
+          <br>
+        </div>
+        <!-- Tab 2 Content -->
+        <div id="tab2" class="tab-pane fade">
+          Tab 2 Open
+        </div>
+        <!-- Tab 3 Content -->
+        <div id="tab3" class="tab-pane fade">
+          Tab 3 Open
         </div>
       </div>
-      <button id="simBtn" onclick="sendToR()"> Simulate </button>
-      <br>
+      </div>
+
       <div id="moreInfo" class="row">
         <h3 class="centered">MORE INFORMATION</h3>
       </div>

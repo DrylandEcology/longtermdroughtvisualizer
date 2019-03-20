@@ -34,6 +34,27 @@ my_selected <- c('CanESM2', 'CESM1-CAM5', 'CNRM-CM5',
                  'GISS-E2-R','inmcm4', 'IPSL-CM5A-MR',
                  'MIROC-ESM', 'MRI-CGCM3' )
 
+
+ui <- fluidPage(
+  
+  titlePanel("Long-term Drought Simulator"),
+  
+  tabsetPanel(id = "mainTabset",               # IDEA: Two tabs - site-by-site & multiple sites (file upload).
+              
+              
+              # Sidebar layout with site-by-site definitions ----
+              tabPanel("Site-by-site"#,
+                     # Main panel for outputs ----
+                     #mainPanel("Welcome to the long-term drought simulator!")
+              ) #end of tab 1
+  ), # end of tabset
+  # Important! : 'Freshly baked' tabs first enter here.
+  uiOutput("creationPool", style = "display: none;")
+  # End Important
+)# end of UI
+
+  
+  
 # Define server logic ----
 server <- function(input, output, session) {
   # reference to external UI elements
@@ -46,6 +67,7 @@ server <- function(input, output, session) {
   tags$link(href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
   tags$script(src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
   
+  tabsetPanel(id="mainTabset")
   
   # Important! : creationPool should be hidden to avoid elements flashing before they are moved.
   #              But hidden elements are ignored by shiny, unless this option below is set.
@@ -306,106 +328,106 @@ server <- function(input, output, session) {
      )
 
   }) # end of tab 1 hover
-  # 
-  # #################################################################################################
-  # ######## ---------------- - - - - - - -----  Tab 2  ---- - - - - - - - ----------------  ########
-  # #################################################################################################
-  # output$WL_DSM_Plots <- renderPlot({
-  # 
-  #   req(input$years) #input$years doesn't initally have values .. need this
-  #   data <- run$outs
-  # 
-  #   # Walter-Leith controls ----------------------------------------------------------------------
-  #   dataWL <- formatDataWL(data = data[[1]], future = input$future)
-  # 
-  #   # Daily Soil Moisture Plot controls ----------------------------------------------------------
-  #   dataDSM <- formatDataDSM(data = data[[2]], RCP = input$RCP)
-  # 
-  #   # PLOTTING    --------------------------------------------------------------------------------
-  #   # Walter-Leith Plot ----------------------------------
-  #   diagwl2(dataWL[[1]], RCP = input$RCP,
-  #           Year = input$yearButton, YearChoice = input$years2,
-  #           GCM = input$gcmsButton, GCMc = input$gcms2,
-  #           FUTURE50 = input$future, FUTURE90 = input$future,
-  #           data[[1]], dataWL[[3]], dataWL[[2]],
-  #           est='',alt=NA, per='',margen=c(0.1, .5, 0.4, .2))
-  # 
-  #   grid.echo()
-  #   WL_Plot <- grid.grab()
-  # 
-  #   # Daily Soil Moisture Plot ----------------------------------
-  #   if(input$future == 1) {
-  # 
-  #     RibbonDF <-  dataDSM[[2]][dataDSM[[2]]$TP %in% c('Near', 'Late'), ]
-  # 
-  #     DSM_Plot <-  ggplot() +
-  #           geom_line(data = dataDSM[[2]], aes(Day, median, color=as.factor(TP)),size=1.1)+
-  #           geom_ribbon(data = RibbonDF, aes(x = Day, ymin = min, ymax = max,fill = as.factor(TP)),
-  #                      alpha=0.2) +
-  #           #LEGEND
-  #           scale_color_manual(values=c('black','#b8ae23','#a223b8'),name="",labels=c('Current','Near', 'Long-term'))+
-  #           scale_fill_manual(values=c('#b8ae23','#a223b8'),name="",labels=c('Near', 'Long-term'),guide=FALSE) +
-  #           theme_bw()+
-  #           theme_DSM +
-  #           #AXES
-  #           labs(
-  #             y = 'soil water potential (-MPa)',
-  #             x = 'Month'
-  #           )+
-  #           scale_x_continuous(expand=c(0,0),breaks=c(1,29,60,91,121,152,182,213,244,274,305,335),
-  #                              labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
-  #           coord_cartesian(ylim = c(dataDSM[[3]],0)) +
-  #       #FORMATTING
-  #       uniformTheme
-  # 
-  #     # EXTRA Lines (Ind. Years and GCMs.)
-  #     if(input$gcmsButton == 2 && input$yearButton == 1){
-  #       yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
-  #       DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
-  #     }
-  # 
-  #     if(input$gcmsButton == 1 & input$yearButton == 2) {
-  #       GCMLineDat <- dataDSM[[1]][dataDSM[[1]]$GCM %in% input$gcms2, ]
-  #       GCMLineDat_near <- GCMLineDat[GCMLineDat$TP == 'Near', ]
-  #       head(GCMLineDat_near)
-  #       str(GCMLineDat_near)
-  #       DSM_Plot <- DSM_Plot + geom_line(data = GCMLineDat_near, aes(Day, mean), color = '#b8ae23', size = 1.1, linetype = 'dashed')
-  #       GCMLineDat_late <- GCMLineDat[GCMLineDat$TP == 'Late', ]
-  #       DSM_Plot <- DSM_Plot + geom_line(data = GCMLineDat_late, aes(Day, mean), color = '#a223b8', size = 1.1, linetype = 'dashed')
-  #     }
-  # 
-  #   } else {
-  # 
-  #     dataDSM[[2]] <- dataDSM[[2]][dataDSM[[2]]$TP == 'Current',]
-  # 
-  #     DSM_Plot <-  ggplot() +
-  #       geom_line(data =  dataDSM[[2]],aes(Day, median, color=as.factor(TP)),size=1.1)+
-  #       #LEGEND
-  #       scale_color_manual(values=c('black'),name="",labels=c('Current'))+
-  #       theme_bw()+
-  #       theme_DSM +
-  #       #AXES
-  #       labs(
-  #         y = 'soil water potential (-MPa)',
-  #         x = 'Month'
-  #       )+
-  #       scale_x_continuous(expand=c(0,0),breaks=c(1,29,60,91,121,152,182,213,244,274,305,335),
-  #                          labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
-  #       coord_cartesian(ylim = c(dataDSM[[3]],0)) +
-  #       #FORMATTING
-  #       uniformTheme
-  # 
-  #     if(input$yearButton == 1){
-  #       yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
-  #       DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
-  #     }
-  # 
-  #   }
-  # 
-  #   grid.arrange(WL_Plot, DSM_Plot)
-  # 
-  # }) #end of Tab 2 Plots
+
+  #################################################################################################
+  ######## ---------------- - - - - - - -----  Tab 2  ---- - - - - - - - ----------------  ########
+  #################################################################################################
+  output$WL_DSM_Plots <- renderPlot({
+
+    req(input$years) #input$years doesn't initally have values .. need this
+    data <- run$outs
+
+    # Walter-Leith controls ----------------------------------------------------------------------
+    dataWL <- formatDataWL(data = data[[1]], future = input$future)
+
+    # Daily Soil Moisture Plot controls ----------------------------------------------------------
+    dataDSM <- formatDataDSM(data = data[[2]], RCP = input$RCP)
+
+    # PLOTTING    --------------------------------------------------------------------------------
+    # Walter-Leith Plot ----------------------------------
+    diagwl2(dataWL[[1]], RCP = input$RCP,
+            Year = input$yearButton, YearChoice = input$years2,
+            GCM = input$gcmsButton, GCMc = input$gcms2,
+            FUTURE50 = input$future, FUTURE90 = input$future,
+            data[[1]], dataWL[[3]], dataWL[[2]],
+            est='',alt=NA, per='',margen=c(0.1, .5, 0.4, .2))
+
+    grid.echo()
+    WL_Plot <- grid.grab()
+
+    # Daily Soil Moisture Plot ----------------------------------
+    if(input$future == 1) {
+
+      RibbonDF <-  dataDSM[[2]][dataDSM[[2]]$TP %in% c('Near', 'Late'), ]
+
+      DSM_Plot <-  ggplot() +
+            geom_line(data = dataDSM[[2]], aes(Day, median, color=as.factor(TP)),size=1.1)+
+            geom_ribbon(data = RibbonDF, aes(x = Day, ymin = min, ymax = max,fill = as.factor(TP)),
+                       alpha=0.2) +
+            #LEGEND
+            scale_color_manual(values=c('black','#b8ae23','#a223b8'),name="",labels=c('Current','Near', 'Long-term'))+
+            scale_fill_manual(values=c('#b8ae23','#a223b8'),name="",labels=c('Near', 'Long-term'),guide=FALSE) +
+            theme_bw()+
+            theme_DSM +
+            #AXES
+            labs(
+              y = 'soil water potential (-MPa)',
+              x = 'Month'
+            )+
+            scale_x_continuous(expand=c(0,0),breaks=c(1,29,60,91,121,152,182,213,244,274,305,335),
+                               labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
+            coord_cartesian(ylim = c(dataDSM[[3]],0)) +
+        #FORMATTING
+        uniformTheme
+
+      # EXTRA Lines (Ind. Years and GCMs.)
+      if(input$gcmsButton == 2 && input$yearButton == 1){
+        yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
+        DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
+      }
+
+      if(input$gcmsButton == 1 & input$yearButton == 2) {
+        GCMLineDat <- dataDSM[[1]][dataDSM[[1]]$GCM %in% input$gcms2, ]
+        GCMLineDat_near <- GCMLineDat[GCMLineDat$TP == 'Near', ]
+        head(GCMLineDat_near)
+        str(GCMLineDat_near)
+        DSM_Plot <- DSM_Plot + geom_line(data = GCMLineDat_near, aes(Day, mean), color = '#b8ae23', size = 1.1, linetype = 'dashed')
+        GCMLineDat_late <- GCMLineDat[GCMLineDat$TP == 'Late', ]
+        DSM_Plot <- DSM_Plot + geom_line(data = GCMLineDat_late, aes(Day, mean), color = '#a223b8', size = 1.1, linetype = 'dashed')
+      }
+
+    } else {
+
+      dataDSM[[2]] <- dataDSM[[2]][dataDSM[[2]]$TP == 'Current',]
+
+      DSM_Plot <-  ggplot() +
+        geom_line(data =  dataDSM[[2]],aes(Day, median, color=as.factor(TP)),size=1.1)+
+        #LEGEND
+        scale_color_manual(values=c('black'),name="",labels=c('Current'))+
+        theme_bw()+
+        theme_DSM +
+        #AXES
+        labs(
+          y = 'soil water potential (-MPa)',
+          x = 'Month'
+        )+
+        scale_x_continuous(expand=c(0,0),breaks=c(1,29,60,91,121,152,182,213,244,274,305,335),
+                           labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
+        coord_cartesian(ylim = c(dataDSM[[3]],0)) +
+        #FORMATTING
+        uniformTheme
+
+      if(input$yearButton == 1){
+        yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
+        DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
+      }
+
+    }
+
+    grid.arrange(WL_Plot, DSM_Plot)
+
+  }) #end of Tab 2 Plots
 
 }
 # Run the app ----
-shinyApp(ui = htmlTemplate("www/index.html"), server = server)
+shinyApp(ui = c(ui, htmlTemplate("www/index.html")), server = server)
