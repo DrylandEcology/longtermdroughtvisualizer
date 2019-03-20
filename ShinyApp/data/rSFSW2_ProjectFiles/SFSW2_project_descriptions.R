@@ -93,7 +93,7 @@ fnames_in <- list(
 
   fslayers = "SWRuns_InputData_SoilLayers_v9.csv",
   ftreatDesign = "SWRuns_InputData_TreatmentDesign_v16_fill.csv",
-  fexpDesign = "SWRuns_InputData_ExperimentalDesign_v08.csv",
+  fexpDesign = "SWRuns_InputData_ExperimentalDesign_v09.csv",
 
   fclimnorm = "SWRuns_InputData_cloud_v10.csv",
   fvegetation = "SWRuns_InputData_prod_v11.csv",
@@ -120,7 +120,7 @@ fnames_in <- list(
 
   # Database with daily weather data
   fdbWeather = if (identical(opt_platform[["host"]], "local")) {
-      file.path("/home/devel/AZ_dbWeatherData.sqlite3")
+      file.path("/media/natemccauslin/Powell/AZ_dbWeatherData.sqlite3")
     } else if (identical(opt_platform[["host"]], "hpc")) {
       file.path(project_paths[["dir_prj"]], "..", "dbWeatherData.sqlite3")
     },
@@ -212,7 +212,7 @@ opt_input <- list(
       "ExtractSoilDataFromISRICWISEv12_Global", 0,
       #   - ISRIC-WISE 30-arsec v1.0 (2016): 30-arcsec re-gridded; data expected
       #     at project_paths[["dir_ex_soil"]], "WISE", "WISE30sec_v1a")
-      "ExtractSoilDataFromISRICWISE30secV1a_Global", 1
+      "ExtractSoilDataFromISRICWISE30secV1a_Global", 0
   ),
 
   # Approach to determine prioprities of external data source extractions

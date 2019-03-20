@@ -1,6 +1,13 @@
 library(dplyr)
 library(data.table)
 
+
+show_js_inputs <- function(lat, long, future, soils, sand, clay,
+               comp, trees, shrubs, grasses, forbs, bareground){
+  print(paste(lat, long, future, soils, sand, clay,
+              comp, trees, shrubs, grasses, forbs, bareground))
+}
+
 #' @code{}
 #' 
 #' @param location A list from the input$clickmap of lat & lng

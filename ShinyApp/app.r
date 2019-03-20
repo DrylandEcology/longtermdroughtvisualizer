@@ -18,8 +18,8 @@ source("functions/MiscFunctions.R")
 source("functions/getOutputs.R")
 source("functions/diagwl2.R")
 
-#devtools::load_all(pkg = '~/Documents/Git/rSFSW2/')
-#devtools::load_all(pkg = '~/Documents/Git/rSOILWAT2/')
+#devtools::load_all(pkg = '~/Desktop/Dryland Ecology/rSFSW2/')
+#devtools::load_all(pkg = '~/Desktop/Dryland Ecology/rSOILWAT2/')
 
 my_names <- list( 'CanESM2' = 'CanESM2',
                 'CESM1-CAM5' = 'CESM1-CAM5',  'CNRM-CM5' = 'CNRM-CM5',
@@ -34,131 +34,19 @@ my_selected <- c('CanESM2', 'CESM1-CAM5', 'CNRM-CM5',
                  'GISS-E2-R','inmcm4', 'IPSL-CM5A-MR',
                  'MIROC-ESM', 'MRI-CGCM3' )
 
-# Define UI ----
-ui <- fluidPage(
-
-  titlePanel("Long-term Drought Simulator"),
-
-    tabsetPanel(id = "mainTabset",               # IDEA: Two tabs - site-by-site & multiple sites (file upload).
-
-
-# Sidebar layout with site-by-site definitions ----
-      tabPanel("Site-by-site",
-         sidebarLayout(position = "left",
-
-            # IDEA: site-by-site: choose 4 Inputs - These inputs actually control what will be simulated
-            # # (1) Site location, (2) whether or not you want future simulations, (3) soil type (4) Vegetation
-
-            # Sidebar panel for user inputs ----
-            sidebarPanel(
-
-                         ####################################################################
-                         ######## ------------------- LOCATIONS  -----------------  #########
-                         ####################################################################
-
-                         ## Location: Choose a location by entering coordinates or clicking on a map ----
-                         h4("Site Location"),
-
-                         leafletOutput("locMap"),#, height = 250, width = 250),
-
-                         fluidRow(
-                               splitLayout(
-                                numericInput("lat", "lat", "35.1983", min = 25, max = 49),
-                                numericInput("lng", "long", "-111.6513", min = -12, max = -100)
-                           )
-                         ),
-                         br(), # break
-
-                         ####################################################################
-                         ######## ------------------- FUTURE ----------------------  ########
-                         ####################################################################
-
-
-                         ### Checkbox for future simulations ----
-                         radioButtons("future", label = h4("Future Simulations?"),
-                                      choices =  list("Yes" = 1, "No" = 2),
-                                      selected = 1,
-                                      inline = TRUE), # side-by-side
-
-                         ####################################################################
-                         ######## ------------------- SOILS ----------------------  #########
-                         ####################################################################
-
-                         # TO DO -> Texture Triangle, not inputs
-
-                         radioButtons("soils", label = h4("Extract or Choose Soils?"),
-                                            choices = list('Extract' = 1, 'Choose' = 2),
-                                            inline = TRUE, # side-by-side
-                                            selected = 2),
-
-                         conditionalPanel(
-                           condition = "input.soils == 2",
-                           ### input slots for soil that appear of select == TRUE
-                           fluidRow(
-                             splitLayout(
-                                numericInput("sand", "sand", "34", min = 0, max = 100),
-                                numericInput("silt", "silt", "33", min = 0, max = 100),
-                                numericInput("clay", "clay", "33", min = 0, max = 100)
-                             )
-                           )
-
-                         ),
-
-                         br(),
-
-                         ####################################################################
-                         ######## -------------------- VEG -----------------------  #########
-                         ####################################################################
-
-                         radioButtons("comp", label = h4("Estimate or Choose Comp?"),
-                                      choices = list('Estimate' = 1, 'Choose' = 2),
-                                      inline = TRUE, # side-by-side
-                                      selected = 1),
-
-                         conditionalPanel(
-                           condition = "input.comp == 2",
-                           fluidRow(
-                             splitLayout(
-                               numericInput("trees", "trees", "0.0", min = 0, max = 1),
-                               numericInput("shrubs", "shrubs", "0.5", min = 0, max = 1),
-                               numericInput("grasses", "grasses", "0.5", min = 0, max = 1),
-                               numericInput("forbs", "forbs", "0.0", min = 0, max = 1),
-                               numericInput("bg", "bareground", "0.0", min = 0, max = 1)
-                             )
-                           )
-
-                         ),
-
-                         br(),
-
-                         ####################################################################
-                         ######## -------------------- GO! -----------------------  #########
-                         ####################################################################
-
-                         ## Just need this once for "... textInput"
-                         verbatimTextOutput("value"),
-
-                         actionButton("simulate", label = "Simulate!")
-            ), # end of side bar panel
-
-            # Main panel for outputs ----
-            mainPanel("Welcome to the long-term drought simulator!")
-            ) # end of side bar layout
-         ) #end of tab 1
-
-
-
-  ), # end of tabset
-# Important! : 'Freshly baked' tabs first enter here.
-uiOutput("creationPool", style = "display: none;")
-# End Important
-)# end of UI
-
-
-
 # Define server logic ----
 server <- function(input, output, session) {
-
+  # reference to external UI elements
+  # leaflet map
+  tags$link(href = "leaflet.css")
+  tags$script(src = "leaflet.js")
+  # in house javascript
+  tags$script(src = "master.js")
+  # bootstrap
+  tags$link(href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
+  tags$script(src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+  
+  
   # Important! : creationPool should be hidden to avoid elements flashing before they are moved.
   #              But hidden elements are ignored by shiny, unless this option below is set.
   output$creationPool <- renderUI({})
@@ -174,40 +62,6 @@ server <- function(input, output, session) {
   }
   # End Important
   #################################################################################################
-  ######## ------------------------------ UI Reactivity ---------------------------------  ########
-  #################################################################################################
-
-  # Leaflet map ---------------------------------------
-  output$locMap <- renderLeaflet({
-    m <- leaflet() %>%
-      addTiles() %>%
-      setView(lng = input$lng, lat = input$lat , zoom = 9) %>%
-      addMarkers(input$lng, input$lat)
-    })
-
-  # Click functionality -----------------------------------------------------------
-
-  observeEvent(input$locMap_click, { # input$MAPID_event = input$locMap_click
-
-    proxy <- leafletProxy("locMap")
-
-    #### 1 - Allow for visualization of click ----------------------------------
-    click <- input$locMap_click
-
-    proxy %>% clearMarkers() %>%
-      setView(lng = click$lng, lat = click$lat , zoom = 9) %>%
-      addMarkers(click$lng, click$lat)
-
-    #### 2 - Allow for click lat/long to update numeric lat/long  --------------
-
-    updateNumericInput(session, "lat",  value = round(input$locMap_click$lat, 4))
-    updateNumericInput(session, "lng", value = round(input$locMap_click$lng, 4))
-
-  })
-
-
-
-  #################################################################################################
   ######## ---------------------------- SIMULATION!  ------------------------------------  ########
   #################################################################################################
 
@@ -216,8 +70,8 @@ server <- function(input, output, session) {
   observeEvent(input$simulate, {
 
     begintime <- proc.time() # start timer clock
-    showModal(modalDialog("calculation running!"))
-
+    #showModal(modalDialog("calculation running!"))
+    
     run$SW_out <- set_execute_SW(input$lat, input$lng, input$future, input$soils, input$sand, input$clay,
                                  input$comp, input$trees, input$shrubs, input$grasses, input$forbs, input$bg) # the actual calculation
 
@@ -330,17 +184,17 @@ server <- function(input, output, session) {
     updateTabsetPanel(session, "mainTabset", selected = "outputs1")
 
   })
-
-  #################################################################################################
-  #################################################################################################
-  ######## ---------------------------- Output Reactivity  -----------------------------  ########
-  #################################################################################################
-  #################################################################################################
-
-  #################################################################################################
-  ######## ---------------- - - - - - - -----  Tab 1  ---- - - - - - - - -----------------  ########
-  #################################################################################################
-
+  # 
+  # #################################################################################################
+  # #################################################################################################
+  # ######## ---------------------------- Output Reactivity  -----------------------------  ########
+  # #################################################################################################
+  # #################################################################################################
+  # 
+  # #################################################################################################
+  # ######## ---------------- - - - - - - -----  Tab 1  ---- - - - - - - - -----------------  ########
+  # #################################################################################################
+  # 
   output$TS_BP_Plots <- renderPlot({
 
     req(input$years) #input$years doesn't initally have values .. need this
@@ -452,106 +306,106 @@ server <- function(input, output, session) {
      )
 
   }) # end of tab 1 hover
-
-  #################################################################################################
-  ######## ---------------- - - - - - - -----  Tab 2  ---- - - - - - - - ----------------  ########
-  #################################################################################################
-  output$WL_DSM_Plots <- renderPlot({
-
-    req(input$years) #input$years doesn't initally have values .. need this
-    data <- run$outs
-
-    # Walter-Leith controls ----------------------------------------------------------------------
-    dataWL <- formatDataWL(data = data[[1]], future = input$future)
-
-    # Daily Soil Moisture Plot controls ----------------------------------------------------------
-    dataDSM <- formatDataDSM(data = data[[2]], RCP = input$RCP)
-
-    # PLOTTING    --------------------------------------------------------------------------------
-    # Walter-Leith Plot ----------------------------------
-    diagwl2(dataWL[[1]], RCP = input$RCP,
-            Year = input$yearButton, YearChoice = input$years2,
-            GCM = input$gcmsButton, GCMc = input$gcms2,
-            FUTURE50 = input$future, FUTURE90 = input$future,
-            data[[1]], dataWL[[3]], dataWL[[2]],
-            est='',alt=NA, per='',margen=c(0.1, .5, 0.4, .2))
-
-    grid.echo()
-    WL_Plot <- grid.grab()
-
-    # Daily Soil Moisture Plot ----------------------------------
-    if(input$future == 1) {
-
-      RibbonDF <-  dataDSM[[2]][dataDSM[[2]]$TP %in% c('Near', 'Late'), ]
-
-      DSM_Plot <-  ggplot() +
-            geom_line(data = dataDSM[[2]], aes(Day, median, color=as.factor(TP)),size=1.1)+
-            geom_ribbon(data = RibbonDF, aes(x = Day, ymin = min, ymax = max,fill = as.factor(TP)),
-                       alpha=0.2) +
-            #LEGEND
-            scale_color_manual(values=c('black','#b8ae23','#a223b8'),name="",labels=c('Current','Near', 'Long-term'))+
-            scale_fill_manual(values=c('#b8ae23','#a223b8'),name="",labels=c('Near', 'Long-term'),guide=FALSE) +
-            theme_bw()+
-            theme_DSM +
-            #AXES
-            labs(
-              y = 'soil water potential (-MPa)',
-              x = 'Month'
-            )+
-            scale_x_continuous(expand=c(0,0),breaks=c(1,29,60,91,121,152,182,213,244,274,305,335),
-                               labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
-            coord_cartesian(ylim = c(dataDSM[[3]],0)) +
-        #FORMATTING
-        uniformTheme
-
-      # EXTRA Lines (Ind. Years and GCMs.)
-      if(input$gcmsButton == 2 && input$yearButton == 1){
-        yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
-        DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
-      }
-
-      if(input$gcmsButton == 1 & input$yearButton == 2) {
-        GCMLineDat <- dataDSM[[1]][dataDSM[[1]]$GCM %in% input$gcms2, ]
-        GCMLineDat_near <- GCMLineDat[GCMLineDat$TP == 'Near', ]
-        head(GCMLineDat_near)
-        str(GCMLineDat_near)
-        DSM_Plot <- DSM_Plot + geom_line(data = GCMLineDat_near, aes(Day, mean), color = '#b8ae23', size = 1.1, linetype = 'dashed')
-        GCMLineDat_late <- GCMLineDat[GCMLineDat$TP == 'Late', ]
-        DSM_Plot <- DSM_Plot + geom_line(data = GCMLineDat_late, aes(Day, mean), color = '#a223b8', size = 1.1, linetype = 'dashed')
-      }
-
-    } else {
-
-      dataDSM[[2]] <- dataDSM[[2]][dataDSM[[2]]$TP == 'Current',]
-
-      DSM_Plot <-  ggplot() +
-        geom_line(data =  dataDSM[[2]],aes(Day, median, color=as.factor(TP)),size=1.1)+
-        #LEGEND
-        scale_color_manual(values=c('black'),name="",labels=c('Current'))+
-        theme_bw()+
-        theme_DSM +
-        #AXES
-        labs(
-          y = 'soil water potential (-MPa)',
-          x = 'Month'
-        )+
-        scale_x_continuous(expand=c(0,0),breaks=c(1,29,60,91,121,152,182,213,244,274,305,335),
-                           labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
-        coord_cartesian(ylim = c(dataDSM[[3]],0)) +
-        #FORMATTING
-        uniformTheme
-
-      if(input$yearButton == 1){
-        yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
-        DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
-      }
-
-    }
-
-    grid.arrange(WL_Plot, DSM_Plot)
-
-  }) #end of Tab 2 Plots
+  # 
+  # #################################################################################################
+  # ######## ---------------- - - - - - - -----  Tab 2  ---- - - - - - - - ----------------  ########
+  # #################################################################################################
+  # output$WL_DSM_Plots <- renderPlot({
+  # 
+  #   req(input$years) #input$years doesn't initally have values .. need this
+  #   data <- run$outs
+  # 
+  #   # Walter-Leith controls ----------------------------------------------------------------------
+  #   dataWL <- formatDataWL(data = data[[1]], future = input$future)
+  # 
+  #   # Daily Soil Moisture Plot controls ----------------------------------------------------------
+  #   dataDSM <- formatDataDSM(data = data[[2]], RCP = input$RCP)
+  # 
+  #   # PLOTTING    --------------------------------------------------------------------------------
+  #   # Walter-Leith Plot ----------------------------------
+  #   diagwl2(dataWL[[1]], RCP = input$RCP,
+  #           Year = input$yearButton, YearChoice = input$years2,
+  #           GCM = input$gcmsButton, GCMc = input$gcms2,
+  #           FUTURE50 = input$future, FUTURE90 = input$future,
+  #           data[[1]], dataWL[[3]], dataWL[[2]],
+  #           est='',alt=NA, per='',margen=c(0.1, .5, 0.4, .2))
+  # 
+  #   grid.echo()
+  #   WL_Plot <- grid.grab()
+  # 
+  #   # Daily Soil Moisture Plot ----------------------------------
+  #   if(input$future == 1) {
+  # 
+  #     RibbonDF <-  dataDSM[[2]][dataDSM[[2]]$TP %in% c('Near', 'Late'), ]
+  # 
+  #     DSM_Plot <-  ggplot() +
+  #           geom_line(data = dataDSM[[2]], aes(Day, median, color=as.factor(TP)),size=1.1)+
+  #           geom_ribbon(data = RibbonDF, aes(x = Day, ymin = min, ymax = max,fill = as.factor(TP)),
+  #                      alpha=0.2) +
+  #           #LEGEND
+  #           scale_color_manual(values=c('black','#b8ae23','#a223b8'),name="",labels=c('Current','Near', 'Long-term'))+
+  #           scale_fill_manual(values=c('#b8ae23','#a223b8'),name="",labels=c('Near', 'Long-term'),guide=FALSE) +
+  #           theme_bw()+
+  #           theme_DSM +
+  #           #AXES
+  #           labs(
+  #             y = 'soil water potential (-MPa)',
+  #             x = 'Month'
+  #           )+
+  #           scale_x_continuous(expand=c(0,0),breaks=c(1,29,60,91,121,152,182,213,244,274,305,335),
+  #                              labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
+  #           coord_cartesian(ylim = c(dataDSM[[3]],0)) +
+  #       #FORMATTING
+  #       uniformTheme
+  # 
+  #     # EXTRA Lines (Ind. Years and GCMs.)
+  #     if(input$gcmsButton == 2 && input$yearButton == 1){
+  #       yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
+  #       DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
+  #     }
+  # 
+  #     if(input$gcmsButton == 1 & input$yearButton == 2) {
+  #       GCMLineDat <- dataDSM[[1]][dataDSM[[1]]$GCM %in% input$gcms2, ]
+  #       GCMLineDat_near <- GCMLineDat[GCMLineDat$TP == 'Near', ]
+  #       head(GCMLineDat_near)
+  #       str(GCMLineDat_near)
+  #       DSM_Plot <- DSM_Plot + geom_line(data = GCMLineDat_near, aes(Day, mean), color = '#b8ae23', size = 1.1, linetype = 'dashed')
+  #       GCMLineDat_late <- GCMLineDat[GCMLineDat$TP == 'Late', ]
+  #       DSM_Plot <- DSM_Plot + geom_line(data = GCMLineDat_late, aes(Day, mean), color = '#a223b8', size = 1.1, linetype = 'dashed')
+  #     }
+  # 
+  #   } else {
+  # 
+  #     dataDSM[[2]] <- dataDSM[[2]][dataDSM[[2]]$TP == 'Current',]
+  # 
+  #     DSM_Plot <-  ggplot() +
+  #       geom_line(data =  dataDSM[[2]],aes(Day, median, color=as.factor(TP)),size=1.1)+
+  #       #LEGEND
+  #       scale_color_manual(values=c('black'),name="",labels=c('Current'))+
+  #       theme_bw()+
+  #       theme_DSM +
+  #       #AXES
+  #       labs(
+  #         y = 'soil water potential (-MPa)',
+  #         x = 'Month'
+  #       )+
+  #       scale_x_continuous(expand=c(0,0),breaks=c(1,29,60,91,121,152,182,213,244,274,305,335),
+  #                          labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
+  #       coord_cartesian(ylim = c(dataDSM[[3]],0)) +
+  #       #FORMATTING
+  #       uniformTheme
+  # 
+  #     if(input$yearButton == 1){
+  #       yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
+  #       DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
+  #     }
+  # 
+  #   }
+  # 
+  #   grid.arrange(WL_Plot, DSM_Plot)
+  # 
+  # }) #end of Tab 2 Plots
 
 }
 # Run the app ----
-shinyApp(ui = ui, server = server)
+shinyApp(ui = htmlTemplate("www/index.html"), server = server)
