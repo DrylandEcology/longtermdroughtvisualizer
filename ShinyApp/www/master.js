@@ -35,6 +35,7 @@ $(document).ready(function(){
     }
   })
 })
+
 function changeMarkerXY(){
   var lat = document.getElementById("latMap").value;
   var long = document.getElementById("longMap").value;
@@ -108,9 +109,18 @@ function sendToR(){
     Shiny.onInputChange("forbs", forbs / 100);
     Shiny.onInputChange("bg", bareground / 100);
     Shiny.onInputChange("simulate", true);
-    changeFeedbackText("<br><p><pre>                 Inputs</pre></p>Latitude: " + lat + "<br>Longitude: " + long + "<br>Calculate Futures: " + calcFutures + "<br>Choose Soils: " + chooseSoils +
-    "<br>Choose Veg Composition " + chooseComp + "<br>Sand: " + sand + "<br>Clay: " + clay + "<br>Trees: " + trees + "<br>Shrubs: " + shrubs + "<br>Grasses: " + grasses +
-    "<br>Forbs: " + forbs + "<br>Bareground: " + bareground + "<br>");
-    changeFeedbackText("Calculation Running...");
+    if (calcFutures == 2) {calcFutures = "No";}
+    else                  {calcFutures = "Yes";}
+    if (chooseSoils == 1) {chooseSoils = "No";}
+    else                  {chooseSoils = "Yes";}
+    if (chooseComp == 1)  {chooseComp = "No";}
+    else                  {chooseComp = "Yes";}
+    changeFeedbackText("<br><p><pre>                 Inputs</pre></p>Latitude: <span id='imp'>" + lat +
+                       "</span><br>Longitude: <span id='imp'>" + long + "</span><br>Calculate Futures: <span id='imp'>" + calcFutures +
+                       "</span><br>Choose Soils: <span id='imp'>" + chooseSoils + "</span><br>Choose Veg Composition <span id='imp'>" + chooseComp +
+                       "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Trees: <span id='imp'>" + trees +
+                       "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
+                       "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>");
+    changeFeedbackText("<span id='imp'>Calculation Running...</span>");
   }
 }

@@ -37,13 +37,13 @@ my_selected <- c('CanESM2', 'CESM1-CAM5', 'CNRM-CM5',
 
 ui <- fluidPage(
   
-  titlePanel("Long-term Drought Simulator"),
-  
+  #titlePanel("Long-term Drought Simulator"),
   tabsetPanel(id = "mainTabset",               # IDEA: Two tabs - site-by-site & multiple sites (file upload).
               
               
               # Sidebar layout with site-by-site definitions ----
-              tabPanel("Site-by-site"#,
+              tabPanel("Site-by-site",
+                       htmlTemplate("www/index.html")
                      # Main panel for outputs ----
                      #mainPanel("Welcome to the long-term drought simulator!")
               ) #end of tab 1
@@ -102,7 +102,6 @@ server <- function(input, output, session) {
 
     endtime <- proc.time() - begintime
     showModal(modalDialog(paste("calculation finished in", round(unname(endtime[3]), 0), "seconds")))
-
     ##################################################################################################
     ######## --------------------------------- Output UI  ---------------------------------  ########
     #################################################################################################
@@ -430,4 +429,4 @@ server <- function(input, output, session) {
 
 }
 # Run the app ----
-shinyApp(ui = c(ui, htmlTemplate("www/index.html")), server = server)
+shinyApp(ui = c(htmlTemplate("www/header.html"), ui, htmlTemplate("www/footer.html")), server = server)
