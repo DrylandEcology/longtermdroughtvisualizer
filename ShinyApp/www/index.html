@@ -16,6 +16,9 @@
       width: 100%;
       border: 1px solid black;
     }
+    body .container-fluid{
+      background-color: #DBE2E9;
+    }
     .centered {
       text-align: center;
     }
@@ -24,16 +27,15 @@
       width: auto;
     }
     #inputs{
-      flex: 1;
       border: 1px solid black;
+    }
+    .whiteBack{
+      background-color: white;
     }
     #simBtn{
-      margin-left: 45%;
+      margin-left: 37%;
     }
-    .card-header{
-      background-color: #4CBB17;
-      border: 1px solid black;
-    }
+
     #feedback{
       height: 50%;
       margin-top: 5px;
@@ -42,55 +44,94 @@
     #imp{
       color: red;
     }
+    #howToTitle{
+      border: 1px solid black;
+    }
+    a{
+      width: 100%;
+    }
+
+    a.panel-heading {
+    display: block;
+  }
+  .panel-primary .panel-heading[aria-expanded="true"], .panel-primary .panel-heading a:hover, .panel-primary .panel-heading a:focus, .panel-primary a.panel-heading:hover, .panel-primary a.panel-heading:focus {
+  	background-color: #286090;
+  }
+  .panel-danger .panel-heading[aria-expanded="true"], .panel-danger .panel-heading a:hover, .panel-danger .panel-heading a:focus, .panel-danger a.panel-heading:hover, .panel-danger a.panel-heading:focus {
+  	background-color: #c9302c;
+  }
+  .panel-default .panel-heading[aria-expanded="true"], .panel-default .panel-heading a:hover, .panel-default .panel-heading a:focus, .panel-default a.panel-heading:hover, .panel-default a.panel-heading:focus {
+  	background-color: #dcdcdc;
+  }
+  .panel-info .panel-heading[aria-expanded="true"], .panel-info .panel-heading a:hover, .panel-info .panel-heading a:focus, .panel-info a.panel-heading:hover, .panel-info a.panel-heading:focus {
+  	background-color: #31b0d5;
+  }
+  .panel-success .panel-heading[aria-expanded="true"], .panel-success .panel-heading a:hover, .panel-success .panel-heading a:focus, .panel-success a.panel-heading:hover, .panel-success a.panel-heading:focus {
+  	background-color: #449d44;
+  }
+  .panel-warning .panel-heading[aria-expanded="true"], .panel-warning .panel-heading a:hover, .panel-warning .panel-heading a:focus, .panel-warning a.panel-heading:hover, .panel-warning a.panel-heading:focus {
+  	background-color: #ec971f;
+  }
+  .panel-group .panel, .panel-group .panel-heading {
+  	border: none !important;
+  }
+  .panel-group .panel-body {
+  	border: 1px solid #ddd !important;
+  	border-width: 0 1px 1px 1px !important;
+  }
+  .panel-group .panel-heading a, .panel-group a.panel-heading {
+  	outline: 0;
+  }
+  .panel-group .panel-heading a:hover, .panel-group .panel-heading a:focus, .panel-group a.panel-heading:hover, .panel-group a.panel-heading:focus {
+  	text-decoration: none;
+  }
+  .panel-group .panel-heading .icon-indicator {
+  	margin-right: 10px;
+  }
+  .panel-group .panel-heading .icon-indicator:before {
+  	content: "\e114";
+  }
+  .panel-group .panel-heading.collapsed .icon-indicator:before {
+  	content: "\e080";
+  }
+  h2.centered{
+    margin-top: 50px;
+  }
   </style>
 </head>
 <div class="container-fluid">
   <body>
     <div class="container" id="firstTab">
-      <h2 class="centered">Site-by-site Configuration</h1>
+      <h2 class="centered">Long-term Drought Simulator</h1>
       <div class="row">
         <div class="col-sm-6">
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">How to #1</a>
-                        </h4>
-                    </div>
-                    <div id="collapseOne" class="panel-collapse collapse in">
-                        <div class="panel-body">
-                            <p>HTML stands for HyperText Markup Language. HTML is the standard markup language for describing the structure of web pages. <a href="https://www.tutorialrepublic.com/html-tutorial/" target="_blank">Learn more.</a></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">How to #2</a>
-                        </h4>
-                    </div>
-                    <div id="collapseTwo" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <p>Bootstrap is a sleek, intuitive, and powerful front-end framework for faster and easier web development. It is a collection of CSS and HTML conventions. <a href="https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/" target="_blank">Learn more.</a></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">How to #3</a>
-                        </h4>
-                    </div>
-                    <div id="collapseThree" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <p>CSS stands for Cascading Style Sheet. CSS allows you to specify various style properties for a given HTML element such as colors, backgrounds, fonts etc. <a href="https://www.tutorialrepublic.com/css-tutorial/" target="_blank">Learn more.</a></p>
-                        </div>
+          <h3 id="howToTitle" class="whiteBack"> How to title </h3>
+          <div aria-multiselectable="true" role="tablist" id="accordion" class="panel-group">
+            <div class="panel panel-default"> <a title="How to 1" aria-controls="collapse1" aria-expanded="false" href="#collapse1" data-parent="#accordion" data-toggle="collapse" id="heading1" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Tab 1</span> </a>
+                <div aria-labelledby="heading1" role="tabpanel" class="panel-collapse collapse" id="collapse1" aria-expanded="false">
+                    <div class="panel-body">
+                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
                     </div>
                 </div>
             </div>
+            <div class="panel panel-default"> <a title="How to 2" aria-controls="collapse2" aria-expanded="false" href="#collapse2" data-parent="#accordion" data-toggle="collapse" id="heading2" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Tab 2</span> </a>
+                <div aria-labelledby="heading2" role="tabpanel" class="panel-collapse collapse" id="collapse2" aria-expanded="false">
+                    <div class="panel-body">
+                        <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default"> <a title="How to 3" aria-controls="collapse3" aria-expanded="false" href="#collapse3" data-parent="#accordion" data-toggle="collapse" id="heading3" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Tab 3</span> </a>
+                <div aria-labelledby="heading3" role="tabpanel" class="panel-collapse collapse" id="collapse3" aria-expanded="false">
+                    <div class="panel-body">
+                        <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         	<p><strong>Note:</strong> Click on the above text to expand or collapse 'how to' tips.</p>
           <br><h3>Status</h3>
-          <div id="feedback">
+          <div id="feedback" class="whiteBack">
             <span id="imp">Input simulation configuration...</span>
           </div>
         </div>
@@ -114,58 +155,62 @@
               </script>
             </div>
           </div>
-          <h3 class="centered">Simulation Inputs</h3><hr>
-          <div class="col-sm-6">
-              <label for="latMap">Lat</label>
-              <input type="number" id="latMap" name="latMap" value="35.1983" min="25" max="49" step=".1" onchange="changeMarkerXY()" >
-              <!-- Future Simulations Options -->
-              <br><br>Future Simulations? <br>
-              <input type="radio" name="futureSim" value="futureTrue"> Yes
-              <input type="radio" name="futureSim" value="futureFalse"> No
-              <br><br>
-
-              <!-- Soils Composition -->
-              Extract or Choose Soils? <br>
-              <input type="radio" name="chooseSoils" value="chooseFalse"> Extract
-              <input type="radio" name="chooseSoils" value="chooseTrue"> Choose
-              <br><br>
-              <div id="chooseSoils">
-                <label for="sand">sand</label>
-                <input type="number" id="sand" name="sand" value="34" min="0" max="100" step="1" onchange="adjustSilt()">
-                <br><label for="clay">clay</label>
-                <input type="number" id="clay" name="clay" value="33" min="0" max="100" step="1" onchange="adjustSilt()">
-                <br><label for="silt">silt</label>
-                <input type="number" id="silt" name="silt" value="33" min="0" max="100" step="1" disabled>
-              </div>
-              <br>
-            </div>
+          <h3 class="centered">Simulation Inputs</h3>
+          <div id="inputs" class="whiteBack">
             <div class="col-sm-6">
-              <label for="longMap">Long</label>
-              <input type="number" id="longMap" name="longMap" value="-111.6513" min="-120" max="-12" step=".1" onchange="changeMarkerXY()">
-              <br><br>
-              <!-- Veg Composition -->
-              Estimate or Choose Comp? <br>
-              <input type="radio" name="chooseComp" value="chooseCompFalse"> Estimate
-              <input type="radio" name="chooseComp" value="chooseCompTrue"> Choose
-              <br><br>
-              <div id="chooseComp">
-                <label for="trees">trees</label>
-                <input type="number" id="trees" name="trees" value="20" min="0" max="100" step="1">
-                <br><label for="shrubs">shrubs</label>
-                <input type="number" id="shrubs" name="shrubs" value="20" min="0" max="100" step="1">
-                <br><label for="grasses">grasses</label>
-                <input type="number" id="grasses" name="grasses" value="20" min="0" max="100" step="1">
-                <br><label for="forbs">forbs</label>
-                <input type="number" id="forbs" name="forbs" value="20" min="0" max="100" step="1">
-                <br><label for="bareground">bareground</label>
-                <input type="number" id="bareground" name="bareground" value="20" min="0" max="100" step="1">
+                <br>
+                <label for="latMap">Lat</label>
+                <input type="number" id="latMap" name="latMap" value="35.1983" min="25" max="49" step=".1" onchange="changeMarkerXY()" >
+                <!-- Future Simulations Options -->
+                <br><br>Future Simulations? <br>
+                <input type="radio" name="futureSim" value="futureTrue"> Yes
+                <input type="radio" name="futureSim" value="futureFalse"> No
+                <br><br>
+
+                <!-- Soils Composition -->
+                Extract or Choose Soils? <br>
+                <input type="radio" name="chooseSoils" value="chooseFalse"> Extract
+                <input type="radio" name="chooseSoils" value="chooseTrue"> Choose
+                <br><br>
+                <div id="chooseSoils">
+                  <label for="sand">Sand</label>
+                  <input type="number" id="sand" name="sand" value="34" min="0" max="100" step="1" onchange="adjustSilt()">
+                  <br><label for="clay">Clay</label>
+                  <input type="number" id="clay" name="clay" value="33" min="0" max="100" step="1" onchange="adjustSilt()">
+                  <br><label for="silt">Silt</label>
+                  <input type="number" id="silt" name="silt" value="33" min="0" max="100" step="1" disabled>
+                </div>
+                <br>
               </div>
-              <br><br>
-          </div>
+              <div class="col-sm-6">
+                <br>
+                <label for="longMap">Long</label>
+                <input type="number" id="longMap" name="longMap" value="-111.6513" min="-120" max="-12" step=".1" onchange="changeMarkerXY()">
+                <br><br>
+                <!-- Veg Composition -->
+                Estimate or Choose Comp? <br>
+                <input type="radio" name="chooseComp" value="chooseCompFalse"> Estimate
+                <input type="radio" name="chooseComp" value="chooseCompTrue"> Choose
+                <br><br>
+                <div id="chooseComp">
+                  <label for="trees">Trees</label>
+                  <input type="number" id="trees" name="trees" value="20" min="0" max="100" step="1">
+                  <br><label for="shrubs">Shrubs</label>
+                  <input type="number" id="shrubs" name="shrubs" value="20" min="0" max="100" step="1">
+                  <br><label for="grasses">Grasses</label>
+                  <input type="number" id="grasses" name="grasses" value="20" min="0" max="100" step="1">
+                  <br><label for="forbs">Forbs</label>
+                  <input type="number" id="forbs" name="forbs" value="20" min="0" max="100" step="1">
+                  <br><label for="bareground">Bg</label>
+                  <input type="number" id="bareground" name="bareground" value="20" min="0" max="100" step="1">
+                </div>
+                <br><br>
+            </div>
+            <button id="simBtn" onclick="sendToR()"> Simulate </button>
+            <br><br>
+          </div><br>
         </div>
       </div>
-      <button id="simBtn" onclick="sendToR()"> Simulate </button>
-      <br>
     </div>
   </div>
   </body>

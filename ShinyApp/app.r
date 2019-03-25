@@ -47,9 +47,9 @@ ui <- fluidPage(
                      # Main panel for outputs ----
                      #mainPanel("Welcome to the long-term drought simulator!")
               ) #end of tab 1
-  ), # end of tabset
+  )#, # end of tabset
   # Important! : 'Freshly baked' tabs first enter here.
-  uiOutput("creationPool", style = "display: none;")
+  #uiOutput("creationPool", style = "display: none;")
   # End Important
 )# end of UI
 
@@ -66,9 +66,7 @@ server <- function(input, output, session) {
   # bootstrap
   tags$link(href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
   tags$script(src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
-  
-  tabsetPanel(id="mainTabset")
-  
+  tags$link(href = "stylesheets/custom.css")
   # Important! : creationPool should be hidden to avoid elements flashing before they are moved.
   #              But hidden elements are ignored by shiny, unless this option below is set.
   output$creationPool <- renderUI({})
