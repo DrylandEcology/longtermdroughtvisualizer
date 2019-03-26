@@ -1,4 +1,3 @@
-// 1 = true, 2 = false
 var chooseSoils = 2;
 var chooseComp = 2;
 var calcFutures = 2;
@@ -57,20 +56,12 @@ $(document).ready(function(){
 function changeMarkerXY(){
   var lat = document.getElementById("latMap").value;
   var long = document.getElementById("longMap").value;
-  //var map = L.map('map').setView([lat, long], 9);
-
-  //L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  //    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  //}).addTo(map);
   layerGroup.clearLayers();
   var marker = L.marker([lat, long], {draggable: true}).addTo(layerGroup);
   marker.on('drag', function(e){
     document.getElementById("latMap").value = marker.getLatLng().lat;
     document.getElementById("longMap").value = marker.getLatLng().lng;
   })
-
-  //document.getElementById("latMap").value = marker.getLatLng();
-  //L.marker.setLatLng([lat, long]);
 }
 
 function changeFeedbackText(status){
@@ -135,24 +126,19 @@ function sendToR(){
     else                  {chooseSoils = "Yes";}
     if (chooseComp == 1)  {chooseComp = "No";}
     else                  {chooseComp = "Yes";}
-    // show feedback text for input values
-    /*changeFeedbackText("<br><p><pre>                 Inputs</pre></p>Latitude: <span id='imp'>" + lat +
-                       "</span><br>Longitude: <span id='imp'>" + long + "</span><br>Calculate Futures: <span id='imp'>" + calcFutures +
-                       "</span><br>Choose Soils: <span id='imp'>" + chooseSoils + "</span><br>Choose Veg Composition <span id='imp'>" + chooseComp +
-                       "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Trees: <span id='imp'>" + trees +
-                       "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
-                       "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>");
-    */
     changeFeedbackText("<br>Simulation running on location <span id='imp'>[" + lat + ", " +
                        long + "]</span> with calculate futures set to <span id='imp'>" + calcFutures +
                        "</span>.<br><br><pre>     Soils composition set to: </pre><span id='imp'>" +
-                      "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Type (BETA): <span id='imp'>" + calcSoilType(sand, clay) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
+                      "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Type (BETA): <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
                        "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
                        "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>");
    changeFeedbackText("<span id='imp'>Calculation Running...</span>");
   }
-
-  function calcSoilType(sand, clay){
+  /*
+    * Calculates the type of soil a composition of sand, clay and silt are classified as
+    * @returns string, indicating type of soil
+  */
+  function calcSoilType(sand, clay, silt){
     // categorize soil composition
     if (sand > 85 && (silt + 1.5 * clay) < 15){
       return "Sand";

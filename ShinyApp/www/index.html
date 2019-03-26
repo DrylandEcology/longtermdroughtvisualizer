@@ -138,47 +138,62 @@
 </head>
 <div class="container-fluid">
   <body>
+    <!-- Content container with borders on either side -->
     <div class="container" id="firstTab">
       <h2 class="centered"><b>Site-by-site</b></h1>
       <div class="row">
         <div class="col-sm-6">
+          <!-- Description about the long term simulation -->
           <h3 id="howToTitle" class="whiteBack">About Long-term drought Simulator</h3>
+          <!-- Create tip dropdowns -->
           <div aria-multiselectable="true" role="tablist" id="accordion" class="panel-group">
+            <!-- Dropdown 1 -->
             <div class="panel panel-default"> <a name="tab1" title="How to 1" aria-controls="collapse1" aria-expanded="false" href="#collapse1" data-parent="#accordion" data-toggle="collapse" id="heading1" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Location</span> </a>
                 <div aria-labelledby="heading1" role="tabpanel" class="panel-collapse collapse" id="collapse1" aria-expanded="false">
                     <div class="panel-body">
+                        <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
                         <p>The locations setting indicates the latitude and longitude of the site that the simulation should be run on.</p>
                     </div>
                 </div>
             </div>
+            <!-- Dropdown 2 -->
             <div class="panel panel-default"> <a title="How to 2" aria-controls="collapse2" aria-expanded="false" href="#collapse2" data-parent="#accordion" data-toggle="collapse" id="heading2" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Future Simulations</span> </a>
                 <div aria-labelledby="heading2" role="tabpanel" class="panel-collapse collapse" id="collapse2" aria-expanded="false">
                     <div class="panel-body">
+                        <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
                         <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
                     </div>
                 </div>
             </div>
+            <!-- Dropdown 3 -->
             <div class="panel panel-default"> <a title="How to 3" aria-controls="collapse3" aria-expanded="false" href="#collapse3" data-parent="#accordion" data-toggle="collapse" id="heading3" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Soils Compositions</span> </a>
                 <div aria-labelledby="heading3" role="tabpanel" class="panel-collapse collapse" id="collapse3" aria-expanded="false">
                     <div class="panel-body">
+                        <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
                         <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.</p>
                     </div>
                 </div>
             </div>
+            <!-- Dropdown 4 -->
             <div class="panel panel-default"> <a title="How to 4" aria-controls="collapse4" aria-expanded="false" href="#collapse4" data-parent="#accordion" data-toggle="collapse" id="heading4" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Vegetation Compositions</span> </a>
                 <div aria-labelledby="heading3" role="tabpanel" class="panel-collapse collapse" id="collapse4" aria-expanded="false">
                     <div class="panel-body">
+                        <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
                         <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.</p>
                     </div>
                 </div>
             </div>
         </div>
-        	<p><strong>Note:</strong> Click on the above text to expand or collapse 'how to' tips.</p>
+        <!-- Dropdown note, displayed directly below dropdown menu -->
+        <p><strong>Note:</strong> Click on the above text to expand or collapse 'how to' tips.</p>
+        <!-- Status box -->
           <br><h3 class="centered"><b>Status</b></h3>
           <div id="feedback" class="greyBack">
+            <!-- Content for status box, is updated dynamically using javascript in master.js-->
             <span id="imp">Input simulation configuration...</span>
           </div>
         </div>
+          <!-- Leaflet map -->
           <div class="col-sm-6">
             <div id="greyBack">
               <div id='map'>
@@ -199,14 +214,13 @@
               </script>
             </div>
           </div>
+          <!-- Simulation Inputs Box-->
           <h3 class="centered"><b>Simulation Inputs</b></h3>
           <br>
-
           <div id="inputs" class="whiteBack">
             <h4 class="centered">Location Settings <i class='glyphicon glyphicon-info-sign' id="moreTip1" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Site location for simulation run. See highlighted tab for more."></i></a></h4>
             <div class="row">
               <div class="col-sm-3">
-
               </div>
               <div class="col-sm-3">
                 <div class="centered" style="background-color:white;">
@@ -314,7 +328,6 @@
                   <input type="number" id="bareground" name="bareground" value="20" min="0" max="100" step="1">
                 </div>
                 <br><br>
-
             <button id="simBtn" onclick="sendToR()" > Simulate </button>
             <br><br>
             </div>
@@ -322,6 +335,7 @@
           </div>
           <br>
         </div>
+        <!-- More information and Data sources placeholders, add text for this here -->
         <h3 class="centered"> More Information </h3>
         <h3 class="centered"> Data Sources </h3>
       </div>
