@@ -49,6 +49,7 @@
       color: red;
     }
     #howToTitle{
+      margin-top: 0px;
       border: 1px solid black;
     }
     .greyBack{
@@ -140,7 +141,7 @@
   <body>
     <!-- Content container with borders on either side -->
     <div class="container" id="firstTab">
-      <h2 class="centered"><b>Site-by-site</b></h1>
+      <h2 class="centered"><b>Long-term Drought Simulator</b></h1>
       <div class="row">
         <div class="col-sm-6">
           <!-- Description about the long term simulation -->
@@ -176,7 +177,16 @@
             </div>
             <!-- Dropdown 4 -->
             <div class="panel panel-default"> <a title="How to 4" aria-controls="collapse4" aria-expanded="false" href="#collapse4" data-parent="#accordion" data-toggle="collapse" id="heading4" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Vegetation Compositions</span> </a>
-                <div aria-labelledby="heading3" role="tabpanel" class="panel-collapse collapse" id="collapse4" aria-expanded="false">
+                <div aria-labelledby="heading4" role="tabpanel" class="panel-collapse collapse" id="collapse4" aria-expanded="false">
+                    <div class="panel-body">
+                        <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
+                        <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Dropdown 5 -->
+            <div class="panel panel-default"> <a title="How to 5" aria-controls="collapse5" aria-expanded="false" href="#collapse5" data-parent="#accordion" data-toggle="collapse" id="heading5" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Status</span> </a>
+                <div aria-labelledby="heading5" role="tabpanel" class="panel-collapse collapse" id="collapse5" aria-expanded="false">
                     <div class="panel-body">
                         <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
                         <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.</p>
@@ -187,7 +197,7 @@
         <!-- Dropdown note, displayed directly below dropdown menu -->
         <p><strong>Note:</strong> Click on the above text to expand or collapse 'how to' tips.</p>
         <!-- Status box -->
-          <br><h3 class="centered"><b>Status</b></h3>
+          <br><h3 class="centered"><b>Status</b><i class='glyphicon glyphicon-info-sign' style="margin-left:5px; margin-bottom:1px;" id="moreTip5" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Status messages related to running the simulation. See highlighted tab for more."></i></a></h3>
           <div id="feedback" class="greyBack">
             <!-- Content for status box, is updated dynamically using javascript in master.js-->
             <span id="imp">Input simulation configuration...</span>
@@ -258,10 +268,9 @@
                 </div>
                   <br><br>
                 </div>
-
-              <h4 class="centered">Composition Settings <i class='glyphicon glyphicon-info-sign' id="moreTip3" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set compositions or have the program extract them for you. See highlighted tabs for more."></i></h4><br>
+                <br>
+              <h4 class="centered">Extract or Choose Soils? <i class='glyphicon glyphicon-info-sign' id="moreTip3" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set soils compositions or have the program extract them for you. See highlighted tabs for more."></i></h4>
                 <!-- Soils Composition -->
-                <h5 class="centered" id="whiteBack" style="background-color:white;"><em>Extract or Choose Soils?</em></h5>
                 <div class="row">
                   <div class="col-sm-3">
                   </div>
@@ -281,22 +290,31 @@
                 </div>
                 <br>
                 <div id="chooseSoils">
-                  <label for="sand">Sand</label>
-                  <input type="number" id="sand" name="sand" value="34" min="0" max="100" step="1" onchange="adjustSilt()">
-                  <br><label for="clay">Clay</label>
-                  <input type="number" id="clay" name="clay" value="33" min="0" max="100" step="1" onchange="adjustSilt()">
-                  <br><label for="silt">Silt</label>
-                  <input type="number" id="silt" name="silt" value="33" min="0" max="100" step="1" disabled>
-                </div>
-                <br>
-
-                <!-- Veg Composition -->
-                <div class="row">
-                  <div class="col-sm-12">
-                    <h5 class="centered" id="whiteBack" style="background-color:white;"><em>Estimate or Choose Vegetation?</em></h5>
+                  <img src="images/soilTexTri.png" height="50%" width="100%"/></img>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="sand">Sand</label><br>
+                        <input type="number" id="sand" name="sand" value="34" min="0" max="100" step="1" onchange="adjustSilt()">
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="clay">Clay</label><br>
+                        <input type="number" id="clay" name="clay" value="33" min="0" max="100" step="1" onchange="adjustSilt()">
+                    </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="silt">Silt</label><br>
+                        <input type="number" id="silt" name="silt" value="33" min="0" max="100" step="1" disabled>
+                      </div>
+                    </div>
+                    <br><br>
                   </div>
                 </div>
-
+                <!-- Veg Composition -->
+                <h4 class="centered">Estimate or Choose Vegetation? <i class='glyphicon glyphicon-info-sign' id="moreTip4" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set vegetation compositions or have the program extract them for you. See highlighted tabs for more."></i></h4>
                 <div class="row">
                   <div class="col-sm-3">
                   </div>
@@ -316,28 +334,56 @@
                 </div>
                 <br>
                 <div id="chooseComp">
-                  <label for="trees">Trees</label>
-                  <input type="number" id="trees" name="trees" value="20" min="0" max="100" step="1">
-                  <br><label for="shrubs">Shrubs</label>
-                  <input type="number" id="shrubs" name="shrubs" value="20" min="0" max="100" step="1">
-                  <br><label for="grasses">Grasses</label>
-                  <input type="number" id="grasses" name="grasses" value="20" min="0" max="100" step="1">
-                  <br><label for="forbs">Forbs</label>
-                  <input type="number" id="forbs" name="forbs" value="20" min="0" max="100" step="1">
-                  <br><label for="bareground">Bg</label>
-                  <input type="number" id="bareground" name="bareground" value="20" min="0" max="100" step="1">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="trees">Trees</label>
+                        <input type="number" id="trees" name="trees" value="20" min="0" max="100" step="1">
+                      </div>
+                      <div class="centered" style="background-color:white;">
+                        <br><label for="shrubs">Shrubs</label>
+                        <input type="number" id="shrubs" name="shrubs" value="20" min="0" max="100" step="1">
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="grasses">Grasses</label>
+                        <input type="number" id="grasses" name="grasses" value="20" min="0" max="100" step="1">
+                      </div>
+                      <div class="centered" style="background-color:white;">
+                        <br><label for="forbs">Forbs</label>
+                        <input type="number" id="forbs" name="forbs" value="20" min="0" max="100" step="1"><br><br>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="bareground">Bg</label><br>
+                        <input type="number" id="bareground" name="bareground" value="20" min="0" max="100" step="1">
+                      </div>
+                      <div class="centered" style="background-color:white;">
+                        <br><label for="sand">Sand</label><br>
+                        <input type="number" id="sand" name="sand" value="34" min="0" max="100" step="1" onchange="adjustSilt()">
+                      </div>
+                    </div>
+                    <br><br>
+                  </div>
                 </div>
-                <br><br>
-            <button id="simBtn" onclick="sendToR()" > Simulate </button>
-            <br><br>
+                <button id="simBtn" onclick="sendToR()">Simulate</button><br><br>
             </div>
             </div>
           </div>
           <br>
         </div>
         <!-- More information and Data sources placeholders, add text for this here -->
-        <h3 class="centered"> More Information </h3>
-        <h3 class="centered"> Data Sources </h3>
+        <div class="row">
+          <h3 class="centered"> More Information </h3><hr>
+          <p>faerceravferavmireapovmreaviermvrea;mvo;erasimvoeir;vmero;vmero;ivmermvsdddddddddddddddddddddddd</p>
+        </div>
+        <div class="row">
+          <h3 class="centered"> Data Sources </h3><hr>
+          <p>faerceravferavmireapovmreaviermvrea;mvo;erasimvoeir;vmero;vmero;ivmermvsdddddddddddddddddddddddd</p>
+        </div>
       </div>
     </div>
   </div>

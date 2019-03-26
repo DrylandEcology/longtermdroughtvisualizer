@@ -18,10 +18,18 @@ $(document).ready(function(){
   });
   $("#moreTip3").hover(function(){
     $("#heading3").attr("aria-expanded", "true");
-    $("#heading4").attr("aria-expanded", "true");
   }, function(){
     $("#heading3").attr("aria-expanded", "false");
+  });
+  $("#moreTip4").hover(function(){
+    $("#heading4").attr("aria-expanded", "true");
+  }, function(){
     $("#heading4").attr("aria-expanded", "false");
+  });
+  $("#moreTip5").hover(function(){
+    $("#heading5").attr("aria-expanded", "true");
+  }, function(){
+    $("#heading5").attr("aria-expanded", "false");
   });
   // when a radio button is clicked
   $('input[type="radio"]').click(function(){
@@ -129,7 +137,7 @@ function sendToR(){
     changeFeedbackText("<br>Simulation running on location <span id='imp'>[" + lat + ", " +
                        long + "]</span> with calculate futures set to <span id='imp'>" + calcFutures +
                        "</span>.<br><br><pre>     Soils composition set to: </pre><span id='imp'>" +
-                      "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Type (BETA): <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
+                      "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
                        "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
                        "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>");
    changeFeedbackText("<span id='imp'>Calculation Running...</span>");
