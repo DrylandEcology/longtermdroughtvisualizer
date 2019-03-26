@@ -6,6 +6,24 @@ var calcFutures = 2;
 $(document).ready(function(){
   $("#chooseSoils").hide();
   $("#chooseComp").hide();
+  $('[data-toggle="tooltip"]').tooltip();
+  $("#moreTip1").hover(function(){
+    $("#heading1").attr("aria-expanded", "true");
+  }, function(){
+    $("#heading1").attr("aria-expanded", "false");
+  });
+  $("#moreTip2").hover(function(){
+    $("#heading2").attr("aria-expanded", "true");
+  }, function(){
+    $("#heading2").attr("aria-expanded", "false");
+  });
+  $("#moreTip3").hover(function(){
+    $("#heading3").attr("aria-expanded", "true");
+    $("#heading4").attr("aria-expanded", "true");
+  }, function(){
+    $("#heading3").attr("aria-expanded", "false");
+    $("#heading4").attr("aria-expanded", "false");
+  });
   // when a radio button is clicked
   $('input[type="radio"]').click(function(){
     // button click for soil radios
@@ -128,9 +146,49 @@ function sendToR(){
     changeFeedbackText("<br>Simulation running on location <span id='imp'>[" + lat + ", " +
                        long + "]</span> with calculate futures set to <span id='imp'>" + calcFutures +
                        "</span>.<br><br><pre>     Soils composition set to: </pre><span id='imp'>" +
-                      "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
+                      "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Type (BETA): <span id='imp'>" + calcSoilType(sand, clay) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
                        "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
                        "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>");
    changeFeedbackText("<span id='imp'>Calculation Running...</span>");
+  }
+
+  function calcSoilType(sand, clay){
+    // categorize soil composition
+    if (sand > 85 && (silt + 1.5 * clay) < 15){
+      return "Sand";
+    }
+    else if (sand >= 70 && sand <= 90 && (silt + (1.5 * clay) >= 15) && (silt + (2 * clay)) < 30){
+      return "Loamy Sand";
+    }
+    else if (clay >= 7 && clay < 20 & sand > 52 && (silt + 2 * clay) >= 30){
+      return "Sandy Loam";
+    }
+    else if (clay >= 7 && clay < 27 && silt >= 28 && silt < 50 && sand <= 52){
+      return "Loam";
+    }
+    else if ((silt >= 50 && clay >= 12 && clay < 27) || (silt >= 50 && silt < 80 && clay < 12)){
+      return "Silt Loam";
+    }
+    else if (silt >= 80 && clay < 12){
+      return "Silt";
+    }
+    else if (clay >= 20 && clay < 35 && silt < 28 && sand > 45){
+      return "Sandy Clay Loam";
+    }
+    else if (clay >= 27 && clay < 40 && sand > 20 && sand < 45){
+      return "Clay Loam";
+    }
+    else if (clay >= 27 && clay < 40 && sand <= 20){
+      return "Silty Clay Loam";
+    }
+    else if (clay >= 35 && sand >= 45){
+      return "Sandy Clay";
+    }
+    else if (clay >= 40 && silt >= 40){
+      return "Silty Clay";
+    }
+    else if (clay >= 40 && sand <= 45 && silt < 40){
+      return "Clay";
+    }
   }
 }

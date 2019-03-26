@@ -19,12 +19,16 @@
     body .container-fluid{
       background-color: #DBE2E9;
     }
+    body .container-fluid{
+      background-color: #DBE2E9;
+    }
     .centered {
       text-align: center;
     }
     #howTo{
       border: 1px solid black;
       width: auto;
+      margin-top: 0px;
     }
     #inputs{
       border: 1px solid black;
@@ -33,7 +37,7 @@
       background-color: white;
     }
     #simBtn{
-      margin-left: 37%;
+      margin-left: 40%;
     }
 
     #feedback{
@@ -46,6 +50,9 @@
     }
     #howToTitle{
       border: 1px solid black;
+    }
+    .greyBack{
+      background-color: #F1F1F1;
     }
     a{
       width: 100%;
@@ -97,32 +104,69 @@
   h2.centered{
     margin-top: 50px;
   }
+  /* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+.glyphicon.glyphicon-info-sign{
+  font-size: 15px;
+  margin-bottom: 1px;
+}
   </style>
 </head>
 <div class="container-fluid">
   <body>
     <div class="container" id="firstTab">
-      <h2 class="centered">Long-term Drought Simulator</h1>
+      <h2 class="centered"><b>Site-by-site</b></h1>
       <div class="row">
         <div class="col-sm-6">
-          <h3 id="howToTitle" class="whiteBack"> How to title </h3>
+          <h3 id="howToTitle" class="whiteBack">About Long-term drought Simulator</h3>
           <div aria-multiselectable="true" role="tablist" id="accordion" class="panel-group">
-            <div class="panel panel-default"> <a title="How to 1" aria-controls="collapse1" aria-expanded="false" href="#collapse1" data-parent="#accordion" data-toggle="collapse" id="heading1" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Tab 1</span> </a>
+            <div class="panel panel-default"> <a name="tab1" title="How to 1" aria-controls="collapse1" aria-expanded="false" href="#collapse1" data-parent="#accordion" data-toggle="collapse" id="heading1" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Location</span> </a>
                 <div aria-labelledby="heading1" role="tabpanel" class="panel-collapse collapse" id="collapse1" aria-expanded="false">
                     <div class="panel-body">
-                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                        <p>The locations setting indicates the latitude and longitude of the site that the simulation should be run on.</p>
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default"> <a title="How to 2" aria-controls="collapse2" aria-expanded="false" href="#collapse2" data-parent="#accordion" data-toggle="collapse" id="heading2" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Tab 2</span> </a>
+            <div class="panel panel-default"> <a title="How to 2" aria-controls="collapse2" aria-expanded="false" href="#collapse2" data-parent="#accordion" data-toggle="collapse" id="heading2" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Future Simulations</span> </a>
                 <div aria-labelledby="heading2" role="tabpanel" class="panel-collapse collapse" id="collapse2" aria-expanded="false">
                     <div class="panel-body">
                         <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default"> <a title="How to 3" aria-controls="collapse3" aria-expanded="false" href="#collapse3" data-parent="#accordion" data-toggle="collapse" id="heading3" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Tab 3</span> </a>
+            <div class="panel panel-default"> <a title="How to 3" aria-controls="collapse3" aria-expanded="false" href="#collapse3" data-parent="#accordion" data-toggle="collapse" id="heading3" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Soils Compositions</span> </a>
                 <div aria-labelledby="heading3" role="tabpanel" class="panel-collapse collapse" id="collapse3" aria-expanded="false">
+                    <div class="panel-body">
+                        <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default"> <a title="How to 4" aria-controls="collapse4" aria-expanded="false" href="#collapse4" data-parent="#accordion" data-toggle="collapse" id="heading4" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Vegetation Compositions</span> </a>
+                <div aria-labelledby="heading3" role="tabpanel" class="panel-collapse collapse" id="collapse4" aria-expanded="false">
                     <div class="panel-body">
                         <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.</p>
                     </div>
@@ -130,8 +174,8 @@
             </div>
         </div>
         	<p><strong>Note:</strong> Click on the above text to expand or collapse 'how to' tips.</p>
-          <br><h3>Status</h3>
-          <div id="feedback" class="whiteBack">
+          <br><h3 class="centered"><b>Status</b></h3>
+          <div id="feedback" class="greyBack">
             <span id="imp">Input simulation configuration...</span>
           </div>
         </div>
@@ -155,23 +199,73 @@
               </script>
             </div>
           </div>
-          <h3 class="centered">Simulation Inputs</h3>
-          <div id="inputs" class="whiteBack">
-            <div class="col-sm-6">
-                <br>
-                <label for="latMap">Lat</label>
-                <input type="number" id="latMap" name="latMap" value="35.1983" min="25" max="49" step=".1" onchange="changeMarkerXY()" >
-                <!-- Future Simulations Options -->
-                <br><br>Future Simulations? <br>
-                <input type="radio" name="futureSim" value="futureTrue"> Yes
-                <input type="radio" name="futureSim" value="futureFalse"> No
-                <br><br>
+          <h3 class="centered"><b>Simulation Inputs</b></h3>
+          <br>
 
+          <div id="inputs" class="whiteBack">
+            <h4 class="centered">Location Settings <i class='glyphicon glyphicon-info-sign' id="moreTip1" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Site location for simulation run. See highlighted tab for more."></i></a></h4>
+            <div class="row">
+              <div class="col-sm-3">
+
+              </div>
+              <div class="col-sm-3">
+                <div class="centered" style="background-color:white;">
+                  <label for="latMap">Lat</label><br>
+                  <input type="number" id="latMap" name="latMap" value="35.1983" min="25" max="49" step=".01" onchange="changeMarkerXY()" >
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="centered" style="background-color:white;">
+                  <label for="longMap">Long</label><br>
+                  <input type="number" id="longMap" name="longMap" value="-111.6513" min="-120" max="-12" step=".01" onchange="changeMarkerXY()">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <br>
+              </div>
+            </div>
+
+            <!-- Future Simulations Options -->
+            <br><h4 class="centered">Future Simulations <i class='glyphicon glyphicon-info-sign' id="moreTip2" src="images/marker-icon.png" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Indicate whether you would like to run future scenarios in the simulation. See highlighted tab for more."></i></h4>
+              <div class="row">
+                <div class="col-sm-3">
+                </div>
+                <div class="col-sm-3">
+                  <div class="centered" style="background-color:white;">
+                    <input type="radio" name="futureSim" value="futureTrue"> Yes
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="centered" style="background-color:white;">
+                    <input type="radio" name="futureSim" value="futureFalse"> No
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                </div>
+                  <br><br>
+                </div>
+
+              <h4 class="centered">Composition Settings <i class='glyphicon glyphicon-info-sign' id="moreTip3" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set compositions or have the program extract them for you. See highlighted tabs for more."></i></h4><br>
                 <!-- Soils Composition -->
-                Extract or Choose Soils? <br>
-                <input type="radio" name="chooseSoils" value="chooseFalse"> Extract
-                <input type="radio" name="chooseSoils" value="chooseTrue"> Choose
-                <br><br>
+                <h5 class="centered" id="whiteBack" style="background-color:white;"><em>Extract or Choose Soils?</em></h5>
+                <div class="row">
+                  <div class="col-sm-3">
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="centered" style="background-color:white;">
+                      <input type="radio" name="chooseSoils" value="chooseFalse"> Extract
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="centered" style="background-color:white;">
+                      <input type="radio" name="chooseSoils" value="chooseTrue"> Choose
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                  </div>
+                    <br><br>
+                </div>
+                <br>
                 <div id="chooseSoils">
                   <label for="sand">Sand</label>
                   <input type="number" id="sand" name="sand" value="34" min="0" max="100" step="1" onchange="adjustSilt()">
@@ -181,17 +275,32 @@
                   <input type="number" id="silt" name="silt" value="33" min="0" max="100" step="1" disabled>
                 </div>
                 <br>
-              </div>
-              <div class="col-sm-6">
-                <br>
-                <label for="longMap">Long</label>
-                <input type="number" id="longMap" name="longMap" value="-111.6513" min="-120" max="-12" step=".1" onchange="changeMarkerXY()">
-                <br><br>
+
                 <!-- Veg Composition -->
-                Estimate or Choose Comp? <br>
-                <input type="radio" name="chooseComp" value="chooseCompFalse"> Estimate
-                <input type="radio" name="chooseComp" value="chooseCompTrue"> Choose
-                <br><br>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <h5 class="centered" id="whiteBack" style="background-color:white;"><em>Estimate or Choose Vegetation?</em></h5>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-3">
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="centered" style="background-color:white;">
+                      <input type="radio" name="chooseComp" value="chooseCompFalse"> Estimate
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="centered" style="background-color:white;">
+                      <input type="radio" name="chooseComp" value="chooseCompTrue"> Choose
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                  </div>
+                    <br><br>
+                </div>
+                <br>
                 <div id="chooseComp">
                   <label for="trees">Trees</label>
                   <input type="number" id="trees" name="trees" value="20" min="0" max="100" step="1">
@@ -205,11 +314,16 @@
                   <input type="number" id="bareground" name="bareground" value="20" min="0" max="100" step="1">
                 </div>
                 <br><br>
-            </div>
-            <button id="simBtn" onclick="sendToR()"> Simulate </button>
+
+            <button id="simBtn" onclick="sendToR()" > Simulate </button>
             <br><br>
-          </div><br>
+            </div>
+            </div>
+          </div>
+          <br>
         </div>
+        <h3 class="centered"> More Information </h3>
+        <h3 class="centered"> Data Sources </h3>
       </div>
     </div>
   </div>
