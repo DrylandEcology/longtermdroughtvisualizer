@@ -42,7 +42,7 @@ $(document).ready(function(){
       $("#chooseComp").hide();
       chooseComp = 1;
     }
-    // button click for futrue radios
+    // button click for future radios
     if($(this).attr("value") == "futureTrue"){
       calcFutures = 1;
     }
