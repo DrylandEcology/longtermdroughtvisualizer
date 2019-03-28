@@ -4,24 +4,32 @@
 #map {
   height: 400px;
   width: 100%;
-  border: 1px solid black;
+  border: 1px solid #CCCCCC;
 }
 body .container-fluid{
-  background-color: #DBE2E9;
+  background-color: #FAFAFA;
 }
-body .container-fluid{
-  background-color: #DBE2E9;
+h1, h2, h3, h4, h5, h6{
+  color: #424242;
+  font-weight: 500;
+  font-family: inherit;
 }
 .centered {
   text-align: center;
+  background-color: #FAFAFA;
+}
+hr{
+  border: none;
+  height: 1px;
+  color: #CCCCCC;
 }
 #howTo{
-  border: 1px solid black;
+  border: 1px solid #CCCCCC;
   width: auto;
   margin-top: 0px;
 }
 #inputs{
-  border: 1px solid black;
+  border: 1px solid #CCCCCC;
 }
 .whiteBack{
   background-color: white;
@@ -33,20 +41,21 @@ body .container-fluid{
 #feedback{
   height: 50%;
   margin-top: 5px;
-  border: 1px solid black;
+  border: 1px solid #CCCCCC;
 }
 #imp{
   color: red;
 }
 #howToTitle{
   margin-top: 0px;
-  border: 1px solid black;
+  border: 1px solid #CCCCCC;
 }
 .greyBack{
   background-color: #F1F1F1;
 }
 a{
   width: 100%;
+  color: #0275d8;
 }
 a.panel-heading {
 display: block;
@@ -92,35 +101,34 @@ content: "\e114";
 content: "\e080";
 }
 h2.centered{
-margin-top: 50px;
+  margin-top: 50px;
 }
 /* Tooltip container */
 .tooltip {
-position: relative;
-display: inline-block;
-border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
 /* Tooltip text */
 .tooltip .tooltiptext {
-visibility: hidden;
-width: 120px;
-background-color: black;
-color: #fff;
-text-align: center;
-padding: 5px 0;
-border-radius: 6px;
-
-/* Position the tooltip text - see examples below! */
-position: absolute;
-z-index: 1;
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
 }
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
-visibility: visible;
+  visibility: visible;
 }
 /* Style for tooltip image */
 .glyphicon.glyphicon-info-sign{
-font-size: 15px;
-margin-bottom: 1px;
+  font-size: 15px;
+  margin-bottom: 1px;
 }

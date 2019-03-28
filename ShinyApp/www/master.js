@@ -83,6 +83,7 @@ function adjustSilt(){
   if (siltVal >= 0){
     document.getElementById("silt").value = siltVal;
   }
+  drawPoint(sand, clay);
 }
 /*
  * Send information derived from user inputs to R
