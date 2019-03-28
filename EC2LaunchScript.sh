@@ -83,7 +83,7 @@
       R CMD INSTALL rSOILWAT2
 
       # clone and install rSFSW2
-      git clone -b master --single-branch https://github.com/DrylandEcology/rSFSW2
+      git clone -b feature_CDIfixes --single-branch https://github.com/DrylandEcology/rSFSW2
       R CMD INSTALL rSFSW2
 
       # clone and install Shiny App Code
