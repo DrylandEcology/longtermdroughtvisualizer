@@ -14,31 +14,13 @@ $(document).ready(function(){
   // allow tooltips to show when highlighted
   $('[data-toggle="tooltip"]').tooltip();
   // show tooltip detail panel highlighting
-  $("#moreTip1").hover(function(){
-    $("#heading1").attr("aria-expanded", "true");
+  var heading;
+  $('.glyphicon.glyphicon-info-sign').hover(function(){
+    heading = $('#heading' + this.id.substr(this.id.length - 1));
+    heading.attr("aria-expanded", "true");
   }, function(){
-    $("#heading1").attr("aria-expanded", "false");
-  });
-  $("#moreTip2").hover(function(){
-    $("#heading2").attr("aria-expanded", "true");
-  }, function(){
-    $("#heading2").attr("aria-expanded", "false");
-  });
-  $("#moreTip3").hover(function(){
-    $("#heading3").attr("aria-expanded", "true");
-  }, function(){
-    $("#heading3").attr("aria-expanded", "false");
-  });
-  $("#moreTip4").hover(function(){
-    $("#heading4").attr("aria-expanded", "true");
-  }, function(){
-    $("#heading4").attr("aria-expanded", "false");
-  });
-  $("#moreTip5").hover(function(){
-    $("#heading5").attr("aria-expanded", "true");
-  }, function(){
-    $("#heading5").attr("aria-expanded", "false");
-  });
+    heading.attr("aria-expanded", "false");
+  })
   // when a radio button is clicked
   $('input[type="radio"]').click(function(){
     // show choose soils options when radio enabled
