@@ -1,11 +1,19 @@
+/*
+ * In house javascript
+ */
+
+// value of radio buttons, initialized to 2
 var chooseSoils = 2;
 var chooseComp = 2;
 var calcFutures = 2;
 
 $(document).ready(function(){
+  // immedietly hide choose soil and veg options
   $("#chooseSoils").hide();
   $("#chooseComp").hide();
+  // allow tooltips to show when highlighted
   $('[data-toggle="tooltip"]').tooltip();
+  // show tooltip detail panel highlighting
   $("#moreTip1").hover(function(){
     $("#heading1").attr("aria-expanded", "true");
   }, function(){
@@ -33,11 +41,12 @@ $(document).ready(function(){
   });
   // when a radio button is clicked
   $('input[type="radio"]').click(function(){
-    // button click for soil radios
+    // show choose soils options when radio enabled
     if($(this).attr("value") == "chooseTrue"){
       $("#chooseSoils").show();
       chooseSoils = 2;
     }
+    // hide choose soils options when radio enabled
     if($(this).attr("value") == "chooseFalse"){
       $("#chooseSoils").hide();
       chooseSoils = 1;
@@ -60,7 +69,10 @@ $(document).ready(function(){
     }
   })
 })
-
+/*
+ * Changes the marker lat and long values based on the lat long input fields
+ * @returns void
+ */
 function changeMarkerXY(){
   var lat = document.getElementById("latMap").value;
   var long = document.getElementById("longMap").value;
@@ -71,10 +83,17 @@ function changeMarkerXY(){
     document.getElementById("longMap").value = marker.getLatLng().lng;
   })
 }
-
+/*
+ * Append status populating text dynamically
+ * @returns void
+ */
 function changeFeedbackText(status){
   document.getElementById("feedback").innerHTML = document.getElementById("feedback").innerHTML + "<br>" + status;
 }
+/*
+ * Adjusts silt values of the soil dynamically based on sand and clay values
+ * @returns void
+ */
 function adjustSilt(){
   var sand = document.getElementById("sand").value;
   var clay = document.getElementById("clay").value;
@@ -83,7 +102,12 @@ function adjustSilt(){
     document.getElementById("silt").value = siltVal;
   }
 }
+/*
+ * Send information derived from user inputs to R
+ * @returns void
+ */
 function sendToR(){
+  // get user input lat and long coordinates
   var lat = parseFloat(document.getElementById("latMap").value);
   var long = parseFloat(document.getElementById("longMap").value);
   var sand = 34.0;
@@ -94,6 +118,7 @@ function sendToR(){
   var grasses = 20.0;
   var forbs = 20.0;
   var bareground = 20.0;
+  // if the user selected to choose soils or comp, get their input values
   if (chooseSoils == 1){
     sand = parseFloat(document.getElementById("sand").value);
     clay = parseFloat(document.getElementById("clay").value);
@@ -106,6 +131,7 @@ function sendToR(){
     forbs = parseFloat(document.getElementById("forbs").value);
     bareground = parseFloat(document.getElementById("bareground").value);
   }
+  // verify correct input values
   if ((trees + shrubs + grasses + forbs + bareground) != 100){
     alert("Composition must add up to 100. Composition is: " + (trees + shrubs + grasses + forbs + bareground))
   }
@@ -113,7 +139,7 @@ function sendToR(){
     alert("Soils must add up to 100.");
   }
   else{
-    // send values to RShiny
+    // send values to RShiny, convert values to between 0 and 1
     Shiny.onInputChange("lat", lat);
     Shiny.onInputChange("lng", long);
     Shiny.onInputChange("future", calcFutures);
@@ -134,6 +160,7 @@ function sendToR(){
     else                  {chooseSoils = "Yes";}
     if (chooseComp == 1)  {chooseComp = "No";}
     else                  {chooseComp = "Yes";}
+    // setup feedback status text
     changeFeedbackText("<br>Simulation running on location <span id='imp'>[" + lat + ", " +
                        long + "]</span> with calculate futures set to <span id='imp'>" + calcFutures +
                        "</span>.<br><br><pre>     Soils composition set to: </pre><span id='imp'>" +
@@ -147,7 +174,7 @@ function sendToR(){
     * @returns string, indicating type of soil
   */
   function calcSoilType(sand, clay, silt){
-    // categorize soil composition
+    // categorize soil composition based on soil texture triangle
     if (sand > 85 && (silt + 1.5 * clay) < 15){
       return "Sand";
     }

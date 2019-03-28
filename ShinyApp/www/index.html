@@ -221,6 +221,24 @@
                   document.getElementById("latMap").value = marker.getLatLng().lat;
                   document.getElementById("longMap").value = marker.getLatLng().lng;
                 })
+                map.on("click", function (event) {
+              	if (marker) {
+                      marker._icon.style.transition = "transform 0.3s ease-out";
+                      marker._shadow.style.transition = "transform 0.3s ease-out";
+
+                  	  marker.setLatLng(event.latlng);
+                      document.getElementById("latMap").value = marker.getLatLng().lat;
+                      document.getElementById("longMap").value = marker.getLatLng().lng;
+                      setTimeout(function () {
+                          marker._icon.style.transition = null;
+                          marker._shadow.style.transition = null;
+                      }, 300);
+                      return;
+                  }
+              });
+              document.getElementById("done").addEventListener("click", function () {
+              	marker = null;
+              });
               </script>
             </div>
           </div>
