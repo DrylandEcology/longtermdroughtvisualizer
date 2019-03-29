@@ -20,7 +20,8 @@ delete_test_output2 <- function(dir_test, delete_filepaths = NULL) {
     
                         file.path(dir_test, "1_Input", "SWRuns_InputAll_PreProcessed.rds"), 
                         file.path(dir_test, "1_Input", "SWRuns_InputMaster_fill_v11.csv"), 
-                        file.path(dir_test, "1_Input", "SWRuns_InputData_ExperimentalDesign_v08.csv"), 
+                        file.path(dir_test, "1_Input", "SWRuns_InputData_TreatmentDesign_v17_fill.csv"),
+                        file.path(dir_test, "1_Input", "SWRuns_InputData_ExperimentalDesign_v09_fill.csv"), 
                         file.path(dir_test, "1_Input", "SWRuns_InputData_SoilLayers_v9.csv"), 
                         file.path(dir_test, "1_Input", "datafiles", "SWRuns_InputData_prod_v11.csv"),
                         file.path(dir_test, "1_Input", "datafiles", "SWRuns_InputData_soils_v12.csv"),

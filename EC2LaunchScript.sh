@@ -76,20 +76,22 @@
       R -e "install.packages('ncdf4', repos='http://cran.rstudio.com/')"
       R -e "install.packages('RCurl', repos='http://cran.rstudio.com/')"
       R -e "install.packages('gridGraphics', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('dplyr', repos='http://cran.rstudio.com/')"
 
       # clone and install rSOILWAT2
       git clone -b master --single-branch --recursive https://github.com/DrylandEcology/rSOILWAT2.git rSOILWAT2
       R CMD INSTALL rSOILWAT2
 
       # clone and install rSFSW2
-      git clone -b master --single-branch https://github.com/DrylandEcology/rSFSW2
+      git clone -b feature_CDIfixes --single-branch https://github.com/DrylandEcology/rSFSW2
       R CMD INSTALL rSFSW2
 
       # clone and install Shiny App Code
-      git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/
+      git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/longtermdroughtsimulator
 
       # ensure that shiny server service file installed in the correct place
       cp /opt/shiny-server/config/systemd/shiny-server.service /etc/systemd/system
+      systemctl restart shiny-server
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'
