@@ -106,10 +106,10 @@ set_IM <- function(lat, lng, futuresim){
   ######################################################################################################################
   
   # Input treatment file
-  TrtfilepathIn <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputData_TreatmentDesign_v16.csv"
+  TrtfilepathIn <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputData_TreatmentDesign_v17.csv"
   
   # Output treatment file
-  TrtfilepathOut <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputData_TreatmentDesign_v16_fill.csv"
+  TrtfilepathOut <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputData_TreatmentDesign_v17_fill.csv"
   
   # Read in file
   TrtFile <- read.csv(TrtfilepathIn, stringsAsFactors = FALSE)
