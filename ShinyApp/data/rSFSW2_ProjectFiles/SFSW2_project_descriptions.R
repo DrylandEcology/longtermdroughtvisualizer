@@ -92,8 +92,8 @@ fnames_in <- list(
   fmaster = "SWRuns_InputMaster_fill_v11.csv",
 
   fslayers = "SWRuns_InputData_SoilLayers_v9.csv",
-  ftreatDesign = "SWRuns_InputData_TreatmentDesign_v16_fill.csv",
-  fexpDesign = "SWRuns_InputData_ExperimentalDesign_v08.csv",
+  ftreatDesign = "SWRuns_InputData_TreatmentDesign_v17_fill.csv",
+  fexpDesign = "SWRuns_InputData_ExperimentalDesign_v09.csv",
 
   fclimnorm = "SWRuns_InputData_cloud_v10.csv",
   fvegetation = "SWRuns_InputData_prod_v11.csv",
@@ -237,7 +237,7 @@ opt_input <- list(
   #   first position of 'dw_source_priority' if available, if not then second
   #   etc.
   # Do not change/remove/add entries; only re-order to set different priorities
-  dw_source_priority = c( "Livneh2013_NorthAmerica","DayMet_NorthAmerica", 
+  dw_source_priority = c( "Livneh2013_NorthAmerica","DayMet_NorthAmerica",
                           "LookupWeatherFolder", "Maurer2002_NorthAmerica", "NRCan_10km_Canada",
     "NCEPCFSR_Global"),
 
@@ -386,10 +386,10 @@ sim_time <- list(
   #   'ClimateWizardEnsembles'
   DScur_startyr = 1950,
   DScur_endyr = 2000,
-  
+
   future_yrs = list(
     c(d <- 45, 2015, 2060),
-    c(d <- 85, 2060, 2100) 
+    c(d <- 85, 2060, 2100)
   )
 )
 
@@ -614,7 +614,7 @@ req_out <- list(
     "dailyRegeneration_GISSM", 0
   ),
 
-  
+
   # Select variables to aggregate daily means and stats::sd
   #  (one per day of year, DOY) options: NULL or a selection of
   #   c("AET", "Transpiration", "EvaporationSoil",
