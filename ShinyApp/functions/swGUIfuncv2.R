@@ -216,47 +216,38 @@ set_soils <- function(environment, soils, sand, clay, futuresim){
 
 set_comp <- function(environment, comp, trees, shrubs, grasses, forbs, bg, futuresim){
 
-  #################################################################################
-  if(comp == "2") { # If user chooses to select comp, need to populate prod file & change environment.
+  ######################################################################################################################
+  #                           ------------------ Setup Experimental Designfile Design-----------------
+  ######################################################################################################################
+  
+  # Input exp file
+  ExpfilepathIn <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputData_ExperimentalDesign_v09.csv"
+  
+  # Output exp file
+  ExpfilepathOut <- environment[["fnames_in"]][["fexpDesign"]]
+  
+  # Read in file
+  ExpFile <- read.csv(ExpfilepathIn, stringsAsFactors = FALSE)
+  
+  if(comp == "2") { # If user chooses to select comp, need to populate exp file
     
     #################################################################
     # --------- change exp design file --------------------------------
     #################################################################
-    x <- read.csv(environment[["fnames_in"]][["fexpDesign"]], stringsAsFactors = FALSE)
     
-    # At this point need to turn off all climate estimation .... TO DO - make it so default tree is used, but can set comp of other things...
-    x$Label[2] <- "VegSet"
-    x[,24:53] <- 0
+    ExpFile$Label[2] <- "VegSet"
+    ExpFile[,25:53] <- 0
     
-    write.csv(x, environment[["fnames_in"]][["fexpDesign"]], row.names = FALSE)
+    ExpFile$PotentialNaturalVegetation_CompositionTrees_Fraction <- c(1, trees/100)
+    ExpFile$PotentialNaturalVegetation_CompositionShrubs_Fraction <- c(1, shrubs/100)
+    ExpFile$PotentialNaturalVegetation_CompositionAnnuals_Fraction <- c(1, grasses/100)
+    ExpFile$PotentialNaturalVegetation_CompositionForb_Fraction <- c(1, forbs/100)
+    ExpFile$PotentialNaturalVegetation_CompositionBareGround_Fraction <- c(1, bg/100)
     
-    #################################################################
-    # --------- change & write prod file ------------
-    #################################################################
-    x <- read.csv(environment[["fnames_in"]][["fvegetation"]], stringsAsFactors = FALSE)
-    y <- data.frame(matrix(nrow = 2, ncol = ncol(x)))
-    y[1,] <- x[1,]
-    names(y) <- names(x)
-    
-    y$Label[2] <- "Site01"
-    
-    y$Composition_TreeFraction[2] <- trees
-    y$Composition_ShrubFraction[2] <- shrubs
-    y$Composition_GrassFraction[2] <- grasses
-    y$Composition_ForbFraction[2] <- forbs
-    y$Composition_BareGround[2] <- bg
-    
-    y$Composition_TreeFraction[1] <- 1
-    y$Composition_ShrubFraction[1] <- 1
-    y$Composition_GrassFraction[1] <- 1
-    y$Composition_ForbFraction[1] <- 1
-    y$Composition_BareGround[1] <- 1
-    
-    if(futuresim == 1)   y <- rbind(y[1,],  do.call("rbind", replicate(23, y[2,], simplify = FALSE)))
-    
-    write.csv(y, environment[["fnames_in"]][["fvegetation"]], row.names = FALSE)
-   
   }
+  
+  write.csv(ExpFile, environment[["fnames_in"]][["fexpDesign"]], row.names = FALSE)
+  
   
 }
 
