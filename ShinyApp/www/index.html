@@ -18,61 +18,113 @@
     <!-- Content container with borders on either side -->
     <div class="container">
       <h2 class="centered"><b>Long-term Drought Simulator</b></h1>
-      <h4 class="centered"> Welcome to the Long-term Drought Simulator! This tool is designed for resource managers who
-are interested in exploring long-term historical and future patterns of soil moisture and plant
-available water for their specific site.</h4><br>
-      <h5><a class="centered" href="#moreInfo" style="margin-left: 42%;"> MORE INFORMATION </a><h5><br>
+      <h4 class="centered">
+        Welcome to the Long-term Drought Simulator! This tool is designed for resource managers who
+        are interested in exploring long-term historical and future patterns of soil moisture and plant
+        available water for their specific site.</h4><br>
+        <h5>
+          <ul class="navBar1">
+            <li class="firstElem"><a href="#moreInfo">MORE INFORMATION</a></li>
+            <li><a href="#dataSources">DATA SOURCES</a></li>
+            <li><a href="#publications">PUBLICATIONS</a></li>
+          </ul>
+        </h5>
+      <br>
       <hr>
       <div class="row">
         <div class="col-sm-6">
           <!-- Description about the long term simulation -->
-          <p id="howToTitle" class="whiteBack">Historical simulations illustrate long-term, site-specific
-perspectives on drought variability and provide context on a site’s natural range of variability.
-Future projections of 21 st century drought help quantify expected deviations from historical
-variability that represent potential risk of novel drought exposure.
-Here, users can utilize the Long-term Drought Simulator by specifying a focal location and users
-have the option to provide additional site-specific information, including soil texture, and
-vegetation structure. Historical and future climate data are compiled for the focal location, and
-climate, soil and vegetation information are integrated into a process-based, ecosystem water-
-balance model that estimates water fluxes and soil water content at a daily time step. The tool
-provides interactive, site-specific figures where seasonal and annual patterns of water availability
-for both the past and the future, under different models of climate change, can be explored and
-downloaded.</p>
+          <p id="aboutBox" class="whiteBack">
+            <p  style="float:left;font-size:20px;margin-bottom:0px;color:#78909c"><em>About</em></p><br><br>
+            Historical simulations illustrate long-term, site-specific
+            perspectives on drought variability and provide context on a site’s natural range of variability.
+            Future projections of 21 st century drought help quantify expected deviations from historical
+            variability that represent potential risk of novel drought exposure.
+            Here, users can utilize the Long-term Drought Simulator by specifying a focal location and users
+            have the option to provide additional site-specific information, including soil texture, and
+            vegetation structure. Historical and future climate data are compiled for the focal location, and
+            climate, soil and vegetation information are integrated into a process-based, ecosystem water-
+            balance model that estimates water fluxes and soil water content at a daily time step. The tool
+            provides interactive, site-specific figures where seasonal and annual patterns of water availability
+            for both the past and the future, under different models of climate change, can be explored and
+            downloaded.
+          </p>
+          <p id="howToBox" class="whiteBack">
+            <p style="float:left;font-size:20px;margin-bottom:0px;color:#78909c"><em>How to</em></p><br><br>
+            This tool is designed to simulate site-specific results dynamically. Users must select a location to
+            simulate and specify if they would like results for historical conditions only, or historical and
+            future. Additionally, users have the option of specifying soil texture and vegetation composition
+            for their site or utilizing gridded soils and vegetation conditions that are estimated from mean
+            climate conditions.
+          </p>
           <!-- Create tip dropdowns -->
           <div aria-multiselectable="true" role="tablist" id="accordion" class="panel-group">
             <!-- Dropdown 1 -->
-            <div class="panel panel-default"> <a name="tab1" title="How to 1" aria-controls="collapse1" aria-expanded="false" href="#collapse1" data-parent="#accordion" data-toggle="collapse" id="heading1" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Location</span> </a>
+            <div class="panel panel-default"> <a title="How to 1" aria-controls="collapse1" aria-expanded="false" href="#collapse1" data-parent="#accordion" data-toggle="collapse" id="heading1" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Location</span> </a>
                 <div aria-labelledby="heading1" role="tabpanel" class="panel-collapse collapse" id="collapse1" aria-expanded="false">
                     <div class="panel-body">
                         <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
-                        <p>The locations setting indicates the latitude and longitude of the site that the simulation should be run on.</p>
+                        <p>
+                            Location is designated as coordinates (lat, lon) in the WGS84 coordinate reference system. <br><br>
+                            Select your location by either clicking on the map or by <span class="highlight" class="redText">entering coordinates</span> into the latitude and
+                            longitude boxes provided.<br><br>
+                            <span class="highlight">Note: Currently, only locations in Arizona, New Mexico, Colorado, and Utah are operational.</span>
+                        </p>
                     </div>
                 </div>
             </div>
             <!-- Dropdown 2 -->
-            <div class="panel panel-default"> <a title="How to 2" aria-controls="collapse2" aria-expanded="false" href="#collapse2" data-parent="#accordion" data-toggle="collapse" id="heading2" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Future Simulations</span> </a>
+            <div class="panel panel-default"> <a title="How to 2" aria-controls="collapse2" aria-expanded="false" href="#collapse2" data-parent="#accordion" data-toggle="collapse" id="heading2" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Past and Future Simulations</span> </a>
                 <div aria-labelledby="heading2" role="tabpanel" class="panel-collapse collapse" id="collapse2" aria-expanded="false">
                     <div class="panel-body">
                         <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
-                        <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                        <p>
+                          Users have the option of selecting to simulate long-term historical (1916 – 2017) patterns of
+                          water availability alone or to simulate both historical and future (2020 – 2099) water availability.
+                          Future simulations occur for 11 different general circulation models (GCMs), that are believed to
+                          best predict future climate in the American Southwest.<br><br>
+                          Selecting <b>yes</b> to simulate future simulations increase simulation time approximately from 30
+                          seconds to 2 minutes and 30 seconds.
+                        </p>
                     </div>
                 </div>
             </div>
             <!-- Dropdown 3 -->
-            <div class="panel panel-default"> <a title="How to 3" aria-controls="collapse3" aria-expanded="false" href="#collapse3" data-parent="#accordion" data-toggle="collapse" id="heading3" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Soils Compositions</span> </a>
+            <div class="panel panel-default"> <a title="How to 3" aria-controls="collapse3" aria-expanded="false" href="#collapse3" data-parent="#accordion" data-toggle="collapse" id="heading3" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Soils Texture</span> </a>
                 <div aria-labelledby="heading3" role="tabpanel" class="panel-collapse collapse" id="collapse3" aria-expanded="false">
                     <div class="panel-body">
                         <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
-                        <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.</p>
+                        <p>
+                          Soil texture influences the availability of a site to retain moisture in the soil profile. Here soil
+                          texture is described as percent sand, silt, and clay, where these must sum to 100%.
+                          <br><br>If you know your site’s texture or soil type select <b>choose</b>. This will give you the option to either:
+                          (A) Enter specific texture values in the input boxes provide or (B) Click on the soil texture
+                          diagram to generate mean values for that soil texture type.
+                          <br><br>Otherwise, select <b>obtain</b>. Selecting obtain will grab soil texture values for the latitude and
+                          longitude provided from a gridded soils map.
+                        </p>
                     </div>
                 </div>
             </div>
             <!-- Dropdown 4 -->
-            <div class="panel panel-default"> <a title="How to 4" aria-controls="collapse4" aria-expanded="false" href="#collapse4" data-parent="#accordion" data-toggle="collapse" id="heading4" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Vegetation Compositions</span> </a>
+            <div class="panel panel-default"> <a title="How to 4" aria-controls="collapse4" aria-expanded="false" href="#collapse4" data-parent="#accordion" data-toggle="collapse" id="heading4" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Vegetation Structure</span> </a>
                 <div aria-labelledby="heading4" role="tabpanel" class="panel-collapse collapse" id="collapse4" aria-expanded="false">
                     <div class="panel-body">
                         <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
-                        <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.</p>
+                        <p>
+                          Vegetation structure influences how much moisture reaches the soil profile (via interception) and
+                          how soil moisture is utilized (via transpiration). Here vegetation structure is defined as the
+                          composition of 4 plant functional types (Trees, shrubs, grasses, forbs) and as bare-ground. One
+                          or all 5 types can exist on a site, but they must sum to 1. Other information about the vegetation
+                          types (i.e. biomass, percent live) is generated by the model.
+                          <br><br>If you know your site’s vegetation structure select <b>choose</b>. This will give you the option to enter
+                          vegetation composition values, summing to 1.
+                          <br><br>Otherwise, select <b>generate</b>. Selecting generate tells the model to simulate vegetation
+                          composition based on site-specific climate. Potential vegetation composition of the three
+                          functional groups, mean monthly biomass, litter, and phenology are based on climate
+                          relationships and calculated for each cell and climate condition (detailed description in Bradford
+                          et al.(2014)).
+                        </p>
                     </div>
                 </div>
             </div>
@@ -158,7 +210,7 @@ downloaded.</p>
               </div>
             </div>
             <!-- Future Simulations Options -->
-            <br><h4 class="centered">Future Simulations <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip2" src="images/marker-icon.png" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Indicate whether you would like to run future scenarios in the simulation. See highlighted tab for more."></i></h4>
+            <br><h4 class="centered">Past and Future Simulations <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip2" src="images/marker-icon.png" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Indicate whether you would like to run future scenarios in the simulation. See highlighted tab for more."></i></h4>
               <div class="row">
                 <div class="col-sm-3">
                 </div>
@@ -176,14 +228,14 @@ downloaded.</p>
                 </div>
                   <br><br>
                 </div>
-              <h4 class="centered">Extract or Choose Soils? <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip3" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set soils compositions or have the program extract them for you. See highlighted tabs for more."></i></h4>
+              <h4 class="centered">Soil Texture <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip3" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set soils compositions or have the program extract them for you. See highlighted tabs for more."></i></h4>
                 <!-- Soils Composition -->
                 <div class="row">
                   <div class="col-sm-3">
                   </div>
                   <div class="col-sm-3">
                     <div class="centered" style="background-color:white;">
-                      <input type="radio" name="chooseSoils" value="chooseFalse"> Extract
+                      <input type="radio" name="chooseSoils" value="chooseFalse"> Obtain
                     </div>
                   </div>
                   <div class="col-sm-3">
@@ -235,13 +287,13 @@ downloaded.</p>
                   </div>
                 </div>
                 <!-- Veg Composition -->
-                <h4 class="centered">Estimate or Choose Vegetation? <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip4" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set vegetation compositions or have the program extract them for you. See highlighted tabs for more."></i></h4>
+                <h4 class="centered">Vegetation Structure<i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip4" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set vegetation compositions or have the program extract them for you. See highlighted tabs for more."></i></h4>
                 <div class="row">
                   <div class="col-sm-3">
                   </div>
                   <div class="col-sm-3">
                     <div class="centered" style="background-color:white;">
-                      <input type="radio" name="chooseComp" value="chooseCompFalse"> Estimate
+                      <input type="radio" name="chooseComp" value="chooseCompFalse"> Generate
                     </div>
                   </div>
                   <div class="col-sm-3">
@@ -290,7 +342,7 @@ downloaded.</p>
                     <br><br>
                   </div>
                 </div>
-
+                <button id="validateBtn" onclick="validateInputs()">Validate</button>
                 <button id="simBtn" onclick="sendToR()">Simulate</button><br><br>
             </div>
             </div>
@@ -299,11 +351,94 @@ downloaded.</p>
           <!-- More information and Data sources placeholders, add text for this here -->
           <div class="row">
             <hr><h2 id="moreInfo"> More Information </h2>
-            <p class="centered" style="word-wrap: break-word">faerceravferavmireapovmreaviermvrea;mvo;erasimvoeir;vmero;vmero;ivmermvsdddddddddddddddddddddddd</p>
+            <p class="centered" style="word-wrap: break-word">
+              <em>About the model</em>
+              <br>
+              The results presented here are generated with <a href="https://github.com/DrylandEcology/SOILWAT2">SOILWAT2</a>(Schlaepfer and Andrews 2018,
+              Schlaepfer and Murphy 2018) , which is a daily, site-specific, multi soil-layer, ecosystem water-
+              balance model, driven by daily meteorology, as well as site soil texture, soil depth, and
+              vegetation.
+              <br><br>
+              Daily meteorology includes historical weather data from <a href="http://ciresgroups.colorado.edu/livneh/data/daily-obserational-hydrometeorology-data-set-conus-extent-canadian-extent-columbia-river-basin"> University of Colorado’s Water and
+              Climate Research Group Laboratory</a>, derived from observed data at weather stations, as well as
+              predictions derived from projections of future climate. The tool shows projections for two
+              possible climate futures, one in which emissions peak around 2040 and then decline (RCP 4.5)
+              and another in which emissions continue to rise throughout the 21st century (RCP 8.5). Both
+              futures are considered possible depending on hypothetical trajectories of greenhouse
+              gases. These climate projections have been downscaled on a temporal and spatial from 11 global
+              climate models from the <a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html">CMIP5</a> archive, using a hybrid-delta downscaling technique.
+              <br><br>
+              <em>Guidance on using results</em>
+              <br>
+              The results generated and presented here provide a long-term historical and future perspective on
+              soil moisture and climate at a specific site. The resulting site-specific projections of moisture
+              availability is intended to allow users to recognize novel drought risk and to develop hypotheses
+              about how plant species and ecosystems will respond to changing soil water conditions.
+              Projections are based on GCMs that were were selected from all models that participated in the
+              fifth phase of the Climate Model Intercomparison Project (Taylor et al. 2011; CMIP5) to include
+              both the most independent (Knutti et al. 2013) and best performing subset (for the western
+              United States; Rupp et al. 2013) of GCMs.. While users can explore projected climate and soil
+              moisture conditions from individual climate models, ensembles are also presented to represent
+              the mean consensus amongst models.
+            </p>
           </div>
           <div class="row">
-            <hr><h2> Data Sources </h2>
-            <p class="centered" style="word-wrap: break-word">faerceravferavmireapovmreaviermvrea;mvo;erasimvoeir;vmero;vmero;ivmermvsdddddddddddddddddddddddd</p>
+            <hr><h2 id="dataSources"> Data Sources </h2>
+            <p class="centered" style="word-wrap: break-word">
+              Livneh daily CONUS near-surface gridded meteorological data.
+              <ul>
+                <li><a href="https://www.esrl.noaa.gov/psd/data/gridded/data.livneh.html">https://www.esrl.noaa.gov/psd/data/gridded/data.livneh.html</a></li>
+                <li>University of Colorado, Boulder</li>
+              </ul>
+              Downscaled CMIP5 Climate and Hydrology Projects
+              <ul>
+                <li><a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Com
+                plete%20Archives">https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Com
+                plete%20Archives</a></li>
+                <li>Lawrence Livermore National Laboratory</li>
+              </ul>
+              Digital General Soil Map of the United States (STATSGO2)
+              <ul>
+                <li><a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs1
+                42p2_053629">https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs1
+                42p2_053629</a></li>
+                <li><b>Natural Resources Conservation Service</b></li>
+              </ul>
+            </p>
+          </div>
+          <div class="row">
+            <hr><h2 id="publications"> Publications </h2>
+            <p class="centered" style="word-wrap: break-word">
+              <ul>
+                <li>
+                  Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, and I. C. Burke. 2014. Shifts in plant
+                  functional types have time-dependent and regionally variable impacts on dryland
+                  ecosystem water balance. Journal of Ecology 102:1408-1418.
+                </li>
+                <li>
+                  Knutti, R., D. Masson, and A. Gettelman. 2013. Climate model genealogy: Generation CMIP5
+                  and how we got there. Geophysical Research Letters 40:1194-1199.
+                </li>
+                <li>
+                  Rupp, D. E., J. T. Abatzoglou, K. C. Hegewisch, and P. W. Mote. 2013. Evaluation of CMIP5
+                  20th century climate simulations for the Pacific Northwest USA. Journal of Geophysical
+                  Research: Atmospheres 118:2013JD020085.
+                </li>
+                <li>
+                  Schlaepfer, D. R., and C. A. Andrews. 2018. rSFSW2: Simulation Framework for SOILWAT2.
+                  R package version 3.0.0. <a href="https://github.com/DrylandEcology/rSFSW2">https://github.com/DrylandEcology/rSFSW2</a>
+                </li>
+                <li>
+                  Schlaepfer, D. R., and R. Murphy. 2018. rSOILWAT2: An Ecohydrological Ecosystem-Scale
+                  Water Balance Simulation Model. R package version 2.3.2.
+                  <a href="https://github.com/DrylandEcology/rSOILWAT2">https://github.com/DrylandEcology/rSOILWAT2</a>
+                </li>
+                <li>
+                  Taylor, K. E., R. J. Stouffer, and G. A. Meehl. 2011. An Overview of CMIP5 and the
+                  Experiment Design. Bulletin of the American Meteorological Society 93:485-498.
+                </li>
+              </ul>
+            </p>
           </div>
         </div>
 

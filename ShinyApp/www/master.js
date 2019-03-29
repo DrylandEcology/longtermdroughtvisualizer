@@ -7,6 +7,19 @@ var chooseSoils = 2;
 var chooseComp = 2;
 var calcFutures = 2;
 
+// global variable init for user inputs
+var lat = 35.1983;
+var long = -111.6513;
+var sand = 34.0;
+var clay = 33.0;
+var silt = 33.0;
+var trees = 20.0;
+var shrubs = 20.0;
+var grasses = 20.0;
+var forbs = 20.0;
+var bareground = 20.0;
+
+// do this stuff as soon as the document loads
 $(document).ready(function(){
   // immedietly hide choose soil and veg options
   $("#chooseSoils").hide();
@@ -85,22 +98,10 @@ function adjustSilt(){
   }
   drawPoint(sand, clay);
 }
-/*
- * Send information derived from user inputs to R
- * @returns void
- */
-function sendToR(){
+function setGlobalInputs(){
   // get user input lat and long coordinates
-  var lat = parseFloat(document.getElementById("latMap").value);
-  var long = parseFloat(document.getElementById("longMap").value);
-  var sand = 34.0;
-  var clay = 33.0;
-  var silt = 33.0;
-  var trees = 20.0;
-  var shrubs = 20.0;
-  var grasses = 20.0;
-  var forbs = 20.0;
-  var bareground = 20.0;
+  lat = parseFloat(document.getElementById("latMap").value);
+  long = parseFloat(document.getElementById("longMap").value);
   // if the user selected to choose soils or comp, get their input values
   if (chooseSoils == 1){
     sand = parseFloat(document.getElementById("sand").value);
@@ -114,15 +115,29 @@ function sendToR(){
     forbs = parseFloat(document.getElementById("forbs").value);
     bareground = parseFloat(document.getElementById("bareground").value);
   }
+}
+
+function validateInputs(){
+  // get user input lat and long coordinates
+  setGlobalInputs();
   // verify correct input values
   if ((trees + shrubs + grasses + forbs + bareground) != 100){
-    alert("Composition must add up to 100. Composition is: " + (trees + shrubs + grasses + forbs + bareground))
+    alert("Composition must add up to 100. Composition is: " + (trees + shrubs + grasses + forbs + bareground));
+    return false;
   }
   else if (sand + clay + silt != 100){
     alert("Soils must add up to 100.");
+    return false;
   }
-  else{
-    // send values to RShiny, convert values to between 0 and 1
+  return true;
+}
+/*
+ * Send information derived from user inputs to R
+ * @returns void
+ */
+function sendToR(){
+  var validInputs = validateInputs();
+  if (validInputs){
     Shiny.onInputChange("lat", lat);
     Shiny.onInputChange("lng", long);
     Shiny.onInputChange("future", calcFutures);
@@ -151,7 +166,9 @@ function sendToR(){
                        "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
                        "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>");
    changeFeedbackText("<span id='imp'>Calculation Running...</span>");
-  }
+ }
+}
+
   /*
     * Calculates the type of soil a composition of sand, clay and silt are classified as
     * @returns string, indicating type of soil
@@ -195,4 +212,3 @@ function sendToR(){
       return "Clay";
     }
   }
-}

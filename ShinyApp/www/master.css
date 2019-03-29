@@ -46,9 +46,29 @@ hr{
 #imp{
   color: red;
 }
-#howToTitle{
+#aboutBox{
   margin-top: 0px;
   border: 1px solid #CCCCCC;
+}
+#howToBox{
+  margin-top: 2px;
+  border: 1px solid #CCCCCC;
+}
+.navBar1 li{
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.firstElem{
+  margin-left: 25%;
+}
+.highlight{
+  background-color: yellow;
+}
+.redText{
+  color: red;
 }
 .greyBack{
   background-color: #F1F1F1;
