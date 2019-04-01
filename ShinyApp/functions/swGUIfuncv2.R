@@ -170,8 +170,8 @@ set_soils <- function(environment, soils, sand, clay, futuresim){
     names(y) <- names(x)
     
     y$Label[1] <- "Site01"
-    y[1,c(3:9)] <- c(10, 20, 40, 60, 80, 100, 150) # TO DO: change to standard 250 m depths
-    y[1,2] <- 150
+    y[1,c(3:10)] <- c(10, 20, 40, 60, 80, 100, 150, 200) # Same as ISRIC WISE 30sec V1a
+    y[1,2] <- 200
     
     if(futuresim == 1)   y <- do.call("rbind", replicate(23, y, simplify = FALSE))
 
@@ -185,7 +185,7 @@ set_soils <- function(environment, soils, sand, clay, futuresim){
     y[1,] <- x[1,]
     names(y) <- names(x)
     
-    y$Label[2] <- "Site01"
+    y$Label[2] <- "Current"
 
     # sand
     sandIdx <- grep( 'Sand', names(y))
@@ -197,9 +197,9 @@ set_soils <- function(environment, soils, sand, clay, futuresim){
     y[2,clayIdx[1:7]] <- as.numeric(clay/100) 
     y[1,clayIdx[1:7]] <- 1
     
-    # TO DO - bulk density function where it still pulls
+    # TO DO - bulk density function where it still pulls even though other values are set?
     bdIdx <- grep( 'Matricd', names(x))
-    y[2,bdIdx[1:7]] <- 1.66
+    y[2,bdIdx[1:7]] <- 1.51
     y[1,bdIdx[1:7]] <- 1
 
     if(futuresim == 1)  y <- rbind(y[1,],  do.call("rbind", replicate(23, y[2,], simplify = FALSE)))
