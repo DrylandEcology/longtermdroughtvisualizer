@@ -6,7 +6,7 @@
 var chooseSoils = 1;
 var chooseComp = 1;
 var calcFutures = 2;
-
+var calcFuturesTxt;
 // global variable init for user inputs
 var lat = 35.1983;
 var long = -111.6513;
@@ -132,29 +132,29 @@ function setGlobalInputs(){
   // choose soils value
   temp = $("input[name='chooseSoils']:checked").val();
   if(temp == "chooseTrue"){
-    chooseSoils = 1;
+    chooseSoils = 2;
   }
   if(temp == "chooseFalse"){
-    chooseSoils = 2;
+    chooseSoils = 1;
   }
   // choose composition value
   temp = $("input[name='chooseComp']:checked").val();
   if(temp == "chooseCompTrue"){
-    chooseComp = 1;
+    chooseComp = 2;
   }
   if(temp == "chooseCompFalse"){
-    chooseComp = 2;
+    chooseComp = 1;
   }
   // get user input lat and long coordinates
   lat = parseFloat(document.getElementById("latMap").value);
   long = parseFloat(document.getElementById("longMap").value);
   // if the user selected to choose soils or comp, get their input values
-  if (chooseSoils == 1){
+  if (chooseSoils == 2){
     sand = parseFloat(document.getElementById("sand").value);
     clay = parseFloat(document.getElementById("clay").value);
     silt = parseFloat(document.getElementById("silt").value);
   }
-  if (chooseComp == 1){
+  if (chooseComp == 2){
     trees = parseFloat(document.getElementById("trees").value);
     shrubs = parseFloat(document.getElementById("shrubs").value);
     grasses = parseFloat(document.getElementById("grasses").value);
@@ -162,7 +162,17 @@ function setGlobalInputs(){
     bareground = parseFloat(document.getElementById("bareground").value);
   }
 }
-
+function validateLocation(lat, long){
+    // Colorado
+    if (lat >= 36.9949 && lat <= 41.0006 && long <= -102.0424 && long >= -109.0489) return "Colorado";
+    // Arizona
+    if (lat >= 31.3325 && lat <= 37.0004 && long <= -109.0475 && long >= -114.8126) return "Arizona";
+    // New Mexico
+    if (lat >= 31.3337 && lat <= 36.9982 && long <= -103.0023 && long >= -109.0489) return "New Mexico";
+    // Utah
+    if (lat >= 36.9982 && lat <= 41.9993 && long <= -109.0462 && long >= -114.0504) return "Utah";
+    return false;
+}
 function validateInputs(){
   // get user input lat and long coordinates
   setGlobalInputs();
@@ -178,20 +188,18 @@ function validateInputs(){
   // make sure that the lat and long the user entered is within AZ, NM, UT, CO
   // IN BETA, currently more inclusive than it needs to be and includes a small
   // part of some neighboring states.
-  else if (lat < 31.3337 || lat > 41.9993 || long < -114.8126 || long > -102.0424){
+  var state = validateLocation(lat, long);
+  if (!state){
     alert("Site location must be in the states AZ, UT, NM, or CO.");
     return false;
   }
+
   // change options to make more user friendly
-  if (calcFutures == 2) {calcFutures = "No";}
-  else                  {calcFutures = "Yes";}
-  if (chooseSoils == 1) {chooseSoils = "No";}
-  else                  {chooseSoils = "Yes";}
-  if (chooseComp == 1)  {chooseComp = "No";}
-  else                  {chooseComp = "Yes";}
+  if (calcFutures == 2) {calcFuturesTxt = "No";}
+  else                  {calcFuturesTxt = "Yes";}
   // setup feedback status text
   changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat + ", " +
-                     long + "]</span> with calculate futures set to <span id='imp'>" + calcFutures +
+                     long + "] (" + state + ")</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
                      "</span>.<br><br><pre>     Soils composition set to: </pre><span id='imp'>" +
                     "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Silt: <span id='imp'>" + silt + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
                      "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
@@ -224,7 +232,7 @@ function sendToR(){
     Shiny.onInputChange("simulate", true);
     // setup feedback status text
     changeFeedbackText("<br>Simulation running on location <span id='imp'>[" + lat + ", " +
-                       long + "]</span> with calculate futures set to <span id='imp'>" + calcFutures +
+                       long + "]</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
                        "</span>.<br><br><pre>     Soils composition set to: </pre><span id='imp'>" +
                        "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
                        "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
