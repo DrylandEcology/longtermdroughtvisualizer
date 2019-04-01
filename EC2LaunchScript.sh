@@ -77,6 +77,11 @@
       R -e "install.packages('RCurl', repos='http://cran.rstudio.com/')"
       R -e "install.packages('gridGraphics', repos='http://cran.rstudio.com/')"
       R -e "install.packages('dplyr', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('sp', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('maps', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('maptools', repos='http://cran.rstudio.com/')"
+
+
 
       # clone and install rSOILWAT2
       git clone -b master --single-branch --recursive https://github.com/DrylandEcology/rSOILWAT2.git rSOILWAT2
