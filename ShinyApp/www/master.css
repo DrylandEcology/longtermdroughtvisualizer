@@ -35,7 +35,10 @@ hr{
   background-color: white;
 }
 #simBtn{
-  margin-left: 40%;
+  margin-left: 45%;
+}
+#validateBtn{
+  margin-left: 45%;
 }
 
 #feedback{

@@ -2,9 +2,9 @@
  * In house javascript
  */
 
-// value of radio buttons, initialized to 2
-var chooseSoils = 2;
-var chooseComp = 2;
+// value of radio buttons, initialized
+var chooseSoils = 1;
+var chooseComp = 1;
 var calcFutures = 2;
 
 // global variable init for user inputs
@@ -24,6 +24,7 @@ $(document).ready(function(){
   // immedietly hide choose soil and veg options
   $("#chooseSoils").hide();
   $("#chooseComp").hide();
+  $("#simBtn").hide();
   // allow tooltips to show when highlighted
   $('[data-toggle="tooltip"]').tooltip();
   // show tooltip detail panel highlighting
@@ -39,31 +40,44 @@ $(document).ready(function(){
     // show choose soils options when radio enabled
     if($(this).attr("value") == "chooseTrue"){
       $("#chooseSoils").show();
-      chooseSoils = 2;
+      unValidate();
+      chooseSoils = 1;
     }
     // hide choose soils options when radio enabled
     if($(this).attr("value") == "chooseFalse"){
       $("#chooseSoils").hide();
-      chooseSoils = 1;
+      unValidate();
+      chooseSoils = 2;
     }
     // button click for composition radios
     if($(this).attr("value") == "chooseCompTrue"){
       $("#chooseComp").show();
-      chooseComp = 2;
+      unValidate();
+      chooseComp = 1;
     }
     if($(this).attr("value") == "chooseCompFalse"){
       $("#chooseComp").hide();
-      chooseComp = 1;
+      unValidate();
+      chooseComp = 2;
     }
     // button click for future radios
     if($(this).attr("value") == "futureTrue"){
       calcFutures = 1;
+      unValidate();
     }
     if($(this).attr("value") == "futureFalse"){
       calcFutures = 2;
+      unValidate();
     }
   })
 })
+/*
+ * Unvalidates the the user inputs to make them reclick the validation button.
+ */
+function unValidate(){
+  $("#validateBtn").show();
+  $("#simBtn").hide();
+}
 /*
  * Changes the marker lat and long values based on the lat long input fields
  * @returns void
@@ -79,11 +93,18 @@ function changeMarkerXY(){
   })
 }
 /*
- * Append status populating text dynamically
+ * Change status populating text dynamically
+ * @param status: (string) message to be dyanamically populating
+ * @param append: (boolean) Append to or overwrite current status
  * @returns void
  */
-function changeFeedbackText(status){
-  document.getElementById("feedback").innerHTML = document.getElementById("feedback").innerHTML + "<br>" + status;
+function changeFeedbackText(status, append){
+  if (append){
+    document.getElementById("feedback").innerHTML = document.getElementById("feedback").innerHTML + "<br>" + status;
+  }
+  else{
+    document.getElementById("feedback").innerHTML = status;
+  }
 }
 /*
  * Adjusts silt values of the soil dynamically based on sand and clay values
@@ -96,9 +117,34 @@ function adjustSilt(){
   if (siltVal >= 0){
     document.getElementById("silt").value = siltVal;
   }
-  drawPoint(sand, clay);
+
+  //drawPoint(sand, clay);
 }
 function setGlobalInputs(){
+  // future radio value
+  var temp = $("input[name='futureSim']:checked").val();
+  if(temp == "futureTrue"){
+    calcFutures = 1;
+  }
+  if(temp == "futureFalse"){
+    calcFutures = 2;
+  }
+  // choose soils value
+  temp = $("input[name='chooseSoils']:checked").val();
+  if(temp == "chooseTrue"){
+    chooseSoils = 1;
+  }
+  if(temp == "chooseFalse"){
+    chooseSoils = 2;
+  }
+  // choose composition value
+  temp = $("input[name='chooseComp']:checked").val();
+  if(temp == "chooseCompTrue"){
+    chooseComp = 1;
+  }
+  if(temp == "chooseCompFalse"){
+    chooseComp = 2;
+  }
   // get user input lat and long coordinates
   lat = parseFloat(document.getElementById("latMap").value);
   long = parseFloat(document.getElementById("longMap").value);
@@ -126,9 +172,34 @@ function validateInputs(){
     return false;
   }
   else if (sand + clay + silt != 100){
-    alert("Soils must add up to 100.");
+    alert("Soils must add up to 100. Soil texture is: " + (sand + clay + silt));
     return false;
   }
+  // make sure that the lat and long the user entered is within AZ, NM, UT, CO
+  // IN BETA, currently more inclusive than it needs to be and includes a small
+  // part of some neighboring states.
+  else if (lat < 31.3337 || lat > 41.9993 || long < -114.8126 || long > -102.0424){
+    alert("Site location must be in the states AZ, UT, NM, or CO.");
+    return false;
+  }
+  // change options to make more user friendly
+  if (calcFutures == 2) {calcFutures = "No";}
+  else                  {calcFutures = "Yes";}
+  if (chooseSoils == 1) {chooseSoils = "No";}
+  else                  {chooseSoils = "Yes";}
+  if (chooseComp == 1)  {chooseComp = "No";}
+  else                  {chooseComp = "Yes";}
+  // setup feedback status text
+  changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat + ", " +
+                     long + "]</span> with calculate futures set to <span id='imp'>" + calcFutures +
+                     "</span>.<br><br><pre>     Soils composition set to: </pre><span id='imp'>" +
+                    "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Silt: <span id='imp'>" + silt + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
+                     "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
+                     "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>", false);
+  changeFeedbackText("<span id='imp'>Click Simulate to begin simulation...</span>", true);
+  $("#simBtn").show();
+  $("#validateBtn").hide();
+  alert("Valid");
   return true;
 }
 /*
@@ -151,21 +222,14 @@ function sendToR(){
     Shiny.onInputChange("forbs", forbs / 100);
     Shiny.onInputChange("bg", bareground / 100);
     Shiny.onInputChange("simulate", true);
-    // change options to make more user friendly
-    if (calcFutures == 2) {calcFutures = "No";}
-    else                  {calcFutures = "Yes";}
-    if (chooseSoils == 1) {chooseSoils = "No";}
-    else                  {chooseSoils = "Yes";}
-    if (chooseComp == 1)  {chooseComp = "No";}
-    else                  {chooseComp = "Yes";}
     // setup feedback status text
     changeFeedbackText("<br>Simulation running on location <span id='imp'>[" + lat + ", " +
                        long + "]</span> with calculate futures set to <span id='imp'>" + calcFutures +
                        "</span>.<br><br><pre>     Soils composition set to: </pre><span id='imp'>" +
-                      "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
+                       "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
                        "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
-                       "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>");
-   changeFeedbackText("<span id='imp'>Calculation Running...</span>");
+                       "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>", false);
+    changeFeedbackText("<span id='imp'>Calculation Running...</span>", true);
  }
 }
 
