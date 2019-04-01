@@ -1,5 +1,7 @@
 library(dplyr)
 library(data.table)
+library(maps)
+library(maptools)
 
 #' @code{}
 #' 
@@ -18,7 +20,7 @@ set_execute_SW <- function(lat, lng, futuresim,
   source('data/rSFSW2_ProjectFiles/SFSW2_project_code_Part1.R')
   
   # 1 set location and treatments in Input Master and Treatment files
-  set_IM(lat, lng, futuresim)
+  set_IM(SFSW2_prj_meta, lat, lng, futuresim)
   
   #2 set whether soils should be extracted from 250m data or chosen by user
   set_soils(SFSW2_prj_meta, soils, sand, clay, futuresim)
@@ -36,7 +38,7 @@ set_execute_SW <- function(lat, lng, futuresim,
 
 #' @code{set_IM} Set location (coordinates) in InputMaster
 
-set_IM <- function(lat, lng, futuresim){
+set_IM <- function(environment, lat, lng, futuresim){
   
   # Input input master file
   IMfilepathIn <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputMaster_template_v11.csv"
@@ -51,29 +53,31 @@ set_IM <- function(lat, lng, futuresim){
   IMfile <- read.csv(IMfilepathIn, stringsAsFactors = FALSE)
   
   # get X & Y
-  coords <- data.frame(lat, lng)
+  coords <- data.frame(lng, lat)
 
-  # TO DO: checks for X & Y - regular and within range
-  
   # Write in lat & longs ----
-  IMfile$X_WGS84 <- coords[1,2] # lng
-  IMfile$Y_WGS84 <- coords[1,1] # lat
+  IMfile$X_WGS84 <- coords[1,1] # lng
+  IMfile$Y_WGS84 <- coords[1,2] # lat
 
   # Find what state you are in 
-  
-  state <- 'AZ'
+  state <- latlong2state(coords)
   
   # Find matching weather folder in proper weather db ----
   MasterSites <- fread(file.path("data", paste0(state,"_weatherDB_cells.csv")))
   
   # correct resolution of points (double check that we are finding the right coord in respect to bottom let, top right, etc.)
-  coords2 <- apply(coords, 2, conv_res) #Refining coordinates to match database resolution.
+  coords2 <- apply(coords[, c(2,1)], 2, conv_res) #Refining coordinates to match database resolution.
 
   # match -----
   coordstring <- paste(coords2[2], coords2[1], sep="_")
 
   WeatherFolder <- grep(coordstring, MasterSites$Label, value = TRUE)
   WeatherFolder <- WeatherFolder[1:23]
+  
+  # Set correct weather DB in environment ------------------
+  environment[["fnames_in"]][["fdbWeather"]] <-   #file.path("/home/devel", paste0(state, "_dbWeatherData.sqlite3"))
+    file.path("/Volumes/Samsung_T5/CDI", paste0(state, "_dbWeatherData.sqlite3"))
+    
   ###########################################################
   #------------------ Only Current or All --------------------
   ###########################################################

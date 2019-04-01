@@ -1,7 +1,7 @@
 
 rm(list=ls(all=TRUE))
-devtools::load_all(pkg = '~/Documents/Git/rSFSW2/')
-devtools::load_all(pkg = '~/Documents/Git/rSOILWAT2/')
+#devtools::load_all(pkg = '~/Documents/Git/rSFSW2/')
+#devtools::load_all(pkg = '~/Documents/Git/rSOILWAT2/')
 
 library(rSFSW2)
 setwd("/Users/candrews/Documents/Git/longtermdroughtsimulator/ShinyApp")
@@ -28,8 +28,7 @@ source("functions/MiscFunctions.R")
 #debug(rSFSW2::dbOutput_create_Design)
 #debug(create_job_df)
 #debug(rSFSW2::create_dbWork)
-
-debug(rSOILWAT2::swYears_StartYear)
+#debug(rSOILWAT2::swYears_StartYear)
 
 delete_test_output2(file.path(getwd(), "data/rSFSW2_ProjectFiles"))
 
