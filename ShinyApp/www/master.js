@@ -7,6 +7,7 @@ var chooseSoils = 1;
 var chooseComp = 1;
 var calcFutures = 2;
 var calcFuturesTxt;
+var numRepeats = 0;
 // global variable init for user inputs
 var lat = 35.1983;
 var long = -111.6513;
@@ -238,9 +239,21 @@ function sendToR(){
                        "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
                        "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>", false);
     changeFeedbackText("<span id='imp'>Calculation Running...</span>", true);
- }
+    repeatWithTimer(function(){changeFeedbackText("Working", true)}, 1000, 5);
+  }
 }
-
+  /*
+   * Repeats a passed function numRepeats times with a delay of time.
+   * @param functionIn: (function) function to call
+   * @param time: (int) number of milliseconds between each delay
+   * @param numRepeats: (int) number of times to repeat the function call
+  */
+  function repeatWithTimer(functionIn, time, numRepeats){
+    setTimeout(function(){
+        functionIn();
+        if(numRepeats > 1) repeatWithTimer(functionIn, time, numRepeats - 1);
+    }, time);
+  }
   /*
     * Calculates the type of soil a composition of sand, clay and silt are classified as
     * @returns string, indicating type of soil

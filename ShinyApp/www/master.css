@@ -35,10 +35,8 @@ hr{
   background-color: white;
 }
 #simBtn{
-  margin-left: 45%;
 }
 #validateBtn{
-  margin-left: 45%;
 }
 
 #feedback{
@@ -64,8 +62,14 @@ hr{
   margin-bottom: 20px;
   text-align: center;
 }
-.firstElem{
-  margin-left: 25%;
+
+.centeredDiv{
+  margin: auto;
+  width: 40%;
+}
+.centeredDiv1{
+  margin: auto;
+  width: 13%;
 }
 .highlight{
   background-color: yellow;
