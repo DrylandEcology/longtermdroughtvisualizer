@@ -121,7 +121,7 @@ fnames_in <- list(
 
   # Database with daily weather data
   fdbWeather = if (identical(opt_platform[["host"]], "local")) {
-      file.path("/home/devel/arizona_dbWeatherData.sqlite3")
+      file.path("/srv/shiny-server/longtermdroughtsimulator/Data/WeatherDBs/arizona_dbWeatherData.sqlite3")
     } else if (identical(opt_platform[["host"]], "hpc")) {
       file.path(project_paths[["dir_prj"]], "..", "dbWeatherData.sqlite3")
     },
