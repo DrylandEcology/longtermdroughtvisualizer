@@ -1,5 +1,7 @@
 library(dplyr)
 library(data.table)
+library(maps)
+library(maptools)
 
 
 show_js_inputs <- function(lat, long, future, soils, sand, clay,
@@ -37,7 +39,7 @@ set_execute_SW <- function(lat, lng, futuresim,
   source('data/rSFSW2_ProjectFiles/SFSW2_project_code_Part1.R')
   
   # 1 set location and treatments in Input Master and Treatment files
-  set_IM(lat, lng, futuresim)
+  set_IM(SFSW2_prj_meta, lat, lng, futuresim)
   
   #2 set whether soils should be extracted from 250m data or chosen by user
   set_soils(SFSW2_prj_meta, soils, sand, clay, futuresim)
@@ -55,7 +57,7 @@ set_execute_SW <- function(lat, lng, futuresim,
 
 #' @code{set_IM} Set location (coordinates) in InputMaster
 
-set_IM <- function(lat, lng, futuresim){
+set_IM <- function(environment, lat, lng, futuresim){
   
   # Input input master file
   IMfilepathIn <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputMaster_template_v11.csv"
@@ -70,75 +72,77 @@ set_IM <- function(lat, lng, futuresim){
   IMfile <- read.csv(IMfilepathIn, stringsAsFactors = FALSE)
   
   # get X & Y
-  coords <- data.frame(lat, lng)
+  coords <- data.frame(lng, lat)
 
-  # TO DO: checks for X & Y - regular and within range
-  
   # Write in lat & longs ----
-  IMfile$X_WGS84 <- coords[1,2] # lng
-  IMfile$Y_WGS84 <- coords[1,1] # lat
+  IMfile$X_WGS84 <- coords[1,1] # lng
+  IMfile$Y_WGS84 <- coords[1,2] # lat
 
   # Find what state you are in 
-  
-  state <- 'AZ'
+  state <- latlong2state(coords)
   
   # Find matching weather folder in proper weather db ----
   MasterSites <- fread(file.path("data", paste0(state,"_weatherDB_cells.csv")))
   
   # correct resolution of points (double check that we are finding the right coord in respect to bottom let, top right, etc.)
-  coords2 <- apply(coords, 2, conv_res) #Refining coordinates to match database resolution.
+  coords2 <- apply(coords[, c(2,1)], 2, conv_res) #Refining coordinates to match database resolution.
 
   # match -----
   coordstring <- paste(coords2[2], coords2[1], sep="_")
 
   WeatherFolder <- grep(coordstring, MasterSites$Label, value = TRUE)
   WeatherFolder <- WeatherFolder[1:23]
+
+  # Set correct weather DB in environment ------------------
+  environment[["fnames_in"]][["fdbWeather"]] <-   #file.path("/home/devel", paste0(state, "_dbWeatherData.sqlite3"))
+    file.path("/home/devel", paste0(state, "_dbWeatherData.sqlite3"))
+
   ###########################################################
   #------------------ Only Current or All --------------------
   ###########################################################
-  
+
   if(futuresim == 2) WeatherFolder <- grep('Current', WeatherFolder, value = TRUE) # limit weather folders to current
   #if(futuresim == 1) WeatherFolder <- grep('Current|CanESM2', WeatherFolder, value = TRUE) # limit weather folders to current
-  
+
   ###########################################################
   #------------------ check insert write --------------------
   ###########################################################
-  
+
   # checks
   # # has value, length of 1. only western states in this DB
   if (is.na(WeatherFolder) || length(WeatherFolder) == 0) {
     print(paste('Sites not found in weather database'))
   }
-  
+
   # insert into IM - need as many rows as climate scenarios?
   IMfile <- do.call("rbind", replicate(length(WeatherFolder), IMfile, simplify = FALSE))
   IMfile$site_id <- 1:length(WeatherFolder)
   IMfile$WeatherFolder <- WeatherFolder
   IMfile$Label <-  sapply(strsplit( IMfile$WeatherFolder, "_"), "[", 5)
-  
+
   # write - fill file is linked in the descriptions.R file
 
   write.csv(IMfile, IMfilepathOut, row.names = FALSE)
-  
+
   ######################################################################################################################
   #                           ------------------ Setup Treatment Design-----------------
   ######################################################################################################################
-  
+
   # Input treatment file
   TrtfilepathIn <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputData_TreatmentDesign_v17.csv"
-  
+
   # Output treatment file
   TrtfilepathOut <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputData_TreatmentDesign_v17_fill.csv"
-  
+
   # Read in file
   TrtFile <- read.csv(TrtfilepathIn, stringsAsFactors = FALSE)
-  
+
   ###########################################################
   #------------------ check insert write --------------------
   ###########################################################
-  
+
   if(futuresim == 1) {
-    
+
     TrtFile <- rbind(TrtFile[1,], do.call("rbind", replicate(length(WeatherFolder), TrtFile[2,], simplify = FALSE)))
     indx <- length(WeatherFolder) + 1
     TrtFile$LookupWeatherFolder[2:indx] <- WeatherFolder
@@ -185,8 +189,8 @@ set_soils <- function(environment, soils, sand, clay, futuresim){
     names(y) <- names(x)
     
     y$Label[1] <- "Site01"
-    y[1,c(3:9)] <- c(10, 20, 40, 60, 80, 100, 150) # TO DO: change to standard 250 m depths
-    y[1,2] <- 150
+    y[1,c(3:10)] <- c(10, 20, 40, 60, 80, 100, 150, 200) # Same as ISRIC WISE 30sec V1a
+    y[1,2] <- 200
     
     if(futuresim == 1)   y <- do.call("rbind", replicate(23, y, simplify = FALSE))
 
@@ -200,7 +204,7 @@ set_soils <- function(environment, soils, sand, clay, futuresim){
     y[1,] <- x[1,]
     names(y) <- names(x)
     
-    y$Label[2] <- "Site01"
+    y$Label[2] <- "Current"
 
     # sand
     sandIdx <- grep( 'Sand', names(y))
@@ -212,9 +216,9 @@ set_soils <- function(environment, soils, sand, clay, futuresim){
     y[2,clayIdx[1:7]] <- as.numeric(clay/100) 
     y[1,clayIdx[1:7]] <- 1
     
-    # TO DO - bulk density function where it still pulls
+    # TO DO - bulk density function where it still pulls even though other values are set?
     bdIdx <- grep( 'Matricd', names(x))
-    y[2,bdIdx[1:7]] <- 1.66
+    y[2,bdIdx[1:7]] <- 1.51
     y[1,bdIdx[1:7]] <- 1
 
     if(futuresim == 1)  y <- rbind(y[1,],  do.call("rbind", replicate(23, y[2,], simplify = FALSE)))

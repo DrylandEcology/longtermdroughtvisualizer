@@ -77,6 +77,11 @@
       R -e "install.packages('RCurl', repos='http://cran.rstudio.com/')"
       R -e "install.packages('gridGraphics', repos='http://cran.rstudio.com/')"
       R -e "install.packages('dplyr', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('sp', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('maps', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('maptools', repos='http://cran.rstudio.com/')"
+
+
 
       # clone and install rSOILWAT2
       git clone -b master --single-branch --recursive https://github.com/DrylandEcology/rSOILWAT2.git rSOILWAT2
@@ -92,6 +97,11 @@
       # ensure that shiny server service file installed in the correct place
       cp /opt/shiny-server/config/systemd/shiny-server.service /etc/systemd/system
       systemctl restart shiny-server
+
+      # download data from the S3 environment
+      cd /home/devel/
+      aws s3 sync s3://sbsc-upload-data .
+
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'

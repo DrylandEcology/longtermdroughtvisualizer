@@ -71,7 +71,8 @@ project_paths <- list(
 
   # Path from where external data are extraced
   dir_external = dir_ex <- if (identical(opt_platform[["host"]], "local")) {
-      file.path("~/Desktop/Data")
+      #file.path("/Volumes/Samsung_T5/GIS/Data")
+      file.path("/home/devel/Data")
     } else if (identical(opt_platform[["host"]], "hpc")) {
       file.path("/home", "YOURDRIVE", "BigData", "GIS", "Data")
     },
