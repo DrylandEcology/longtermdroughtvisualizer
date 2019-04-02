@@ -4,33 +4,33 @@ library(maps)
 library(maptools)
 
 #' @code{}
-#' 
+#'
 #' @param location A list from the input$clickmap of lat & lng
 #' @param futuresim logical. TRUE means future simulations will be executed.
-#' 
-    
-set_execute_SW <- function(lat, lng, futuresim, 
-                           soils, sand = 33, clay = 33, 
+#'
+
+set_execute_SW <- function(lat, lng, futuresim,
+                           soils, sand = 33, clay = 33,
                            comp, trees = 0, shrubs = 0.5, grasses = 0.5, forbs = 0, bg = 0){
 
   # delete any potential old or used files
   delete_test_output2("data/rSFSW2_ProjectFiles/")
-  
+
   # load project description & setting environment
   source('data/rSFSW2_ProjectFiles/SFSW2_project_code_Part1.R')
-  
+
   # 1 set location and treatments in Input Master and Treatment files
   set_IM(SFSW2_prj_meta, lat, lng, futuresim)
-  
+
   #2 set whether soils should be extracted from 250m data or chosen by user
   set_soils(SFSW2_prj_meta, soils, sand, clay, futuresim)
-  
+
   #3 set whether composition should be predicted from climate or chosen by user
   set_comp(SFSW2_prj_meta, comp, trees, shrubs, grasses, forbs, bg, futuresim)
-  
+
   #### Save new project description & setting environment
   save_to_rds_with_backup(SFSW2_prj_meta,  file = "data/rSFSW2_ProjectFiles/SFSW2_project_descriptions_Onesite.rds")
-  
+
   source("data/rSFSW2_ProjectFiles/SFSW2_project_code_check_run.R")
 }
 
@@ -39,10 +39,10 @@ set_execute_SW <- function(lat, lng, futuresim,
 #' @code{set_IM} Set location (coordinates) in InputMaster
 
 set_IM <- function(environment, lat, lng, futuresim){
-  
+
   # Input input master file
   IMfilepathIn <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputMaster_template_v11.csv"
-  
+
   # Output input master file
   IMfilepathOut <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputMaster_fill_v11.csv"
 
@@ -51,7 +51,7 @@ set_IM <- function(environment, lat, lng, futuresim){
   ###########################################################
   # Read in file
   IMfile <- read.csv(IMfilepathIn, stringsAsFactors = FALSE)
-  
+
   # get X & Y
   coords <- data.frame(lng, lat)
 
@@ -59,12 +59,12 @@ set_IM <- function(environment, lat, lng, futuresim){
   IMfile$X_WGS84 <- coords[1,1] # lng
   IMfile$Y_WGS84 <- coords[1,2] # lat
 
-  # Find what state you are in 
+  # Find what state you are in
   state <- latlong2state(coords)
-  
+
   # Find matching weather folder in proper weather db ----
   MasterSites <- fread(file.path("data", paste0(state,"_weatherDB_cells.csv")))
-  
+
   # correct resolution of points (double check that we are finding the right coord in respect to bottom let, top right, etc.)
   coords2 <- apply(coords[, c(2,1)], 2, conv_res) #Refining coordinates to match database resolution.
 
@@ -75,8 +75,8 @@ set_IM <- function(environment, lat, lng, futuresim){
   WeatherFolder <- WeatherFolder[1:23]
 
   # Set correct weather DB in environment ------------------
-  environment[["fnames_in"]][["fdbWeather"]] <-   #file.path("/home/devel", paste0(state, "_dbWeatherData.sqlite3"))
-    file.path("/home/devel", paste0(state, "_dbWeatherData.sqlite3"))
+  environment[["fnames_in"]][["fdbWeather"]] <-   
+    file.path("/srv/shiny-server/longtermdroughtsimulator/Data/WeatherDBs", paste0(state, "_dbWeatherData.sqlite3"))
 
   ###########################################################
   #------------------ Only Current or All --------------------
@@ -131,52 +131,52 @@ set_IM <- function(environment, lat, lng, futuresim){
     TrtFile$YearStart[2:indx] <- c(1915, rep(2015, 22))
     TrtFile$YearEnd[2:indx] <- c(2015, rep(2099, 22))
     TrtFile[1,c('LookupWeatherFolder', 'YearStart', 'YearEnd')] <- 1
-    
+
   }
-  
+
   # write - fill file is linked in the descriptions.R file
   write.csv(TrtFile, TrtfilepathOut, row.names = FALSE)
 }
 
 
 
-  
-#' @code{set_soils} Set soils options based on user input. 
+
+#' @code{set_soils} Set soils options based on user input.
 #'
 #' @param soils 1 is extract (default), 2 is select.
 #' @param sand %Sand in each layer
 #' @param clay %Clay in each layer
-#' 
+#'
 #' @return SoilTexture file
 #' @return SoilLayers file
-#' 
+#'
 #' @export
 
 set_soils <- function(environment, soils, sand, clay, futuresim){
 
   #################################################################################
   if(soils == "2") { # If user chooses to select soils, need to populate files.
-    
+
     #################################################################
     # --------- change environment soil extraction to 0 ------------
     #################################################################
     environment[["exinfo"]][["ExtractSoilDataFromISRICWISE30secV1a_Global"]] <- 0
-    
+
     #################################################################
     # --------- change & write soil depth file ------------
     #################################################################
     x <- read.csv(SFSW2_prj_meta[["fnames_in"]][["fslayers"]], stringsAsFactors = FALSE)
     y <- data.frame(matrix(nrow = 1, ncol = ncol(x)))
     names(y) <- names(x)
-    
+
     y$Label[1] <- "Site01"
     y[1,c(3:10)] <- c(10, 20, 40, 60, 80, 100, 150, 200) # Same as ISRIC WISE 30sec V1a
     y[1,2] <- 200
-    
+
     if(futuresim == 1)   y <- do.call("rbind", replicate(23, y, simplify = FALSE))
 
     write.csv(y, SFSW2_prj_meta[["fnames_in"]][["fslayers"]], row.names = FALSE)
-  
+
     #################################################################
     # --------- change & write soil texture file ----------
     #################################################################
@@ -184,26 +184,26 @@ set_soils <- function(environment, soils, sand, clay, futuresim){
     y <- data.frame(matrix(nrow = 2, ncol = ncol(x)))
     y[1,] <- x[1,]
     names(y) <- names(x)
-    
+
     y$Label[2] <- "Current"
 
     # sand
     sandIdx <- grep( 'Sand', names(y))
-    y[2,sandIdx[1:7]] <- as.numeric(sand/100) #always 8 
+    y[2,sandIdx[1:7]] <- as.numeric(sand/100) #always 8
     y[1,sandIdx[1:7]] <- 1
-    
+
     # clay
     clayIdx <- grep( 'Clay', names(y))
-    y[2,clayIdx[1:7]] <- as.numeric(clay/100) 
+    y[2,clayIdx[1:7]] <- as.numeric(clay/100)
     y[1,clayIdx[1:7]] <- 1
-    
+
     # TO DO - bulk density function where it still pulls even though other values are set?
     bdIdx <- grep( 'Matricd', names(x))
     y[2,bdIdx[1:7]] <- 1.51
     y[1,bdIdx[1:7]] <- 1
 
     if(futuresim == 1)  y <- rbind(y[1,],  do.call("rbind", replicate(23, y[2,], simplify = FALSE)))
-    
+
     write.csv(y, SFSW2_prj_meta[["fnames_in"]][["fsoils"]], row.names = FALSE)
 
     }
@@ -213,9 +213,9 @@ set_soils <- function(environment, soils, sand, clay, futuresim){
 #' @code{set_comp} set comp.
 #'
 #' @param comp 1 is estimate comp from climate (default), 2 is user selection.
-#' 
+#'
 #' @return prod file
-#' 
+#'
 #' @export
 
 set_comp <- function(environment, comp, trees, shrubs, grasses, forbs, bg, futuresim){
@@ -223,37 +223,34 @@ set_comp <- function(environment, comp, trees, shrubs, grasses, forbs, bg, futur
   ######################################################################################################################
   #                           ------------------ Setup Experimental Designfile Design-----------------
   ######################################################################################################################
-  
+
   # Input exp file
   ExpfilepathIn <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputData_ExperimentalDesign_v09.csv"
-  
+
   # Output exp file
   ExpfilepathOut <- environment[["fnames_in"]][["fexpDesign"]]
-  
+
   # Read in file
   ExpFile <- read.csv(ExpfilepathIn, stringsAsFactors = FALSE)
-  
+
   if(comp == "2") { # If user chooses to select comp, need to populate exp file
-    
+
     #################################################################
     # --------- change exp design file --------------------------------
     #################################################################
-    
+
     ExpFile$Label[2] <- "VegSet"
     ExpFile[,25:53] <- 0
-    
+
     ExpFile$PotentialNaturalVegetation_CompositionTrees_Fraction <- c(1, trees/100)
     ExpFile$PotentialNaturalVegetation_CompositionShrubs_Fraction <- c(1, shrubs/100)
     ExpFile$PotentialNaturalVegetation_CompositionAnnuals_Fraction <- c(1, grasses/100)
     ExpFile$PotentialNaturalVegetation_CompositionForb_Fraction <- c(1, forbs/100)
     ExpFile$PotentialNaturalVegetation_CompositionBareGround_Fraction <- c(1, bg/100)
-    
+
   }
-  
+
   write.csv(ExpFile, environment[["fnames_in"]][["fexpDesign"]], row.names = FALSE)
-  
-  
+
+
 }
-
-
-
