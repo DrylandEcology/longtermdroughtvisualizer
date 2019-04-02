@@ -18,6 +18,18 @@ set_execute_SW <- function(lat, lng, futuresim,
                            soils, sand = 33, clay = 33, 
                            comp, trees = 0, shrubs = 0.5, grasses = 0.5, forbs = 0, bg = 0){
 
+  print(futuresim)
+  print(lat)
+  print(lng)
+  print(soils)
+  print(sand)
+  print(clay)
+  print(comp)
+  print(trees)
+  print(shrubs)
+  print(grasses)
+  print(forbs)
+  print(bg)
   # delete any potential old or used files
   delete_test_output2("data/rSFSW2_ProjectFiles/")
   
