@@ -2,6 +2,8 @@
 <html>
 <!-- Tell html where to find external resources -->
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="shared/jquery.js" type="text/javascript"></script>
   <script src="shared/shiny.js" type="text/javascript"></script>
   <script src="leaflet.js" type="text/javascript"></script>
@@ -10,8 +12,9 @@
   <link rel="stylesheet" type="text/css" href="master.css"/>
   <link rel="stylesheet" type="text/css" href="shared/shiny.css"/>
   <link rel="stylesheet" type="text/css" href="leaflet.css"/>
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
 <div class="container-fluid">
   <body>
@@ -31,8 +34,7 @@
         </h5>
       <br>
       <hr>
-      <div class="row">
-        <div class="col-sm-6">
+        <div class="col col-sm-6 col-md-6 col-lg-6">
           <!-- Description about the long term simulation -->
           <p id="aboutBox" class="whiteBack">
             <p  style="float:left;font-size:20px;margin-bottom:0px;color:#78909c"><em>About</em></p><br><br>
@@ -60,9 +62,10 @@
             climate conditions.
           </p>
           <!-- Create tip dropdowns -->
-          <div aria-multiselectable="true" role="tablist" id="accordion" class="panel-group">
+          <div id="accordion" class="panel-group">
             <!-- Dropdown 1 -->
-            <div class="panel panel-default"> <a title="How to 1" aria-controls="collapse1" aria-expanded="false" href="#collapse1" data-parent="#accordion" data-toggle="collapse" id="heading1" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Location</span> </a>
+            <div class="panel panel-default">
+              <a title="How to 1" aria-controls="collapse1" aria-expanded="false" href="#collapse1" data-parent="#accordion"  id="heading1" role="tab" class="panel-heading collapsed" data-toggle="collapse"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Location</span> </a>
                 <div aria-labelledby="heading1" role="tabpanel" class="panel-collapse collapse" id="collapse1" aria-expanded="false">
                     <div class="panel-body">
                         <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
@@ -70,7 +73,7 @@
                             Location is designated as coordinates (lat, lon) in the WGS84 coordinate reference system. <br><br>
                             Select your location by either clicking on the map or by <span class="highlight" class="redText">entering coordinates</span> into the latitude and
                             longitude boxes provided.<br><br>
-                            <span class="highlight">Note: Currently, only locations in Arizona, New Mexico, Colorado, and Utah are operational.</span>
+                            Note: Currently, only locations in Arizona, New Mexico, Colorado, and Utah are operational.
                         </p>
                     </div>
                 </div>
@@ -150,7 +153,7 @@
           </div>
         </div>
           <!-- Leaflet map -->
-          <div class="col-sm-6">
+          <div class="col col-sm-6 col-md-6 col-lg-6">
             <div id="greyBack">
               <div id='map'>
               <script>
@@ -256,11 +259,12 @@
                     <script language="javascript">
                       var canvas = new jsGraphics("soilsTriangle");
                       function drawPoint(x, y){
+                        canvas.clear();
                         canvas.setColor("red");
                         var xOff = 570;
                         var yOff = 482;
-                        var yCoord = (parseInt(yOff) - 477 * parseFloat(y) * 0.01) + 500;
-                        var xCoord = (parseInt(xOff) - 557 * parseFloat(x) * 0.01 - 0.5 * parseFloat(y) * 555 * 0.01);
+                        var yCoord = ((parseInt(yOff) - 477 * parseFloat(y) * 0.01) + 715);
+                        var xCoord = ((parseInt(xOff) - 557 * parseFloat(x) * 0.01 - 0.5 * parseFloat(y) * 555 * 0.01) - 12);
                         canvas.fillEllipse(xCoord,yCoord, 10, 10);
                         canvas.paint();
                       }
@@ -347,98 +351,97 @@
               </div>
             </div>
             </div>
-          </div>
           <br>
-          <!-- More information and Data sources placeholders, add text for this here -->
-          <div class="row">
-            <hr><h2 id="moreInfo"> More Information </h2>
-            <p style="word-wrap: break-word">
-              <em>About the model</em>
-              <br>
-              The results presented here are generated with <a href="https://github.com/DrylandEcology/SOILWAT2">SOILWAT2</a>(Schlaepfer and Andrews 2018,
-              Schlaepfer and Murphy 2018) , which is a daily, site-specific, multi soil-layer, ecosystem water-
-              balance model, driven by daily meteorology, as well as site soil texture, soil depth, and
-              vegetation.
-              <br><br>
-              Daily meteorology includes historical weather data from <a href="http://ciresgroups.colorado.edu/livneh/data/daily-obserational-hydrometeorology-data-set-conus-extent-canadian-extent-columbia-river-basin"> University of Colorado’s Water and
-              Climate Research Group Laboratory</a>, derived from observed data at weather stations, as well as
-              predictions derived from projections of future climate. The tool shows projections for two
-              possible climate futures, one in which emissions peak around 2040 and then decline (RCP 4.5)
-              and another in which emissions continue to rise throughout the 21st century (RCP 8.5). Both
-              futures are considered possible depending on hypothetical trajectories of greenhouse
-              gases. These climate projections have been downscaled on a temporal and spatial from 11 global
-              climate models from the <a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html">CMIP5</a> archive, using a hybrid-delta downscaling technique.
-              <br><br>
-              <em>Guidance on using results</em>
-              <br>
-              The results generated and presented here provide a long-term historical and future perspective on
-              soil moisture and climate at a specific site. The resulting site-specific projections of moisture
-              availability is intended to allow users to recognize novel drought risk and to develop hypotheses
-              about how plant species and ecosystems will respond to changing soil water conditions.
-              Projections are based on GCMs that were were selected from all models that participated in the
-              fifth phase of the Climate Model Intercomparison Project (Taylor et al. 2011; CMIP5) to include
-              both the most independent (Knutti et al. 2013) and best performing subset (for the western
-              United States; Rupp et al. 2013) of GCMs.. While users can explore projected climate and soil
-              moisture conditions from individual climate models, ensembles are also presented to represent
-              the mean consensus amongst models.
-            </p>
-          </div>
-          <div class="row">
-            <hr><h2 id="dataSources"> Data Sources </h2>
-            <p style="word-wrap: break-word">
-              <ul>
-                <li><a href="https://www.esrl.noaa.gov/psd/data/gridded/data.livneh.html">Livneh daily CONUS near-surface gridded meteorological data.</a></li>
-                <li>University of Colorado, Boulder</li>
-              </ul>
-              <ul>
-                <li><a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Com
-                plete%20Archives">Downscaled CMIP5 Climate and Hydrology Projects</a></li>
-                <li>Lawrence Livermore National Laboratory</li>
-              </ul>
 
-              <ul>
-                <li><a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs1
-                42p2_053629">Digital General Soil Map of the United States (STATSGO2)</a></li>
-                <li><b>Natural Resources Conservation Service</b></li>
-              </ul>
-            </p>
-          </div>
-          <div class="row">
-            <hr><h2 id="publications"> Publications </h2>
-            <p class="centered" style="word-wrap: break-word">
-              <ul>
-                <li>
-                  Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, and I. C. Burke. 2014. Shifts in plant
-                  functional types have time-dependent and regionally variable impacts on dryland
-                  ecosystem water balance. Journal of Ecology 102:1408-1418.
-                </li>
-                <li>
-                  Knutti, R., D. Masson, and A. Gettelman. 2013. Climate model genealogy: Generation CMIP5
-                  and how we got there. Geophysical Research Letters 40:1194-1199.
-                </li>
-                <li>
-                  Rupp, D. E., J. T. Abatzoglou, K. C. Hegewisch, and P. W. Mote. 2013. Evaluation of CMIP5
-                  20th century climate simulations for the Pacific Northwest USA. Journal of Geophysical
-                  Research: Atmospheres 118:2013JD020085.
-                </li>
-                <li>
-                  Schlaepfer, D. R., and C. A. Andrews. 2018. rSFSW2: Simulation Framework for SOILWAT2.
-                  R package version 3.0.0. <a href="https://github.com/DrylandEcology/rSFSW2">https://github.com/DrylandEcology/rSFSW2</a>
-                </li>
-                <li>
-                  Schlaepfer, D. R., and R. Murphy. 2018. rSOILWAT2: An Ecohydrological Ecosystem-Scale
-                  Water Balance Simulation Model. R package version 2.3.2.
-                  <a href="https://github.com/DrylandEcology/rSOILWAT2">https://github.com/DrylandEcology/rSOILWAT2</a>
-                </li>
-                <li>
-                  Taylor, K. E., R. J. Stouffer, and G. A. Meehl. 2011. An Overview of CMIP5 and the
-                  Experiment Design. Bulletin of the American Meteorological Society 93:485-498.
-                </li>
-              </ul>
-            </p>
-          </div>
         </div>
+        <!-- More information and Data sources placeholders, add text for this here -->
+        <div class="row">
+          <hr><h2 id="moreInfo"> More Information </h2>
+          <p style="word-wrap: break-word">
+            <em>About the model</em>
+            <br>
+            The results presented here are generated with <a href="https://github.com/DrylandEcology/SOILWAT2">SOILWAT2</a>(Schlaepfer and Andrews 2018,
+            Schlaepfer and Murphy 2018) , which is a daily, site-specific, multi soil-layer, ecosystem water-
+            balance model, driven by daily meteorology, as well as site soil texture, soil depth, and
+            vegetation.
+            <br><br>
+            Daily meteorology includes historical weather data from <a href="http://ciresgroups.colorado.edu/livneh/data/daily-obserational-hydrometeorology-data-set-conus-extent-canadian-extent-columbia-river-basin"> University of Colorado’s Water and
+            Climate Research Group Laboratory</a>, derived from observed data at weather stations, as well as
+            predictions derived from projections of future climate. The tool shows projections for two
+            possible climate futures, one in which emissions peak around 2040 and then decline (RCP 4.5)
+            and another in which emissions continue to rise throughout the 21st century (RCP 8.5). Both
+            futures are considered possible depending on hypothetical trajectories of greenhouse
+            gases. These climate projections have been downscaled on a temporal and spatial from 11 global
+            climate models from the <a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html">CMIP5</a> archive, using a hybrid-delta downscaling technique.
+            <br><br>
+            <em>Guidance on using results</em>
+            <br>
+            The results generated and presented here provide a long-term historical and future perspective on
+            soil moisture and climate at a specific site. The resulting site-specific projections of moisture
+            availability is intended to allow users to recognize novel drought risk and to develop hypotheses
+            about how plant species and ecosystems will respond to changing soil water conditions.
+            Projections are based on GCMs that were were selected from all models that participated in the
+            fifth phase of the Climate Model Intercomparison Project (Taylor et al. 2011; CMIP5) to include
+            both the most independent (Knutti et al. 2013) and best performing subset (for the western
+            United States; Rupp et al. 2013) of GCMs.. While users can explore projected climate and soil
+            moisture conditions from individual climate models, ensembles are also presented to represent
+            the mean consensus amongst models.
+          </p>
+        </div>
+        <div class="row">
+          <hr><h2 id="dataSources"> Data Sources </h2>
+          <p style="word-wrap: break-word">
+            <ul>
+              <li><a href="https://www.esrl.noaa.gov/psd/data/gridded/data.livneh.html">Livneh daily CONUS near-surface gridded meteorological data.</a></li>
+              <li>University of Colorado, Boulder</li>
+            </ul>
+            <ul>
+              <li><a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Com
+              plete%20Archives">Downscaled CMIP5 Climate and Hydrology Projects</a></li>
+              <li>Lawrence Livermore National Laboratory</li>
+            </ul>
 
+            <ul>
+              <li><a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs1
+              42p2_053629">Digital General Soil Map of the United States (STATSGO2)</a></li>
+              <li><b>Natural Resources Conservation Service</b></li>
+            </ul>
+          </p>
+        </div>
+        <div class="row">
+          <hr><h2 id="publications"> Publications </h2>
+          <p class="centered" style="word-wrap: break-word">
+            <ul>
+              <li>
+                Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, and I. C. Burke. 2014. Shifts in plant
+                functional types have time-dependent and regionally variable impacts on dryland
+                ecosystem water balance. Journal of Ecology 102:1408-1418.
+              </li>
+              <li>
+                Knutti, R., D. Masson, and A. Gettelman. 2013. Climate model genealogy: Generation CMIP5
+                and how we got there. Geophysical Research Letters 40:1194-1199.
+              </li>
+              <li>
+                Rupp, D. E., J. T. Abatzoglou, K. C. Hegewisch, and P. W. Mote. 2013. Evaluation of CMIP5
+                20th century climate simulations for the Pacific Northwest USA. Journal of Geophysical
+                Research: Atmospheres 118:2013JD020085.
+              </li>
+              <li>
+                Schlaepfer, D. R., and C. A. Andrews. 2018. rSFSW2: Simulation Framework for SOILWAT2.
+                R package version 3.0.0. <a href="https://github.com/DrylandEcology/rSFSW2">https://github.com/DrylandEcology/rSFSW2</a>
+              </li>
+              <li>
+                Schlaepfer, D. R., and R. Murphy. 2018. rSOILWAT2: An Ecohydrological Ecosystem-Scale
+                Water Balance Simulation Model. R package version 2.3.2.
+                <a href="https://github.com/DrylandEcology/rSOILWAT2">https://github.com/DrylandEcology/rSOILWAT2</a>
+              </li>
+              <li>
+                Taylor, K. E., R. J. Stouffer, and G. A. Meehl. 2011. An Overview of CMIP5 and the
+                Experiment Design. Bulletin of the American Meteorological Society 93:485-498.
+              </li>
+            </ul>
+          </p>
+        </div>
       </div>
     </div>
   </div>

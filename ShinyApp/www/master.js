@@ -41,6 +41,7 @@ $(document).ready(function(){
     // show choose soils options when radio enabled
     if($(this).attr("value") == "chooseTrue"){
       $("#chooseSoils").show();
+      if (screen.width > 1200) drawPoint(sand, clay);
       unValidate();
       chooseSoils = 1;
     }
@@ -118,8 +119,7 @@ function adjustSilt(){
   if (siltVal >= 0){
     document.getElementById("silt").value = siltVal;
   }
-
-  //drawPoint(sand, clay);
+  if (screen.width >= 1200) drawPoint(sand, clay);
 }
 function setGlobalInputs(){
   // future radio value
@@ -200,7 +200,7 @@ function validateInputs(){
   else                  {calcFuturesTxt = "Yes";}
   // setup feedback status text
   changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat + ", " +
-                     long + "] (" + state + ")</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
+                     long + "]</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
                      "</span>.<br><br><pre>     Soils composition set to: </pre><span id='imp'>" +
                     "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Silt: <span id='imp'>" + silt + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
                      "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
@@ -208,7 +208,7 @@ function validateInputs(){
   changeFeedbackText("<span id='imp'>Click Simulate to begin simulation...</span>", true);
   $("#simBtn").show();
   $("#validateBtn").hide();
-  alert("Valid");
+  alert("Input settings are valid, view 'Status' box for more information");
   return true;
 }
 /*
