@@ -73,57 +73,57 @@ set_IM <- function(environment, lat, lng, futuresim){
 
   WeatherFolder <- grep(coordstring, MasterSites$Label, value = TRUE)
   WeatherFolder <- WeatherFolder[1:23]
-  
+
   # Set correct weather DB in environment ------------------
   environment[["fnames_in"]][["fdbWeather"]] <-   #file.path("/home/devel", paste0(state, "_dbWeatherData.sqlite3"))
-    file.path("/Volumes/Samsung_T5/CDI", paste0(state, "_dbWeatherData.sqlite3"))
-    
+    file.path("/home/devel", paste0(state, "_dbWeatherData.sqlite3"))
+
   ###########################################################
   #------------------ Only Current or All --------------------
   ###########################################################
-  
+
   if(futuresim == 2) WeatherFolder <- grep('Current', WeatherFolder, value = TRUE) # limit weather folders to current
   #if(futuresim == 1) WeatherFolder <- grep('Current|CanESM2', WeatherFolder, value = TRUE) # limit weather folders to current
-  
+
   ###########################################################
   #------------------ check insert write --------------------
   ###########################################################
-  
+
   # checks
   # # has value, length of 1. only western states in this DB
   if (is.na(WeatherFolder) || length(WeatherFolder) == 0) {
     print(paste('Sites not found in weather database'))
   }
-  
+
   # insert into IM - need as many rows as climate scenarios?
   IMfile <- do.call("rbind", replicate(length(WeatherFolder), IMfile, simplify = FALSE))
   IMfile$site_id <- 1:length(WeatherFolder)
   IMfile$WeatherFolder <- WeatherFolder
   IMfile$Label <-  sapply(strsplit( IMfile$WeatherFolder, "_"), "[", 5)
-  
+
   # write - fill file is linked in the descriptions.R file
 
   write.csv(IMfile, IMfilepathOut, row.names = FALSE)
-  
+
   ######################################################################################################################
   #                           ------------------ Setup Treatment Design-----------------
   ######################################################################################################################
-  
+
   # Input treatment file
   TrtfilepathIn <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputData_TreatmentDesign_v17.csv"
-  
+
   # Output treatment file
   TrtfilepathOut <- "data/rSFSW2_ProjectFiles/1_Input/SWRuns_InputData_TreatmentDesign_v17_fill.csv"
-  
+
   # Read in file
   TrtFile <- read.csv(TrtfilepathIn, stringsAsFactors = FALSE)
-  
+
   ###########################################################
   #------------------ check insert write --------------------
   ###########################################################
-  
+
   if(futuresim == 1) {
-    
+
     TrtFile <- rbind(TrtFile[1,], do.call("rbind", replicate(length(WeatherFolder), TrtFile[2,], simplify = FALSE)))
     indx <- length(WeatherFolder) + 1
     TrtFile$LookupWeatherFolder[2:indx] <- WeatherFolder

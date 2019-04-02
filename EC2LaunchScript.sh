@@ -98,5 +98,10 @@
       cp /opt/shiny-server/config/systemd/shiny-server.service /etc/systemd/system
       systemctl restart shiny-server
 
+      # download data from the S3 environment
+      cd /home/devel/
+      aws s3 sync s3://sbsc-upload-data .
+
+
       echo END
       date '+%Y-%m-%d %H:%M:%S'
