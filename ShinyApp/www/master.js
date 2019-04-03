@@ -8,6 +8,7 @@ var chooseComp = 1;
 var calcFutures = 2;
 var calcFuturesTxt;
 var numRepeats = 0;
+var valid = false;
 // global variable init for user inputs
 var lat = 35.1983;
 var long = -111.6513;
@@ -26,6 +27,7 @@ $(document).ready(function(){
   $("#chooseSoils").hide();
   $("#chooseComp").hide();
   $("#simBtn").hide();
+  $("#validTxt").css("color", "red");
   // allow tooltips to show when highlighted
   $('[data-toggle="tooltip"]').tooltip();
   // show tooltip detail panel highlighting
@@ -79,6 +81,8 @@ $(document).ready(function(){
 function unValidate(){
   $("#validateBtn").show();
   $("#simBtn").hide();
+  $("#validTxt").css("color", "red");
+  document.getElementById("validTxt").innerHTML = "Click to validate inputs and see summary";
 }
 /*
  * Changes the marker lat and long values based on the lat long input fields
@@ -215,7 +219,11 @@ function validateInputs(){
   changeFeedbackText("<span id='imp'>Click Simulate to begin simulation...</span>", true);
   $("#simBtn").show();
   $("#validateBtn").hide();
+  $("#validTxt").show();
+  $("#validTxt").css("color", "green");
+  document.getElementById("validTxt").innerHTML = "Inputs valid, simluation ready";
   alert("Input settings are valid, view 'Status' box for more information");
+  valid = true;
   return true;
 }
 /*
@@ -223,8 +231,8 @@ function validateInputs(){
  * @returns void
  */
 function sendToR(){
-  var validInputs = validateInputs();
-  if (validInputs){
+  //var validInputs = validateInputs();
+  if (valid){
     Shiny.onInputChange("lat", lat);
     Shiny.onInputChange("lng", long);
     Shiny.onInputChange("future", calcFutures);

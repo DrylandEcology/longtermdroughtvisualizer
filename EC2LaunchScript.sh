@@ -5,13 +5,15 @@
       echo BEGIN
       date '+%Y-%m-%d %H:%M:%S'
 
-      echo "pr-candrews ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-      echo "pr-jhensleigh ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-      echo "pr-npayton-mccauslin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
       # setup development account
       useradd devel
       printf "%s\n" ltdsdev ltdsdev | passwd devel
+
+      # set up sudo permissions
+      echo "pr-candrews ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+      echo "pr-jhensleigh ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+      echo "pr-npayton-mccauslin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+      echo "devel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
       # install R
       yum install -y R
@@ -98,8 +100,15 @@
       cp /opt/shiny-server/config/systemd/shiny-server.service /etc/systemd/system
       systemctl restart shiny-server
 
-      # download data from the S3 environment
-      cd /home/devel/
+      # give read and write permission to the app and to devel
+      groupadd appallow
+      usermod -a -G appallow devel
+      usermod -a -G appallow shiny
+      chown -R :appallow /srv/shiny-server/longtermdroughtsimulator
+      #chmod -R g+rwx /srv/shiny-server/longtermdroughtsimulator
+
+      # download data from the S3 environment to the longtermdroughtsimulator folder
+      cd /srv/shiny-server/longtermdroughtsimulator
       aws s3 sync s3://sbsc-upload-data .
 
 

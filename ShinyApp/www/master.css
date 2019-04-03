@@ -15,6 +15,10 @@ body .container-fluid{
 #dataSources, #publications{
   width: 100%;
 }
+#validTxt{
+  color: green;
+  background-color: white;
+}
 h1, h2, h3, h4, h5, h6{
   color: #424242;
   font-weight: 500;
@@ -79,6 +83,10 @@ hr{
 .centeredDiv1{
   margin: auto;
   width: 13%;
+}
+.centeredDiv2{
+  margin: auto;
+  width: 20%;
 }
 .highlight{
   background-color: yellow;
