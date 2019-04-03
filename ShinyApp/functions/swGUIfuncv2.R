@@ -75,7 +75,7 @@ set_IM <- function(environment, lat, lng, futuresim){
   WeatherFolder <- WeatherFolder[1:23]
 
   # Set correct weather DB in environment ------------------
-  environment[["fnames_in"]][["fdbWeather"]] <-   
+  environment[["fnames_in"]][["fdbWeather"]] <-
     file.path("/srv/shiny-server/longtermdroughtsimulator/Data/WeatherDBs", paste0(state, "_dbWeatherData.sqlite3"))
 
   ###########################################################
@@ -189,18 +189,23 @@ set_soils <- function(environment, soils, sand, clay, futuresim){
 
     # sand
     sandIdx <- grep( 'Sand', names(y))
-    y[2,sandIdx[1:7]] <- as.numeric(sand/100) #always 8
-    y[1,sandIdx[1:7]] <- 1
+    y[2,sandIdx[1:8]] <- as.numeric(sand/100) #always 8
+    y[1,sandIdx[1:8]] <- 1
 
     # clay
     clayIdx <- grep( 'Clay', names(y))
-    y[2,clayIdx[1:7]] <- as.numeric(clay/100)
-    y[1,clayIdx[1:7]] <- 1
+    y[2,clayIdx[1:8]] <- as.numeric(clay/100)
+    y[1,clayIdx[1:8]] <- 1
 
-    # TO DO - bulk density function where it still pulls even though other values are set?
+    # TO DO - bulk density/gravel function where it still pulls even though other values are set?
     bdIdx <- grep( 'Matricd', names(x))
-    y[2,bdIdx[1:7]] <- 1.51
-    y[1,bdIdx[1:7]] <- 1
+    y[2,bdIdx[1:8]] <- 1.51
+    y[1,bdIdx[1:8]] <- 1
+
+    grvlIdx <- grep('Gravel', names(x))
+    y[2,grvlIdx[1:8]] <- .2
+    y[1,grvlIdx[1:8]] <- 1
+
 
     if(futuresim == 1)  y <- rbind(y[1,],  do.call("rbind", replicate(23, y[2,], simplify = FALSE)))
 
