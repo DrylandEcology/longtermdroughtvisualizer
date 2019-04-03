@@ -12,10 +12,16 @@ body .container-fluid{
 #dialog{
  z-index: 1000;
 }
+#dataSources, #publications{
+  width: 100%;
+}
 h1, h2, h3, h4, h5, h6{
   color: #424242;
   font-weight: 500;
   font-family: inherit;
+}
+#drag1{
+  z-index: 10000;
 }
 .centered {
   text-align: center;

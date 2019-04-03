@@ -150,6 +150,7 @@
           <div id="feedback" class="greyBack">
             <!-- Content for status box, is updated dynamically using javascript in master.js-->
             <span id="imp">Input simulation configuration...</span>
+            <br>
           </div>
         </div>
           <!-- Leaflet map -->
@@ -254,7 +255,7 @@
                 </div>
                 <br>
                 <div id="chooseSoils">
-                  <div id="soilsTriangle">
+                  <div id="soilsTriangle" ondrop="drop(event)" ondragover="allowDrop(event)">
                     <img src="images/soilTexTri.png" height="50%" width="100%"/></img>
                     <script language="javascript">
                       var canvas = new jsGraphics("soilsTriangle");
@@ -269,7 +270,12 @@
                         canvas.paint();
                       }
                     </script>
-                  </div>
+                    <!--
+                    <p>Drag the marker onto the soils texture triangle or select composition below:</p>
+                    <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                  <br>
+                    <img id="drag1" src="images/marker-icon.png" draggable="true" ondragstart="drag(event)" width="10%" height="10%">
+                  --></div>
                   <div class="row">
                     <div class="col-sm-4">
                       <div class="centered" style="background-color:white;">
@@ -292,6 +298,7 @@
                     <br><br>
                   </div>
                 </div>
+                
                 <!-- Veg Composition -->
                 <h4 class="centered">Vegetation Structure <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip4" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set vegetation compositions or have the program extract them for you. See highlighted tabs for more."></i></h4>
                 <div class="row">
@@ -410,7 +417,7 @@
         </div>
         <div class="row">
           <hr><h2 id="publications"> Publications </h2>
-          <p class="centered" style="word-wrap: break-word">
+          <p style="word-wrap: break-word">
             <ul>
               <li>
                 Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, and I. C. Burke. 2014. Shifts in plant

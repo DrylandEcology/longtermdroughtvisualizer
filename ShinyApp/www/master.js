@@ -164,14 +164,20 @@ function setGlobalInputs(){
   }
 }
 function validateLocation(lat, long){
-    // Colorado
-    if (lat >= 36.9949 && lat <= 41.0006 && long <= -102.0424 && long >= -109.0489) return "Colorado";
     // Arizona
     if (lat >= 31.3325 && lat <= 37.0004 && long <= -109.0475 && long >= -114.8126) return "Arizona";
     // New Mexico
     if (lat >= 31.3337 && lat <= 36.9982 && long <= -103.0023 && long >= -109.0489) return "New Mexico";
+    /*
+     * These are finished and bounds are 'perfect'
+    */
+    // Colorado
+    if (lat >= 36.9949 && lat <= 41.0006 && long <= -102.0424 && long >= -109.0489) return "Colorado";
     // Utah
-    if (lat >= 36.9982 && lat <= 41.9993 && long <= -109.0462 && long >= -114.0504) return "Utah";
+    // top rectangle
+    if (lat >= 40.99752 && lat <= 41.9993 && long <= -111.04705 && long >= -114.0504) return "Upper Utah";
+    // lower rectangle
+    if (lat < 40.99752 && lat >= 36.99377 && long <= -109.05853 && long >= -114.0504) return "Lower Utah";
     return false;
 }
 function validateInputs(){
@@ -190,6 +196,7 @@ function validateInputs(){
   // IN BETA, currently more inclusive than it needs to be and includes a small
   // part of some neighboring states.
   var state = validateLocation(lat, long);
+  console.log(state);
   if (!state){
     alert("Site location must be in the states AZ, UT, NM, or CO.");
     return false;
@@ -297,3 +304,16 @@ function sendToR(){
       return "Clay";
     }
   }
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
