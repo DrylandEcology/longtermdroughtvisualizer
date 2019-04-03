@@ -104,9 +104,8 @@
       groupadd appallow
       usermod -a -G appallow devel
       usermod -a -G appallow shiny
-      chown -R appallow:appallow /srv/shiny-server/longtermdroughtsimulator
-      #chown -R :appallow /srv/shiny-server/longtermdroughtsimulator
-      chmod -R g+rwx /srv/shiny-server/longtermdroughtsimulator
+      chown -R :appallow /srv/shiny-server/longtermdroughtsimulator
+      #chmod -R g+rwx /srv/shiny-server/longtermdroughtsimulator
 
       # download data from the S3 environment to the longtermdroughtsimulator folder
       cd /srv/shiny-server/longtermdroughtsimulator
