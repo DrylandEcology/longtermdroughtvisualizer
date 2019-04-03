@@ -28,7 +28,8 @@ project_paths <- list(
   dir_prj = dir_prj <- {
     # path to simulation project
     temp <- if (identical(opt_platform[["host"]], "local")) {
-      file.path(getwd(), "data/rSFSW2_ProjectFiles")
+      #file.path(getwd(), "data/rSFSW2_ProjectFiles")
+      "/srv/shiny-server/longtermdroughtsimulator/ShinyApp/data/rSFSW2_ProjectFiles"
       } else if (identical(opt_platform[["host"]], "hpc")) {
         getwd()
       }
@@ -72,7 +73,7 @@ project_paths <- list(
   # Path from where external data are extraced
   dir_external = dir_ex <- if (identical(opt_platform[["host"]], "local")) {
       #file.path("/Volumes/Samsung_T5/GIS/Data")
-      file.path("/home/devel/Data")
+      file.path("/srv/shiny-server/longtermdroughtsimulator/Data")
     } else if (identical(opt_platform[["host"]], "hpc")) {
       file.path("/home", "YOURDRIVE", "BigData", "GIS", "Data")
     },
