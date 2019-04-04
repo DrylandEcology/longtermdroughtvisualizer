@@ -110,6 +110,16 @@ a{
   width: 100%;
   color: #0275d8;
 }
+@-moz-document url-prefix() {
+  #latMap{
+    width: 100%;
+  }
+  #longMap{
+    width: 100%;
+  }
+}
+
+
 a.panel-heading {
 display: block;
 }

@@ -184,13 +184,13 @@
               <div class="col-sm-3">
                 <div class="centered" style="background-color:white;">
                   <label for="latMap">Lat</label><br>
-                  <input type="number" id="latMap" name="latMap" value="35.1983" min="31.3325" max="41.9993" step=".0001" onchange="changeMarkerXY(); unValidate();" >
+                  <input type="number" id="latMap" name="latMap" value="35.1983" min="31.3325" max="41.9993" step=".01" onchange="changeMarkerXY(); unValidate();" >
                 </div>
               </div>
               <div class="col-sm-3">
                 <div class="centered" style="background-color:white;">
                   <label for="longMap">Long</label><br>
-                  <input type="number" id="longMap" name="longMap" value="-111.6513" min="-114.8126" max="-102.0424" step=".0001" onchange="changeMarkerXY(); unValidate();">
+                  <input type="number" id="longMap" name="longMap" value="-111.6513" min="-114.8126" max="-102.0424" step=".01" onchange="changeMarkerXY(); unValidate();">
                 </div>
               </div>
               <div class="col-sm-3">
@@ -384,28 +384,62 @@
         </div>
         <div class="row">
           <hr><h2 id="dataSources"> Data Sources </h2>
-          <p style="word-wrap: break-word">
+          <div style="word-wrap: break-word">
             <img class="floatLeft" src="images/marker-icon.png" alt="logo">
             <ul class="noStyle">
               <li><a href="https://www.esrl.noaa.gov/psd/data/gridded/data.livneh.html">Livneh daily CONUS near-surface gridded meteorological data.</a></li>
               <li>University of Colorado, Boulder</li>
-            </ul>
+            </ul><br>
             <img class="floatLeft" src="images/marker-icon.png" alt="logo">
             <ul class="noStyle">
               <li><a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Com
               plete%20Archives">Downscaled CMIP5 Climate and Hydrology Projects</a></li>
               <li>Lawrence Livermore National Laboratory</li>
-            </ul>
+            </ul><br>
             <img class="floatLeft" src="images/marker-icon.png" alt="logo">
             <ul class="noStyle">
               <li><a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs1
               42p2_053629">Digital General Soil Map of the United States (STATSGO2)</a></li>
               <li><b>Natural Resources Conservation Service</b></li>
             </ul>
+          </div>
+        </div>
+        <div class="row">
+          <hr><h2 id="publications"> References </h2>
+          <p style="word-wrap: break-word">
+            <ul class="noStyle">
+              <li>
+                Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, and I. C. Burke. 2014. Shifts in plant
+                functional types have time-dependent and regionally variable impacts on dryland
+                ecosystem water balance. Journal of Ecology 102:1408-1418.
+              </li>
+              <li>
+                Knutti, R., D. Masson, and A. Gettelman. 2013. Climate model genealogy: Generation CMIP5
+                and how we got there. Geophysical Research Letters 40:1194-1199.
+              </li>
+              <li>
+                Rupp, D. E., J. T. Abatzoglou, K. C. Hegewisch, and P. W. Mote. 2013. Evaluation of CMIP5
+                20th century climate simulations for the Pacific Northwest USA. Journal of Geophysical
+                Research: Atmospheres 118:2013JD020085.
+              </li>
+              <li>
+                Schlaepfer, D. R., and C. A. Andrews. 2018. rSFSW2: Simulation Framework for SOILWAT2.
+                R package version 3.0.0. <a href="https://github.com/DrylandEcology/rSFSW2">https://github.com/DrylandEcology/rSFSW2</a>
+              </li>
+              <li>
+                Schlaepfer, D. R., and R. Murphy. 2018. rSOILWAT2: An Ecohydrological Ecosystem-Scale
+                Water Balance Simulation Model. R package version 2.3.2.
+                <a href="https://github.com/DrylandEcology/rSOILWAT2">https://github.com/DrylandEcology/rSOILWAT2</a>
+              </li>
+              <li>
+                Taylor, K. E., R. J. Stouffer, and G. A. Meehl. 2011. An Overview of CMIP5 and the
+                Experiment Design. Bulletin of the American Meteorological Society 93:485-498.
+              </li>
+            </ul>
           </p>
         </div>
         <div class="row">
-          <hr><h2 id="publications"> Publications </h2>
+          <hr><h2 id="publications"> SOILWAT2 Publications </h2>
           <p style="word-wrap: break-word">
             <ul class="noStyle">
               <li>
