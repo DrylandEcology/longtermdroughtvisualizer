@@ -53,15 +53,10 @@ delete_test_output2 <- function(dir_test, delete_filepaths = NULL) {
                         file.path(dir_test, "1_Input", "dbWeatherData_test.sqlite3"),
                         file.path(dir_test,  "SFSW2_project_descriptions_Onesite.rds"),
                         file.path(dir_test,  "SFSW2_project_descriptions.rds")
-
-
                         )
-
     dirs_to_delete <- c(file.path(dir_test, "3_Runs"), file.path(dir_test, "4_Simulation"))
-
     try(unlink(unlist(files_to_delete)), silent = TRUE)
     try(unlink(unlist(dirs_to_delete), recursive = TRUE), silent = TRUE)
-
     invisible(TRUE)
 }
 
