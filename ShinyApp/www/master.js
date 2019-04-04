@@ -1,7 +1,6 @@
-/*
+inValidate/*
  * In house javascript
  */
-
 // value of radio buttons, initialized
 var chooseSoils = 1;
 var chooseComp = 1;
@@ -23,6 +22,24 @@ var bareground = 20.0;
 
 // do this stuff as soon as the document loads
 $(document).ready(function(){
+  // accoridion controlling javascript
+  var accItem = document.getElementsByClassName('accordionItem');
+  var accHD = document.getElementsByClassName('accordionItemHeading');
+  for (i = 0; i < accHD.length; i++) {
+      accHD[i].addEventListener('click', toggleItem, false);
+  }
+  /*
+   * Add ability to toggle open / close
+   */
+  function toggleItem() {
+      var itemClass = this.parentNode.className;
+      for (i = 0; i < accItem.length; i++) {
+          accItem[i].className = 'accordionItem close';
+      }
+      if (itemClass == 'accordionItem close') {
+          this.parentNode.className = 'accordionItem open';
+      }
+  }
   // immedietly hide choose soil and veg options
   $("#chooseSoils").hide();
   $("#chooseComp").hide();
@@ -33,52 +50,52 @@ $(document).ready(function(){
   // show tooltip detail panel highlighting
   var heading;
   $('.glyphicon.glyphicon-info-sign').hover(function(){
-    heading = $('#heading' + this.id.substr(this.id.length - 1));
-    heading.attr("aria-expanded", "true");
+    heading = $('#accordionItemHeading' + this.id.substr(this.id.length - 1));
+    heading.css("background-color", "#7f8c8d");
   }, function(){
-    heading.attr("aria-expanded", "false");
+    heading.css("background-color", "#FAFAFA");
   })
   // when a radio button is clicked
   $('input[type="radio"]').click(function(){
     // show choose soils options when radio enabled
     if($(this).attr("value") == "chooseTrue"){
       $("#chooseSoils").show();
-      if (screen.width > 1200) drawPoint(sand, clay);
-      unValidate();
+      //if (screen.width > 1200) drawPoint(sand, clay);
+      inValidate();
       chooseSoils = 1;
     }
     // hide choose soils options when radio enabled
     if($(this).attr("value") == "chooseFalse"){
       $("#chooseSoils").hide();
-      unValidate();
+      inValidate();
       chooseSoils = 2;
     }
     // button click for composition radios
     if($(this).attr("value") == "chooseCompTrue"){
       $("#chooseComp").show();
-      unValidate();
+      inValidate();
       chooseComp = 1;
     }
     if($(this).attr("value") == "chooseCompFalse"){
       $("#chooseComp").hide();
-      unValidate();
+      inValidate();
       chooseComp = 2;
     }
     // button click for future radios
     if($(this).attr("value") == "futureTrue"){
       calcFutures = 1;
-      unValidate();
+      inValidate();
     }
     if($(this).attr("value") == "futureFalse"){
       calcFutures = 2;
-      unValidate();
+      inValidate();
     }
   })
 })
 /*
- * Unvalidates the the user inputs to make them reclick the validation button.
+ * inValidates the the user inputs to make them reclick the validation button.
  */
-function unValidate(){
+function inValidate(){
   $("#validateBtn").show();
   $("#simBtn").hide();
   $("#validTxt").css("color", "red");
@@ -123,7 +140,7 @@ function adjustSilt(){
   if (siltVal >= 0){
     document.getElementById("silt").value = siltVal;
   }
-  if (screen.width >= 1200) drawPoint(sand, clay);
+  //if (screen.width >= 1200) drawPoint(sand, clay);
 }
 function setGlobalInputs(){
   // future radio value
@@ -200,7 +217,7 @@ function validateInputs(){
   // IN BETA, currently more inclusive than it needs to be and includes a small
   // part of some neighboring states.
   var state = validateLocation(lat, long);
-  console.log(state);
+  //console.log(state);
   if (!state){
     alert("Site location must be in the states AZ, UT, NM, or CO.");
     return false;

@@ -61,88 +61,70 @@
             for their site or utilizing gridded soils and vegetation conditions that are estimated from mean
             climate conditions.
           </p>
-          <!-- Create tip dropdowns -->
-          <div id="accordion" class="panel-group">
-            <!-- Dropdown 1 -->
-            <div class="panel panel-default">
-              <a title="How to 1" aria-controls="collapse1" aria-expanded="false" href="#collapse1" data-parent="#accordion"  id="heading1" role="tab" class="panel-heading collapsed" data-toggle="collapse"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Location</span> </a>
-                <div aria-labelledby="heading1" role="tabpanel" class="panel-collapse collapse" id="collapse1" aria-expanded="false">
-                    <div class="panel-body">
-                        <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
-                        <p>
-                            Location is designated as coordinates (lat, lon) in the WGS84 coordinate reference system. <br><br>
-                            Select your location by either clicking on the map or by <span class="highlight" class="redText">entering coordinates</span> into the latitude and
-                            longitude boxes provided.<br><br>
-                            Note: Currently, only locations in Arizona, New Mexico, Colorado, and Utah are operational.
-                        </p>
-                    </div>
+          <!-- Dropdown accordion -->
+          <div class="accordionWrapper">
+            <div class="accordionItem close">
+                  <h4 class="accordionItemHeading" id="accordionItemHeading1">Location <b class="caret"></b></h4>
+                  <div class="accordionItemContent">
+                    <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
+                    <p>
+                    Location is designated as coordinates (lat, long) in the WGS84 coordinate reference system. <br><br>
+                    Select your location by either clicking on the map or by <span class="highlight" class="redText">entering coordinates</span> into the latitude and
+                    longitude boxes provided.<br><br>
+                    Note: Currently, only locations in Arizona, New Mexico, Colorado, and Utah are operational.
+                  </p>
+                  </div>
+                </div>
+                <div class="accordionItem close">
+                  <h4 class="accordionItemHeading" id="accordionItemHeading2">Past and Future Simulations <b class="caret"></b></h4>
+                  <div class="accordionItemContent">
+                    <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
+                    <p>
+                      Users have the option of selecting to simulate long-term historical (1916 – 2017) patterns of
+                      water availability alone or to simulate both historical and future (2020 – 2099) water availability.
+                      Future simulations occur for 11 different general circulation models (GCMs), that are believed to
+                      best predict future climate in the American Southwest.<br><br>
+                      Selecting <b>yes</b> to simulate future simulations increase simulation time approximately from 30
+                      seconds to 2 minutes and 30 seconds.
+                    </p>
+                  </div>
+                </div>
+                <div class="accordionItem close">
+                  <h4 class="accordionItemHeading" id="accordionItemHeading3">Soils Texture <b class="caret"></b></h4>
+                  <div class="accordionItemContent">
+                    <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
+                    <p>
+                      Soil texture influences the availability of a site to retain moisture in the soil profile. Here soil
+                      texture is described as percent sand, silt, and clay, where these must sum to 100%.
+                      <br><br>If you know your site’s texture or soil type select <b>choose</b>. This will give you the option to either:
+                      (A) Enter specific texture values in the input boxes provide or (B) Click on the soil texture
+                      diagram to generate mean values for that soil texture type.
+                      <br><br>Otherwise, select <b>obtain</b>. Selecting obtain will grab soil texture values for the latitude and
+                      longitude provided from a gridded soils map.
+                    </p>
+                  </div>
+                </div>
+                <div class="accordionItem close">
+                  <h4 class="accordionItemHeading" id="accordionItemHeading4">Vegetation Structure <b class="caret"></b></h4>
+                  <div class="accordionItemContent">
+                    <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
+                    <p>
+                      Vegetation structure influences how much moisture reaches the soil profile (via interception) and
+                      how soil moisture is utilized (via transpiration). Here vegetation structure is defined as the
+                      composition of 4 plant functional types (Trees, shrubs, grasses, forbs) and as bare-ground. One
+                      or all 5 types can exist on a site, but they must sum to 1. Other information about the vegetation
+                      types (i.e. biomass, percent live) is generated by the model.
+                      <br><br>If you know your site’s vegetation structure select <b>choose</b>. This will give you the option to enter
+                      vegetation composition values, summing to 1.
+                      <br><br>Otherwise, select <b>generate</b>. Selecting generate tells the model to simulate vegetation
+                      composition based on site-specific climate. Potential vegetation composition of the three
+                      functional groups, mean monthly biomass, litter, and phenology are based on climate
+                      relationships and calculated for each cell and climate condition (detailed description in Bradford
+                      et al.(2014)).
+                    </p>
+                  </div>
                 </div>
             </div>
-            <!-- Dropdown 2 -->
-            <div class="panel panel-default"> <a title="How to 2" aria-controls="collapse2" aria-expanded="false" href="#collapse2" data-parent="#accordion" data-toggle="collapse" id="heading2" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Past and Future Simulations</span> </a>
-                <div aria-labelledby="heading2" role="tabpanel" class="panel-collapse collapse" id="collapse2" aria-expanded="false">
-                    <div class="panel-body">
-                        <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
-                        <p>
-                          Users have the option of selecting to simulate long-term historical (1916 – 2017) patterns of
-                          water availability alone or to simulate both historical and future (2020 – 2099) water availability.
-                          Future simulations occur for 11 different general circulation models (GCMs), that are believed to
-                          best predict future climate in the American Southwest.<br><br>
-                          Selecting <b>yes</b> to simulate future simulations increase simulation time approximately from 30
-                          seconds to 2 minutes and 30 seconds.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <!-- Dropdown 3 -->
-            <div class="panel panel-default"> <a title="How to 3" aria-controls="collapse3" aria-expanded="false" href="#collapse3" data-parent="#accordion" data-toggle="collapse" id="heading3" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Soils Texture</span> </a>
-                <div aria-labelledby="heading3" role="tabpanel" class="panel-collapse collapse" id="collapse3" aria-expanded="false">
-                    <div class="panel-body">
-                        <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
-                        <p>
-                          Soil texture influences the availability of a site to retain moisture in the soil profile. Here soil
-                          texture is described as percent sand, silt, and clay, where these must sum to 100%.
-                          <br><br>If you know your site’s texture or soil type select <b>choose</b>. This will give you the option to either:
-                          (A) Enter specific texture values in the input boxes provide or (B) Click on the soil texture
-                          diagram to generate mean values for that soil texture type.
-                          <br><br>Otherwise, select <b>obtain</b>. Selecting obtain will grab soil texture values for the latitude and
-                          longitude provided from a gridded soils map.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <!-- Dropdown 4 -->
-            <div class="panel panel-default"> <a title="How to 4" aria-controls="collapse4" aria-expanded="false" href="#collapse4" data-parent="#accordion" data-toggle="collapse" id="heading4" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Vegetation Structure</span> </a>
-                <div aria-labelledby="heading4" role="tabpanel" class="panel-collapse collapse" id="collapse4" aria-expanded="false">
-                    <div class="panel-body">
-                        <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
-                        <p>
-                          Vegetation structure influences how much moisture reaches the soil profile (via interception) and
-                          how soil moisture is utilized (via transpiration). Here vegetation structure is defined as the
-                          composition of 4 plant functional types (Trees, shrubs, grasses, forbs) and as bare-ground. One
-                          or all 5 types can exist on a site, but they must sum to 1. Other information about the vegetation
-                          types (i.e. biomass, percent live) is generated by the model.
-                          <br><br>If you know your site’s vegetation structure select <b>choose</b>. This will give you the option to enter
-                          vegetation composition values, summing to 1.
-                          <br><br>Otherwise, select <b>generate</b>. Selecting generate tells the model to simulate vegetation
-                          composition based on site-specific climate. Potential vegetation composition of the three
-                          functional groups, mean monthly biomass, litter, and phenology are based on climate
-                          relationships and calculated for each cell and climate condition (detailed description in Bradford
-                          et al.(2014)).
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <!-- Dropdown 5 -->
-            <div class="panel panel-default"> <a title="How to 5" aria-controls="collapse5" aria-expanded="false" href="#collapse5" data-parent="#accordion" data-toggle="collapse" id="heading5" role="tab" class="panel-heading collapsed"><span class="glyphicon icon-indicator"></span> <span class="panel-title">Status</span> </a>
-                <div aria-labelledby="heading5" role="tabpanel" class="panel-collapse collapse" id="collapse5" aria-expanded="false">
-                    <div class="panel-body">
-                        <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
-                        <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- Dropdown note, displayed directly below dropdown menu -->
         <p><strong>Note:</strong> Click on the above text to expand or collapse 'how to' tips.</p>
         <!-- Status box -->
@@ -202,13 +184,13 @@
               <div class="col-sm-3">
                 <div class="centered" style="background-color:white;">
                   <label for="latMap">Lat</label><br>
-                  <input type="number" id="latMap" name="latMap" value="35.1983" min="31.3325" max="41.9993" step=".01" onchange="changeMarkerXY(); unValidate();" >
+                  <input type="number" id="latMap" name="latMap" value="35.1983" min="31.3325" max="41.9993" step=".0001" onchange="changeMarkerXY(); unValidate();" >
                 </div>
               </div>
               <div class="col-sm-3">
                 <div class="centered" style="background-color:white;">
                   <label for="longMap">Long</label><br>
-                  <input type="number" id="longMap" name="longMap" value="-111.6513" min="-114.8126" max="-102.0424" step=".01" onchange="changeMarkerXY(); unValidate();">
+                  <input type="number" id="longMap" name="longMap" value="-111.6513" min="-114.8126" max="-102.0424" step=".0001" onchange="changeMarkerXY(); unValidate();">
                 </div>
               </div>
               <div class="col-sm-3">
@@ -386,7 +368,7 @@
             gases. These climate projections have been downscaled on a temporal and spatial from 11 global
             climate models from the <a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html">CMIP5</a> archive, using a hybrid-delta downscaling technique.
             <br><br>
-            <em>Guidance on using results</em>
+            <em style="font-size:20px">Guidance on using results</em>
             <br>
             The results generated and presented here provide a long-term historical and future perspective on
             soil moisture and climate at a specific site. The resulting site-specific projections of moisture
@@ -403,17 +385,19 @@
         <div class="row">
           <hr><h2 id="dataSources"> Data Sources </h2>
           <p style="word-wrap: break-word">
-            <ul>
+            <img class="floatLeft" src="images/marker-icon.png" alt="logo">
+            <ul class="noStyle">
               <li><a href="https://www.esrl.noaa.gov/psd/data/gridded/data.livneh.html">Livneh daily CONUS near-surface gridded meteorological data.</a></li>
               <li>University of Colorado, Boulder</li>
             </ul>
-            <ul>
+            <img class="floatLeft" src="images/marker-icon.png" alt="logo">
+            <ul class="noStyle">
               <li><a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Com
               plete%20Archives">Downscaled CMIP5 Climate and Hydrology Projects</a></li>
               <li>Lawrence Livermore National Laboratory</li>
             </ul>
-
-            <ul>
+            <img class="floatLeft" src="images/marker-icon.png" alt="logo">
+            <ul class="noStyle">
               <li><a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs1
               42p2_053629">Digital General Soil Map of the United States (STATSGO2)</a></li>
               <li><b>Natural Resources Conservation Service</b></li>
@@ -423,7 +407,7 @@
         <div class="row">
           <hr><h2 id="publications"> Publications </h2>
           <p style="word-wrap: break-word">
-            <ul>
+            <ul class="noStyle">
               <li>
                 Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, and I. C. Burke. 2014. Shifts in plant
                 functional types have time-dependent and regionally variable impacts on dryland
