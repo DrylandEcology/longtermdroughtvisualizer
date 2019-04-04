@@ -29,7 +29,7 @@ project_paths <- list(
     # path to simulation project
     temp <- if (identical(opt_platform[["host"]], "local")) {
       file.path(getwd(), "data/rSFSW2_ProjectFiles")
-      #"/srv/shiny-server/longtermdroughtsimulator/ShinyApp/data/rSFSW2_ProjectFiles"
+      #file.path("/srv/shiny-server/longtermdroughtsimulator/ShinyApp/data/rSFSW2_ProjectFiles")
       } else if (identical(opt_platform[["host"]], "hpc")) {
         getwd()
       }
@@ -73,7 +73,7 @@ project_paths <- list(
   # Path from where external data are extraced
   dir_external = dir_ex <- if (identical(opt_platform[["host"]], "local")) {
       #file.path("/Volumes/Samsung_T5/GIS/Data")
-      file.path("/media/natemccauslin/SOILWAT_DATA/GIS/Data")
+      file.path("/srv/shiny-server/longtermdroughtsimulator/Data")
     } else if (identical(opt_platform[["host"]], "hpc")) {
       file.path("/home", "YOURDRIVE", "BigData", "GIS", "Data")
     },
@@ -122,7 +122,7 @@ fnames_in <- list(
 
   # Database with daily weather data
   fdbWeather = if (identical(opt_platform[["host"]], "local")) {
-      file.path("/media/natemccauslin/Powell/arizona_dbWeatherData.sqlite3")
+      file.path("/srv/shiny-server/longtermdroughtsimulator/Data/WeatherDBs/arizona_dbWeatherData.sqlite3")
     } else if (identical(opt_platform[["host"]], "hpc")) {
       file.path(project_paths[["dir_prj"]], "..", "dbWeatherData.sqlite3")
     },
