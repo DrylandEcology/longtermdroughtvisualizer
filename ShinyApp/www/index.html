@@ -24,25 +24,22 @@
   <body>
     <!-- Content container with borders on either side -->
     <div class="container">
-      <h2 class="centered"><b>Long-term Drought Simulator</b></h1>
-      <h4 class="centered">
-        Welcome to the Long-term Drought Simulator!</h4><br>
+      <h1 class="centered"><b>Long-term Drought Simulator</b></h1>
+      <h3 class="centered">Welcome to the Long-term Drought Simulator!</h3><br>
         <!-- Top navbar links -->
-        <h5>
           <div class="centeredDiv">
             <ul class="navBar1">
               <li class="topnav-centered"><a href="#moreInfo">MORE INFORMATION</a></li>
               <li class="navlink"><a href="#dataSources">DATA SOURCES</a></li>
-              <li class="navlink"><a href="#publications">PUBLICATIONS</a></li>
+              <li class="navlink"><a href="#references">REFERENCES</a></li>
             </ul>
           </div>
-        </h5>
       <br>
       <hr>
         <div class="col col-sm-6 col-md-6 col-lg-6">
           <!-- Description about the long term simulation -->
           <p id="aboutBox" class="whiteBack">
-            <p  style="float:left;font-size:20px;margin-bottom:0px;color:#78909c"><em>About</em></p><br><br>
+            <p  style="float:left;font-size:20px;margin-bottom:0px;color:#78909c">About</p><br><br>
             This tool is designed for resource managers who
             are interested in exploring long-term historical and future patterns of soil moisture and plant
             available water for their specific site. Historical simulations illustrate long-term, site-specific
@@ -60,7 +57,7 @@
           </p>
           <!-- Description of how to use the application -->
           <p id="howToBox" class="whiteBack">
-            <p style="float:left;font-size:20px;margin-bottom:0px;color:#78909c"><em>How to</em></p><br><br>
+            <p style="float:left;font-size:20px;margin-bottom:0px;color:#78909c">How to</p><br><br>
             This tool is designed to simulate site-specific results dynamically. Users must select a location to
             simulate and specify if they would like results for historical conditions only, or historical and
             future. Additionally, users have the option of specifying soil texture and vegetation composition
@@ -184,7 +181,7 @@
           <br>
           <div id="inputs" class="whiteBack">
             <!-- Location -->
-            <p class="whiteBack" style="float:left;font-size:20px;margin-bottom:0px;color:#78909c"><em>Simulation Inputs</em></p><br><br>
+            <p class="whiteBack" style="float:left;font-size:20px;margin-bottom:0px;color:#78909c">Simulation Inputs</p><br><br>
             <h4 class="centered">Location <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip1" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Site location for simulation run. See highlighted tab for more."></i></a></h4>
             <div class="row">
               <div class="col-sm-3">
@@ -364,9 +361,10 @@
         </div>
         <!-- More information -->
         <div class="row">
-          <hr><h2 id="moreInfo"> More Information </h2>
+          <hr><p style="font-size:20px"> More Information </p>
+          <br>
           <p style="word-wrap: break-word">
-            <em>About the model</em>
+            About the model
             <br>
             The results presented here are generated with <a href="https://github.com/DrylandEcology/SOILWAT2">SOILWAT2</a>(Schlaepfer and Andrews 2018,
             Schlaepfer and Murphy 2018) , which is a daily, site-specific, multi soil-layer, ecosystem water-
@@ -382,7 +380,7 @@
             gases. These climate projections have been downscaled on a temporal and spatial from 11 global
             climate models from the <a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html">CMIP5</a> archive, using a hybrid-delta downscaling technique.
             <br><br>
-            <em style="font-size:20px">Guidance on using results</em>
+            <p style="font-size:20px">Guidance on using results</p>
             <br>
             The results generated and presented here provide a long-term historical and future perspective on
             soil moisture and climate at a specific site. The resulting site-specific projections of moisture
@@ -400,53 +398,63 @@
         <div class="row">
           <hr><h2 id="dataSources"> Data Sources </h2>
           <div style="word-wrap: break-word">
-            <img class="floatLeft" src="images/marker-icon.png" alt="logo">
+            <img class="floatLeft" src="images/logoFirst.png" alt="no logo" style="margin-right: 20px;">
             <ul class="noStyle">
-              <li><a href="https://www.esrl.noaa.gov/psd/data/gridded/data.livneh.html">Livneh daily CONUS near-surface gridded meteorological data.</a></li>
-              <li>University of Colorado, Boulder</li>
+              <li><h3>University of Colorado, Boulder</h3></li>
+              <li><h4><a href="https://www.esrl.noaa.gov/psd/data/gridded/data.livneh.html">Livneh daily CONUS near-surface gridded meteorological data.</a></h4></li>
             </ul><br>
-            <img class="floatLeft" src="images/marker-icon.png" alt="logo">
-            <ul class="noStyle">
-              <li><a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Com
-              plete%20Archives">Downscaled CMIP5 Climate and Hydrology Projects</a></li>
-              <li>Lawrence Livermore National Laboratory</li>
+            <img class="floatLeft" src="images/thirdLogo.png" alt="no logo" style="margin-right: 20px;">
+            <ul class="noStyle" style="margin-left: 20px;">
+              <li><h3>Lawrence Livermore National Laboratory</h3></li>
+              <li><h4><a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Com
+              plete%20Archives">Downscaled CMIP5 Climate and Hydrology Projects</a></h4></li>
             </ul><br>
-            <img class="floatLeft" src="images/marker-icon.png" alt="logo">
-            <ul class="noStyle">
-              <li><a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs1
-              42p2_053629">Digital General Soil Map of the United States (STATSGO2)</a></li>
-              <li><b>Natural Resources Conservation Service</b></li>
+            <img class="floatLeft" src="images/secondLogo.png" alt="no logo" style="margin-right: 20px;">
+            <ul class="noStyle" style="margin-left: 20px;">
+              <li><h3>Natural Resources Conservation Service</h3></li>
+              <li><h4><a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs1
+              42p2_053629">Digital General Soil Map of the United States (STATSGO2)</a></h4></li>
             </ul>
           </div>
         </div>
         <!-- References -->
         <div class="row">
-          <hr><h2 id="publications"> References </h2>
+          <hr>
+          <h2 id="references"> References </h2>
+          <h4>Methods</h4>
+          <ul>
+            <li>
+              Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, and I. C. Burke. 2014. Shifts in plant
+              functional types have time-dependent and regionally variable impacts on dryland
+              ecosystem water balance. Journal of Ecology 102:1408-1418.
+            </li>
+            <br>
+            <li>
+              Knutti, R., D. Masson, and A. Gettelman. 2013. Climate model genealogy: Generation CMIP5
+              and how we got there. Geophysical Research Letters 40:1194-1199.
+            </li>
+            <br>
+            <li>
+              Rupp, D. E., J. T. Abatzoglou, K. C. Hegewisch, and P. W. Mote. 2013. Evaluation of CMIP5
+              20th century climate simulations for the Pacific Northwest USA. Journal of Geophysical
+              Research: Atmospheres 118:2013JD020085.
+            </li>
+          </ul>
+          <br>
+          <h4>SOILWAT2 Publications</h4>
           <p style="word-wrap: break-word">
-            <ul class="noStyle">
-              <li>
-                Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, and I. C. Burke. 2014. Shifts in plant
-                functional types have time-dependent and regionally variable impacts on dryland
-                ecosystem water balance. Journal of Ecology 102:1408-1418.
-              </li>
-              <li>
-                Knutti, R., D. Masson, and A. Gettelman. 2013. Climate model genealogy: Generation CMIP5
-                and how we got there. Geophysical Research Letters 40:1194-1199.
-              </li>
-              <li>
-                Rupp, D. E., J. T. Abatzoglou, K. C. Hegewisch, and P. W. Mote. 2013. Evaluation of CMIP5
-                20th century climate simulations for the Pacific Northwest USA. Journal of Geophysical
-                Research: Atmospheres 118:2013JD020085.
-              </li>
+            <ul ><!-- class="noStyle" -->
               <li>
                 Schlaepfer, D. R., and C. A. Andrews. 2018. rSFSW2: Simulation Framework for SOILWAT2.
                 R package version 3.0.0. <a href="https://github.com/DrylandEcology/rSFSW2">https://github.com/DrylandEcology/rSFSW2</a>
               </li>
+              <br>
               <li>
                 Schlaepfer, D. R., and R. Murphy. 2018. rSOILWAT2: An Ecohydrological Ecosystem-Scale
                 Water Balance Simulation Model. R package version 2.3.2.
                 <a href="https://github.com/DrylandEcology/rSOILWAT2">https://github.com/DrylandEcology/rSOILWAT2</a>
               </li>
+              <br>
               <li>
                 Taylor, K. E., R. J. Stouffer, and G. A. Meehl. 2011. An Overview of CMIP5 and the
                 Experiment Design. Bulletin of the American Meteorological Society 93:485-498.
@@ -454,40 +462,10 @@
             </ul>
           </p>
         </div>
-        <!-- Soilwat2 publications -->
+        <hr>
+        <!-- Contact -->
         <div class="row">
-          <hr><h2 id="publications"> SOILWAT2 Publications </h2>
-          <p style="word-wrap: break-word">
-            <ul class="noStyle">
-              <li>
-                Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, and I. C. Burke. 2014. Shifts in plant
-                functional types have time-dependent and regionally variable impacts on dryland
-                ecosystem water balance. Journal of Ecology 102:1408-1418.
-              </li>
-              <li>
-                Knutti, R., D. Masson, and A. Gettelman. 2013. Climate model genealogy: Generation CMIP5
-                and how we got there. Geophysical Research Letters 40:1194-1199.
-              </li>
-              <li>
-                Rupp, D. E., J. T. Abatzoglou, K. C. Hegewisch, and P. W. Mote. 2013. Evaluation of CMIP5
-                20th century climate simulations for the Pacific Northwest USA. Journal of Geophysical
-                Research: Atmospheres 118:2013JD020085.
-              </li>
-              <li>
-                Schlaepfer, D. R., and C. A. Andrews. 2018. rSFSW2: Simulation Framework for SOILWAT2.
-                R package version 3.0.0. <a href="https://github.com/DrylandEcology/rSFSW2">https://github.com/DrylandEcology/rSFSW2</a>
-              </li>
-              <li>
-                Schlaepfer, D. R., and R. Murphy. 2018. rSOILWAT2: An Ecohydrological Ecosystem-Scale
-                Water Balance Simulation Model. R package version 2.3.2.
-                <a href="https://github.com/DrylandEcology/rSOILWAT2">https://github.com/DrylandEcology/rSOILWAT2</a>
-              </li>
-              <li>
-                Taylor, K. E., R. J. Stouffer, and G. A. Meehl. 2011. An Overview of CMIP5 and the
-                Experiment Design. Bulletin of the American Meteorological Society 93:485-498.
-              </li>
-            </ul>
-          </p>
+          <p> Contact us:  </p>
         </div>
       </div>
     </div>

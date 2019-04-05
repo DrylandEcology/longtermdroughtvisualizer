@@ -60,23 +60,19 @@ hr{
   margin-top: 2px;
   border: 1px solid #CCCCCC;
 }
-.navBar1 li{
-  display: inline-block;
-  float: left;
-  padding-left: 10px;
-  margin-bottom: 20px;
-  text-align: center;
-}
 .topnav-centered{
   padding-left: 0px;
 }
 .centeredDiv{
-  margin: auto;
-  width: 40%;
+  width: 100% !important;
 }
 .centeredDiv1{
   margin: auto;
   width: 13%;
+}
+.centeredDiv2{
+  margin: auto;
+  width: 20%;
 }
 .highlight{
   background-color: yellow;
@@ -128,7 +124,16 @@ h2.centered{
   font-size: 15px;
   margin-bottom: 1px;
 }
-
+ul.navBar1{
+  width: 100% !important;
+}
+.navBar1 li{
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
 /* Accordion stylings */
 /*
 This style adds a background to the group of dropdowns as well as fancy shadows
