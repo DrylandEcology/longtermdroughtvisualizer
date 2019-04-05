@@ -29,6 +29,18 @@ $(document).ready(function(){
   for (i = 0; i < accHD.length; i++) {
       accHD[i].addEventListener('click', toggleItem, false);
   }
+  /*
+   * Toggle open / close accordion items
+   */
+  function toggleItem() {
+      var itemClass = this.parentNode.className;
+      for (i = 0; i < accItem.length; i++) {
+          accItem[i].className = 'accordionItem close';
+      }
+      if (itemClass == 'accordionItem close') {
+          this.parentNode.className = 'accordionItem open';
+      }
+  }
   // immedietly hide choose soil and veg options
   $("#chooseSoils").hide();
   $("#chooseComp").hide();
@@ -334,16 +346,4 @@ function drop(ev) {
   ev.preventDefault();
   var data = ev.dataTransfer.getData("text");
   ev.target.appendChild(document.getElementById(data));
-}
-/*
- * Toggle open / close accordion items
- */
-function toggleItem() {
-    var itemClass = this.parentNode.className;
-    for (i = 0; i < accItem.length; i++) {
-        accItem[i].className = 'accordionItem close';
-    }
-    if (itemClass == 'accordionItem close') {
-        this.parentNode.className = 'accordionItem open';
-    }
 }

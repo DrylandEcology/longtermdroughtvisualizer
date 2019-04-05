@@ -1,0 +1,224 @@
+/*
+ * In  house css
+ */
+#map {
+  height: 400px;
+  width: 100%;
+  border: 1px solid #CCCCCC;
+}
+body .container-fluid{
+  background-color: #FAFAFA;
+}
+#dataSources, #publications{
+  width: 100%;
+}
+#validTxt{
+  color: green;
+  background-color: white;
+}
+h1, h2, h3, h4, h5, h6{
+  color: #424242;
+  font-weight: 500;
+  font-family: inherit;
+}
+.centered {
+  text-align: center;
+  background-color: #FAFAFA;
+}
+hr{
+  border: none;
+  height: 1px;
+  color: #CCCCCC;
+}
+#inputs{
+  border: 1px solid #CCCCCC;
+}
+.whiteBack{
+  background-color: white;
+}
+.noStyle{
+  list-style: none;
+  display: block;
+  padding-left: 0px;
+}
+.floatLeft{
+  float: left;
+}
+#feedback{
+  height: 50%;
+  margin-top: 5px;
+  border: 1px solid #CCCCCC;
+}
+#imp{
+  color: red;
+}
+#aboutBox{
+  margin-top: 0px;
+  border: 1px solid #CCCCCC;
+}
+#howToBox{
+  margin-top: 2px;
+  border: 1px solid #CCCCCC;
+}
+.navBar1 li{
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.topnav-centered{
+  padding-left: 0px;
+}
+.centeredDiv{
+  margin: auto;
+  width: 40%;
+}
+.centeredDiv1{
+  margin: auto;
+  width: 13%;
+}
+.highlight{
+  background-color: yellow;
+}
+.greyBack{
+  background-color: #F1F1F1;
+}
+a{
+  width: 100%;
+  color: #0275d8;
+}
+/* Adjust width of lat and long inputs only in firefox */
+@-moz-document url-prefix() {
+  #latMap{
+    width: 100%;
+  }
+  #longMap{
+    width: 100%;
+  }
+}
+h2.centered{
+  margin-top: 50px;
+}
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+/* Style for tooltip image */
+.glyphicon.glyphicon-info-sign{
+  font-size: 15px;
+  margin-bottom: 1px;
+}
+
+/* Accordion stylings */
+/*
+This style adds a background to the group of dropdowns as well as fancy shadows
+*/
+/*
+body{
+    background: -webkit-linear-gradient(left, #25c481, #25b7c4);
+    background: linear-gradient(to right, #25c481, #25b7c4);}
+.accordionWrapper{
+    padding:30px;
+    background:#fff;
+    float:left;
+    width:80%;
+    box-sizing:border-box;
+    margin:10%;
+    box-shadow: 0 1.5em 85px 0 rgba(0, 0, 0, 0.2);
+    }*/
+.accordionItem{
+    float:left;
+    display:block;
+    width:100%;
+    color: black;
+    /*box-sizing: border-box;*/
+    font-family:'Open-sans',Arial,sans-serif;
+}
+
+h4.accordionItemHeading{
+    cursor:pointer;
+    margin:0px 0px 10px 0px;
+    padding:10px;
+    /*background:#2980b9;*/
+    color:black;
+    width:100%;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+.open .accordionItemContent{
+    padding: 20px;
+    border: 1px solid #ddd;
+    width: 100%;
+    margin: 0px 0px 10px 0px;
+    display:block;
+  	transform: scaleY(1);
+    /* Ensure that the transition animation looks is the same on all browsers */
+    -webkit-transform-origin: top;
+  	-o-transform-origin: top;
+  	-ms-transform-origin: top;
+  	transform-origin: top;
+    /* Rather than pop in, do dropdown animation */
+  	-webkit-transition: -webkit-transform 0.4s ease-out;
+  	-o-transition: -o-transform 0.4s ease;
+  	-ms-transition: -ms-transform 0.4s ease;
+  	transition: transform 0.4s ease;
+    box-sizing: border-box;
+}
+
+.close .accordionItemContent{
+    height:0px;
+    transition:height 1s ease-out;
+    -webkit-transform: scaleY(0);
+  	-o-transform: scaleY(0);
+  	-ms-transform: scaleY(0);
+  	transform: scaleY(0);
+    float:left;
+    display:block;
+}
+
+.open .accordionItemHeading{
+    margin:0px;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+    -moz-border-radius-bottomright: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    /*background-color: #bdc3c7;*/
+    color: black;
+}
+.accordionItem.close .caret{
+    display: inline-block;
+    transform: scale(1.6) rotate(-90deg);
+}
+.accordionItem.open .caret{
+    display: inline-block;
+    transform: scale(1.6) rotate(3deg);
+}
