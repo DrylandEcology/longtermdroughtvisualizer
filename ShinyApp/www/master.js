@@ -5,6 +5,7 @@ inValidate/*
 var chooseSoils = 1;
 var chooseComp = 1;
 var calcFutures = 2;
+// misc global variables for keeping track or state
 var calcFuturesTxt;
 var numRepeats = 0;
 var valid = false;
@@ -22,23 +23,11 @@ var bareground = 20.0;
 
 // do this stuff as soon as the document loads
 $(document).ready(function(){
-  // accoridion controlling javascript
+  // add click event listener to all accordion items
   var accItem = document.getElementsByClassName('accordionItem');
   var accHD = document.getElementsByClassName('accordionItemHeading');
   for (i = 0; i < accHD.length; i++) {
       accHD[i].addEventListener('click', toggleItem, false);
-  }
-  /*
-   * Add ability to toggle open / close
-   */
-  function toggleItem() {
-      var itemClass = this.parentNode.className;
-      for (i = 0; i < accItem.length; i++) {
-          accItem[i].className = 'accordionItem close';
-      }
-      if (itemClass == 'accordionItem close') {
-          this.parentNode.className = 'accordionItem open';
-      }
   }
   // immedietly hide choose soil and veg options
   $("#chooseSoils").hide();
@@ -140,7 +129,6 @@ function adjustSilt(){
   if (siltVal >= 0){
     document.getElementById("silt").value = siltVal;
   }
-  //if (screen.width >= 1200) drawPoint(sand, clay);
 }
 function setGlobalInputs(){
   // future radio value
@@ -184,6 +172,10 @@ function setGlobalInputs(){
     bareground = parseFloat(document.getElementById("bareground").value);
   }
 }
+/* Validates whether a given lat, long is within acceptable bounds
+ * @returns string the state which the lat long falls in
+ * @returns boolean false if it does not fall in an acceptable bounds
+ */
 function validateLocation(lat, long){
     // Arizona
     if (lat >= 31.3325 && lat <= 37.0004 && long <= -109.0475 && long >= -114.8126) return "Arizona";
@@ -201,6 +193,9 @@ function validateLocation(lat, long){
     if (lat < 40.99752 && lat >= 36.99377 && long <= -109.05853 && long >= -114.0504) return "Lower Utah";
     return false;
 }
+/* Validates user inputs for simuation inputs
+ * @returns boolean true if inputs are valid, otherwise false
+ */
 function validateInputs(){
   // get user input lat and long coordinates
   setGlobalInputs();
@@ -222,7 +217,6 @@ function validateInputs(){
     alert("Site location must be in the states AZ, UT, NM, or CO.");
     return false;
   }
-
   // change options to make more user friendly
   if (calcFutures == 2) {calcFuturesTxt = "No";}
   else                  {calcFuturesTxt = "Yes";}
@@ -329,16 +323,27 @@ function sendToR(){
       return "Clay";
     }
   }
+/* Drag and drop functions for soils texture triangle */
 function allowDrop(ev) {
   ev.preventDefault();
 }
-
 function drag(ev) {
   ev.dataTransfer.setData("text", ev.target.id);
 }
-
 function drop(ev) {
   ev.preventDefault();
   var data = ev.dataTransfer.getData("text");
   ev.target.appendChild(document.getElementById(data));
+}
+/*
+ * Toggle open / close accordion items
+ */
+function toggleItem() {
+    var itemClass = this.parentNode.className;
+    for (i = 0; i < accItem.length; i++) {
+        accItem[i].className = 'accordionItem close';
+    }
+    if (itemClass == 'accordionItem close') {
+        this.parentNode.className = 'accordionItem open';
+    }
 }
