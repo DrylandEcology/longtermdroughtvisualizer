@@ -47,20 +47,14 @@ hr{
 .whiteBack{
   background-color: white;
 }
-#simBtn{
-}
-#validateBtn{
-}
 .noStyle{
   list-style: none;
   display: block;
-  /*margin-left: 5%;*/
   padding-left: 0px;
 }
 .floatLeft{
   float: left;
 }
-
 #feedback{
   height: 50%;
   margin-top: 5px;
@@ -84,7 +78,9 @@ hr{
   margin-bottom: 20px;
   text-align: center;
 }
-
+.topnav-centered{
+  padding-left: 0px;
+}
 .centeredDiv{
   margin: auto;
   width: 40%;
@@ -110,6 +106,7 @@ a{
   width: 100%;
   color: #0275d8;
 }
+/* Adjust width of lat and long inputs only in firefox */
 @-moz-document url-prefix() {
   #latMap{
     width: 100%;
