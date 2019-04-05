@@ -9,9 +9,6 @@
 body .container-fluid{
   background-color: #FAFAFA;
 }
-#dialog{
- z-index: 1000;
-}
 #dataSources, #publications{
   width: 100%;
 }
@@ -24,9 +21,6 @@ h1, h2, h3, h4, h5, h6{
   font-weight: 500;
   font-family: inherit;
 }
-#drag1{
-  z-index: 10000;
-}
 .centered {
   text-align: center;
   background-color: #FAFAFA;
@@ -35,11 +29,6 @@ hr{
   border: none;
   height: 1px;
   color: #CCCCCC;
-}
-#howTo{
-  border: 1px solid #CCCCCC;
-  width: auto;
-  margin-top: 0px;
 }
 #inputs{
   border: 1px solid #CCCCCC;
@@ -89,15 +78,8 @@ hr{
   margin: auto;
   width: 13%;
 }
-.centeredDiv2{
-  margin: auto;
-  width: 20%;
-}
 .highlight{
   background-color: yellow;
-}
-.redText{
-  color: red;
 }
 .greyBack{
   background-color: #F1F1F1;
@@ -115,51 +97,6 @@ a{
     width: 100%;
   }
 }
-
-
-a.panel-heading {
-display: block;
-}
-.panel-primary .panel-heading[aria-expanded="true"], .panel-primary .panel-heading a:hover, .panel-primary .panel-heading a:focus, .panel-primary a.panel-heading:hover, .panel-primary a.panel-heading:focus {
-background-color: #286090;
-}
-.panel-danger .panel-heading[aria-expanded="true"], .panel-danger .panel-heading a:hover, .panel-danger .panel-heading a:focus, .panel-danger a.panel-heading:hover, .panel-danger a.panel-heading:focus {
-background-color: #c9302c;
-}
-.panel-default .panel-heading[aria-expanded="true"], .panel-default .panel-heading a:hover, .panel-default .panel-heading a:focus, .panel-default a.panel-heading:hover, .panel-default a.panel-heading:focus {
-background-color: #dcdcdc;
-}
-.panel-info .panel-heading[aria-expanded="true"], .panel-info .panel-heading a:hover, .panel-info .panel-heading a:focus, .panel-info a.panel-heading:hover, .panel-info a.panel-heading:focus {
-background-color: #31b0d5;
-}
-.panel-success .panel-heading[aria-expanded="true"], .panel-success .panel-heading a:hover, .panel-success .panel-heading a:focus, .panel-success a.panel-heading:hover, .panel-success a.panel-heading:focus {
-background-color: #449d44;
-}
-.panel-warning .panel-heading[aria-expanded="true"], .panel-warning .panel-heading a:hover, .panel-warning .panel-heading a:focus, .panel-warning a.panel-heading:hover, .panel-warning a.panel-heading:focus {
-background-color: #ec971f;
-}
-.panel-group .panel, .panel-group .panel-heading {
-border: none !important;
-}
-.panel-group .panel-body {
-border: 1px solid #ddd !important;
-border-width: 0 1px 1px 1px !important;
-}
-.panel-group .panel-heading a, .panel-group a.panel-heading {
-outline: 0;
-}
-.panel-group .panel-heading a:hover, .panel-group .panel-heading a:focus, .panel-group a.panel-heading:hover, .panel-group a.panel-heading:focus {
-text-decoration: none;
-}
-.panel-group .panel-heading .icon-indicator {
-margin-right: 10px;
-}
-.panel-group .panel-heading .icon-indicator:before {
-content: "\e114";
-}
-.panel-group .panel-heading.collapsed .icon-indicator:before {
-content: "\e080";
-}
 h2.centered{
   margin-top: 50px;
 }
@@ -169,7 +106,6 @@ h2.centered{
   display: inline-block;
   border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
-
 /* Tooltip text */
 .tooltip .tooltiptext {
   visibility: hidden;
