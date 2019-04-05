@@ -41,7 +41,6 @@ delete_test_output2 <- function(dir_test, delete_filepaths = NULL) {
                         full.names = TRUE), list.files(dir_test, pattern = "ClimDB_failedLocations_",
                         recursive = TRUE, full.names = TRUE), list.files(dir_test,
                         pattern = "backup", recursive = TRUE, full.names = TRUE), 
-
                         file.path(dir_test, "1_Input", "SWRuns_InputAll_PreProcessed.rds"),
                         file.path(dir_test, "1_Input", "SWRuns_InputMaster_fill_v11.csv"),
                         file.path(dir_test, "1_Input", "SWRuns_InputData_TreatmentDesign_v17_fill.csv"),
