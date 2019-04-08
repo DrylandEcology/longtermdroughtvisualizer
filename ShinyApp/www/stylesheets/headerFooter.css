@@ -236,6 +236,25 @@ Content: "\f082";
   background-color: #DBE2E9;
 }
 [role="button"]{cursor:pointer}
+.contact.nav li{
+  width: 10px;
+  list-style: none;
+  display: inline;
+  float: left;
+}
+#seperator{
+  border: 2px solid black;
+}
+.contact.nav li span{
+  display: inline-block;
+  margin-left: 0px;
+  margin-top: 9px;
+  height: 8px;
+  border-right: 2px solid white;
+}
+.contactElem{
+  display: inline;
+}
 .menu.nav li span{
   display: inline-block;
   margin-left: 0px;
@@ -248,9 +267,6 @@ Content: "\f082";
   margin-right: 0px;
   bottom: 0px;
   float: left;
-}
-.menu.nav {
-  text-
 }
 hr{
   margin-top: 0px;
