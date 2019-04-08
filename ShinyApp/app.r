@@ -504,15 +504,15 @@ server <- function(input, output, session) {
   #################################################################################################
   output$WL_SM_Plots <- renderPlotly({
 
-    req(input$years) #input$years doesn't initally have values .. need this
+        req(input$years) #input$years doesn't initally have values .. need this
     data <- run$outs
 
     # Walter-Leith controls ----------------------------------------------------------------------
     dataWL <- formatDataWL(data = data[[1]], future = input$future)
-
+    dataWL2 <- dataWL[[1]]
+    
     #  Soil Moisture Plot controls ----------------------------------------------------------
     dataSM <- formatDataSM(data = data[[1]], RCP = input$RCP)
-    print(summary(dataSM))
     dataSM2 <- dataSM[[2]][dataSM[[2]]$TP == 'Current',]
     dataSM2 <- rbind(dataSM2[1,], dataSM2, dataSM2[12,])
     dataSM2$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -520,6 +520,12 @@ server <- function(input, output, session) {
     dataSM2$Month2 <- factor(dataSM2$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                                          'August', 'September', 'October', 'November', 'December', 'December2'))
     
+    y_DSM <- list( # Need this year because range argument can't be populated until now
+      title = "soil water potential (-MPa)",
+      range = c(dataSM[[3]], 0), 
+      showgrid = FALSE,
+      linecolor = "black",
+      linewidth = 0.5)
     
     # PLOTTING    --------------------------------------------------------------------------------
     if(input$future == 2){
@@ -552,6 +558,8 @@ server <- function(input, output, session) {
                    y0 = 60, y1 = 60, x0 =0, x1 = 12.5)
           )
       # Soil Moisture ----------------------------------
+
+      
         SM_Plot <-  plot_ly() %>%  
           add_lines(data = dataSM2, x = ~Month2, y = ~median , 
                     line = list(color= 'black', width = 2),

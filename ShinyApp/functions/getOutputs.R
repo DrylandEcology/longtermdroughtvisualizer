@@ -18,8 +18,8 @@ get_output <- function(){
   #Variables
   VarDF <- data.frame(variable = c('Shallow', 'Inter', 'Deep', 'max_C', 'min_C', 'avg_C', 'ppt'),
                       variable2 = c('Shallow', 'Soil Moisture (SWP, -MPa)', 'Deep', 'max_C', 'min_C', 'Average Temperature (C)', 'Precipitation (cm)'))
-  
-  
+
+
   # Read in and format data
   AllVars <- data.frame()
 
@@ -65,7 +65,7 @@ get_output <- function(){
   AllVars$variable <- NULL
   names(AllVars)[7] <- 'variable'
   AllVars <- AllVars[AllVars$Year %in% c(1915:2013, 2020:2099), ]
-  
+
   return(list(AllVars))
 
 
@@ -163,19 +163,22 @@ formatDataWL <- function(data, future) {
   DataC <- reshape2::dcast(DataC, Month ~ variable, value.var = "value", fun.aggregate = mean)
   names(DataC)[4] <- 'PPT'
   DataC$Temp <- rowMeans(DataC[,2:3])
-  
+
   DataC <- rbind(DataC[1,], DataC, DataC[12,])
   DataC$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                      'August', 'September', 'October', 'November', 'December', 'December2')
   DataC$Month2 <- factor(DataC$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                                    'August', 'September', 'October', 'November', 'December', 'December2'))
 
-    
+
   if(future == 1) {
     ##### Future data
     dataFut <- data[data$Year %in% c(2020:2099), ]
     TP_DF <- data.frame(Year = c(2020:2099), TP = c(rep('Near',40), rep('Late', 40)))
-    dataFut <- suppressMessages(plyr::join(dataFut,TP_DF))
+    dataFut <- suppressMessages(plyr::join(dataFut, TP_DF))
+
+    DatGCM <- setDT(dataFut)[,.(mean = mean(value)),
+                          .(TP, RCP, GCM, Month, variable)]
 
     DatEnsemb <- setDT(DatGCM)[,.(mean = mean(mean),
                                 median = median(mean),
@@ -220,7 +223,7 @@ formatDataSM <- function(data, RCP) {
                                 max = max(mean)),
                              .(TP, RCP, Month, Month2, variable)]
 
-  
+
   ### ysub for plotting
   lowVal <- -8
   ysub <- ceiling(min(DatEnsemb$median, na.rm = TRUE)) - 1
@@ -234,5 +237,3 @@ formatDataSM <- function(data, RCP) {
   return(list(DatGCM, DatEnsemb, ysub))
 
 }
-
-

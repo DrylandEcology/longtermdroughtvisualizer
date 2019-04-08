@@ -6,7 +6,7 @@ y1_WL <- list(
   title = "Temperature (C)",
   range = c(-5, 69),
   autotick = FALSE,
-  dtick = 10,  
+  dtick = 10,
   linecolor = "black",
   linewidth = 0.5,
   mirror = TRUE,
@@ -19,7 +19,7 @@ y2_WL <- list(
   overlaying = "y",
   side = "right",
   title = "Precipitation (mm)",
-  range = c(-10, 139), 
+  range = c(-10, 139),
   autotick = FALSE,
   dtick = 20,
   showgrid = FALSE
@@ -40,13 +40,6 @@ x_DSMWL <- list(
 )
 # -------------------------------------------------------------------------------
 # Dail Soil Moisture theme
-
-y_DSM <- list(
-  title = "soil water potential (-MPa)",
-  range = c(dataDSM[[3]], 0), 
-  showgrid = FALSE,
-  linecolor = "black",
-  linewidth = 0.5)
 
 # -------------------------------------------------------------------------------
 # Time Series Seasonal settings
