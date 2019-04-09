@@ -9,7 +9,7 @@
 body .container-fluid{
   background-color: #FAFAFA;
 }
-#dataSources, #publications{
+#dataSources, #publications, #moreInformation{
   width: 100%;
 }
 #validTxt{

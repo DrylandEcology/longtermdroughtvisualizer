@@ -277,7 +277,13 @@ function sendToR(){
                        "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
                        "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>", false);
     changeFeedbackText("<span id='imp'>Calculation Running...</span>", true);
-    repeatWithTimer(function(){changeFeedbackText("Working", true)}, 1000, 5);
+    if (calcFutures == 1){
+      repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Setting up simulation...", true)}, 5000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 10000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Simulating future ecohydrology...", true)}, 25000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 80000, 1);
+    }
   }
 }
   /*
