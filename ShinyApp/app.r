@@ -435,7 +435,6 @@ server <- function(input, output, session) {
   ######## ---------------- - - - - - - -----  Tab 2  ---- - - - - - - - ----------------  ########
   #################################################################################################
   output$WL_SM_Plots <- renderPlotly({
-
     req(input$years) #input$years doesn't initally have values .. need this
     data <- run$outs
 
@@ -743,4 +742,4 @@ server <- function(input, output, session) {
 
 }
 # Run the app ----
-shinyApp(ui = c(htmlTemplate("www/header.html"), ui, htmlTemplate("www/footer.html")), server = server)
+shinyApp(ui = c(htmlTemplate("www/header.html"), htmlTemplate("www/headerImages.html"), ui, htmlTemplate("www/footer.html")), server = server)
