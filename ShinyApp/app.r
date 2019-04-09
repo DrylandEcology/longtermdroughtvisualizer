@@ -48,7 +48,7 @@ ui <- fluidPage(
 
 
               # Sidebar layout with site-by-site definitions ----
-              tabPanel("Site-by-site",
+              tabPanel("Inputs",
                        htmlTemplate("www/index.html")
                      # Main panel for outputs ----
                      #mainPanel("Welcome to the long-term drought simulator!")
