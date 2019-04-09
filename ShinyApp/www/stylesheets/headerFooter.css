@@ -52,39 +52,6 @@ hr {
   max-width: 100%;
   height: auto;
 }
-.header-search form {
-  float: right;
-  width: auto;
-  padding-top: 0;
-  padding-bottom: 0;
-  margin-right: 0;
-  margin-left: 0;
-  border: 0;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-.header-search input[type="search"] {
-  height: 30px;
-  width: 260px;
-  margin-top: 18px;
-}
-.header-search button[type="submit"] {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 15px;
-  border: 0;
-  color: #666;
-  background: transparent;
-  padding: 0;
-  width: 39px;
-  height: 39px;
-  margin-top: 21px;
-}
-input{line-height:normal}
-input[type="search"]{-webkit-appearance:textfield;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box}
-input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}
-input,button{font-family:inherit;font-size:inherit;line-height:inherit}
 /* Always float the navbar header */
 .navbar-header {
   float: left;
