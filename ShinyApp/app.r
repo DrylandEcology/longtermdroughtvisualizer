@@ -1,4 +1,5 @@
 library(shiny)
+library(shinydashboard)
 library(leaflet)
 # analysis
 library(rSFSW2)
@@ -237,84 +238,101 @@ server <- function(input, output, session) {
     #################################################################################################
     
     ############################################################
-    ###### Tab 1
+    ###### Tab 1 Design
     ############################################################
     insertTab(inputId = "mainTabset",
               tabPanel(title = "Mean annual patterns", value = "outputs1",
                        
+                       fluidRow(
+                         box(title = 'What Does An Average Year Look Like?',  width = 12,
+                             "Box content here", br(), "More box content")
+                       ),
+                       br(),
+                       br(),
+                       br(),
+                       
+                       fluidRow(
+                         box(plotlyOutput("WL_SM_Plots", height = "700px"), width = 6),
+                       
                       ############################################################
                       ###### Side bar options
                       ############################################################
-                       sidebarLayout(position = "right",
-                                     sidebarPanel(
+                       box(title = 'Plot Controls', width = 4,
+                         # If future is turned on
+                         conditionalPanel(
+                           condition = "input.future == 1",
+                             # Select a RCP -----------------
+                           selectInput("RCP", "Select a RCP:",
+                                       c("RCP 4.5" = "RCP45",
+                                         "RCP 8.5" = "RCP85"))
+                         ),
 
-                                       # If future is turned on
-                                       conditionalPanel(
-                                         condition = "input.future == 1",
-                                         # Select a RCP -----------------
-                                         selectInput("RCP", "Select a RCP:",
-                                                     c("RCP 4.5" = "RCP45",
-                                                       "RCP 8.5" = "RCP85"))
-                                       ),
+                         # DO you want to add a specific year?
+                         radioButtons("yearButton", label = h4("Individual year?"),
+                                      choices = list('Yes' = 1, 'No' = 2),
+                                      inline = TRUE, # side-by-side
+                                      selected = 2),
 
-                                       # DO you want to add a specific year?
-                                       radioButtons("yearButton", label = h4("Individual year?"),
-                                                    choices = list('Yes' = 1, 'No' = 2),
-                                                    inline = TRUE, # side-by-side
-                                                    selected = 2),
+                         conditionalPanel(
+                           condition = "input.yearButton == 1",
 
-                                       conditionalPanel(
-                                         condition = "input.yearButton == 1",
+                           # Select a specific year ----------
+                           numericInput("years2", label = "Select a year:",
+                                        min = 1916, max = 2013,
+                                        value = c(2012))
+                         ),
 
-                                         # Select a specific year ----------
-                                         numericInput("years2", label = "Select a year:",
-                                                      min = 1916, max = 2013,
-                                                      value = c(2012))
-                                       ),
+                         # If future is turned on
+                         conditionalPanel(
+                           condition = "input.future == 1",
 
-                                       # If future is turned on
-                                       conditionalPanel(
-                                         condition = "input.future == 1",
+                           # DO you want to add a GCM?
+                           radioButtons("gcmsButton", label = h4("Individual GCM?"),
+                                        choices = list('Yes' = 1, 'No' = 2),
+                                        inline = TRUE, # side-by-side
+                                        selected = 2),
 
-                                         # DO you want to add a GCM?
-                                         radioButtons("gcmsButton", label = h4("Individual GCM?"),
-                                                      choices = list('Yes' = 1, 'No' = 2),
-                                                      inline = TRUE, # side-by-side
-                                                      selected = 2),
+                           conditionalPanel(
+                             condition = "input.gcmsButton == 1",
 
-                                         conditionalPanel(
-                                           condition = "input.gcmsButton == 1",
-
-                                           # Select GCMs --------------------
-                                           selectInput("gcms2", "",
-                                                       c(my_names)))
-                                       )
-                                     ), # end of sidebar layout
-                                     
-                                     ############################################################
-                                     ###### Page Design
-                                     ############################################################
-
-                                     # Main panel for outputs ----
-                                     mainPanel(
-                                       h1("What does an average year look like?"),
-                                               
-                                                  plotlyOutput("WL_SM_Plots", width = "90%", height = "700px")
-                                                           
-                                                
-                                              
-                                     )
-                       ) # end of sidebarlayout
+                             # Select GCMs --------------------
+                             selectInput("gcms2", "Select a GCM:",
+                                         c(my_names)))
+                         )
+                         )# end of sidebar layout boxx
+                      ),
+                      br(),
+                      br(),
+                      fluidRow(
+                        box(title = 'Notes',  width = 12,
+                            "Box content here", br(), "More box content")
+                      )
               ), # end of tab
               target = "Site-by-site", position = 'after')
     
     ############################################################
-    ###### TAB 2
+    ###### TAB 2 DESIGN
     ############################################################
     insertTab(inputId = "mainTabset",
               tabPanel(title = "Long-term past and future", value = "outputs2",
-                       sidebarLayout(position = "left",
-                                     sidebarPanel(
+                       
+                       fluidRow(
+                         box(title = 'What will the future hold?',  width = 12,
+                             "Box content here", br(), "More box content")
+                       ),
+                       br(),
+                       br(),
+                       br(),
+                      
+                       fluidRow(
+                        box( plotlyOutput("TimeSeries"), width = 8),
+                         
+                        box(title = 'Plot Controls', 
+                             solidHeader = TRUE,
+                             width = 4, 
+                             background = 'black',
+                             
+                             br(),
                                        #time-step
                                        selectInput("times", "Time-step:",
                                                    c("Annual" = "Annual",
@@ -322,29 +340,34 @@ server <- function(input, output, session) {
                                        # "Month" = "Month")),
                                        #variable
                                        selectInput("variables", "Variable:",
-                                                   c("Soil Moisture" = "Soil Moisture (SWP, -MPa)",
-                                                     "Temp" = "Average Temperature (C)",
-                                                     "Precip" = "Precipitation (cm)")),
+                                                   c("Soil Moisture (SWP)" = "Soil Moisture (SWP, -MPa)",
+                                                     "Temperature (C) " = "Average Temperature (C)",
+                                                     "Precipitation (cm)" = "Precipitation (cm)")),
                                        #Years
                                        sliderInput("years", label = "years", min = 1916, max = 2013,
                                                    value = c(1916, 2013), sep = "")
-                                     ), # end of sidebar layout
+                                     ) # end of box layout
+                         ), #end of row 2
+                       br(),
+                       br(),
+                       
+                       fluidRow(
+                         box(title = 'Notes',  width = 8,
+                             "Box content here", br(), "More box content")
+                       ),
+                       
+                       br(),
+                       
+                       if(input$future == 1) {# BOX PLOT - only if future == 1
+                         fluidRow( 
+                           box( plotlyOutput("BoxPlots"), width = 12)
+                           ) #end of row 3
+                       }
+                       
 
-                                     ############################################################
-                                     ###### Page Design
-                                     ############################################################
-                                     
-                                     # Main panel for outputs ----
-                                     mainPanel("Long-Term Historical Perspectives",
-                                               plotlyOutput("TimeSeries"),
-                                               
-                                               if(input$future == 1){# BOX PLOT - only if future == 1
-                                                 plotlyOutput("BoxPlots")
-                                               }
-
-                                     )
-                       ) # end of sidebarlayout
-              ), # end of tab
+                       
+                       
+                       ), # end of tab
               target = "outputs1", position = 'after')
 
 
@@ -504,7 +527,7 @@ server <- function(input, output, session) {
   #################################################################################################
   output$WL_SM_Plots <- renderPlotly({
 
-        req(input$years) #input$years doesn't initally have values .. need this
+    req(input$years) #input$years doesn't initally have values .. need this
     data <- run$outs
 
     # Walter-Leith controls ----------------------------------------------------------------------
