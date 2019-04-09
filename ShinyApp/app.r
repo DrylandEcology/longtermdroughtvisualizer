@@ -573,10 +573,8 @@ server <- function(input, output, session) {
       # Walter-Leith Plot ----------------------------------
       
       # # WL Future ----------------------------------------------------------------------------------------
-      DatEnsembSub <- as.data.frame(dataWL[[2]])
+      DatEnsembSub <- as.data.frame(dataWL[[3]])
       DatEnsembSub <- DatEnsembSub[DatEnsembSub$RCP %in% paste(input$RCP), ]
-      print(unique(DatEnsembSub$RCP))
-      print(summary(DatEnsembSub))
       
       # -
       DatEnsembSubNearTemp <- DatEnsembSub[DatEnsembSub$TP == 'Near' & DatEnsembSub$variable == "Average Temperature (C)", ]

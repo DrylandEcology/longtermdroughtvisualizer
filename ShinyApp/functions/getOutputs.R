@@ -186,7 +186,7 @@ formatDataWL <- function(data, future) {
                                 max = max(mean)),
                              .(TP, RCP, Month, variable)]
 
-    return(list(DataC, DatEnsemb))
+    return(list(DataC, DatGCM, DatEnsemb))
   } else {
     return(list(DataC))
   }
