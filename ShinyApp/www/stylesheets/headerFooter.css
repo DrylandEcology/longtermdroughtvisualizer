@@ -242,9 +242,6 @@ Content: "\f082";
   display: inline;
   float: left;
 }
-#seperator{
-  border: 2px solid black;
-}
 .contact.nav li span{
   display: inline-block;
   margin-left: 0px;
@@ -252,8 +249,22 @@ Content: "\f082";
   height: 8px;
   border-right: 2px solid white;
 }
-.contactElem{
+#contact{
   display: inline;
+  float: left;
+}
+.noStyle{
+  list-style: none;
+}
+.noStyle{
+  border-right: 2px solid black;
+}
+#contact li span{
+  display: inline-block;
+  margin-left: 0px;
+  margin-top: 9px;
+  height: 8px;
+  border-right: 2px solid white;
 }
 .menu.nav li span{
   display: inline-block;
