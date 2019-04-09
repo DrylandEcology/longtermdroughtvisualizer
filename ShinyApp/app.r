@@ -1,4 +1,5 @@
 library(shiny)
+library(shinydashboard)
 library(leaflet)
 # analysis
 library(rSFSW2)
@@ -14,12 +15,14 @@ library(gridExtra)
 library(RColorBrewer)
 library(forcats)
 library(gridGraphics)
+library(plotly)
 
 
 source("functions/swGUIfuncv2.R")
 source("functions/MiscFunctions.R")
 source("functions/getOutputs.R")
-source("functions/diagwl2.R")
+source("functions/themes.R")
+
 
 #devtools::load_all(pkg = '~/Desktop/Dryland Ecology/rSFSW2/')
 #devtools::load_all(pkg = '~/Desktop/Dryland Ecology/rSOILWAT2/')
@@ -39,11 +42,11 @@ my_selected <- c('CanESM2', 'CESM1-CAM5', 'CNRM-CM5',
 
 
 ui <- fluidPage(
-  
+
   #titlePanel("Long-term Drought Simulator"),
   tabsetPanel(id = "mainTabset",               # IDEA: Two tabs - site-by-site & multiple sites (file upload).
-              
-              
+
+
               # Sidebar layout with site-by-site definitions ----
               tabPanel("Site-by-site",
                        htmlTemplate("www/index.html")
@@ -56,8 +59,8 @@ ui <- fluidPage(
   # End Important
 )# end of UI
 
-  
-  
+
+
 # Define server logic ----
 server <- function(input, output, session) {
   # reference to external UI elements
@@ -76,6 +79,7 @@ server <- function(input, output, session) {
   outputOptions(output, "creationPool", suspendWhenHidden = FALSE)
   # End Important
   # Important! : This is the make-easy wrapper for adding new tabPanels.
+
   addTabToTabset <- function(Panels, tabsetName){
     titles <- lapply(Panels, function(Panel){return(Panel$attribs$title)})
     Panels <- lapply(Panels, function(Panel){Panel$attribs$title <- NULL; return(Panel)})
@@ -94,7 +98,7 @@ server <- function(input, output, session) {
 
     begintime <- proc.time() # start timer clock
     #showModal(modalDialog("calculation running!"))
-    
+
     run$SW_out <- set_execute_SW(input$lat, input$lng, input$future, input$soils, input$sand, input$clay,
                                  input$comp, input$trees, input$shrubs, input$grasses, input$forbs, input$bg) # the actual calculation
 
@@ -106,66 +110,103 @@ server <- function(input, output, session) {
     ##################################################################################################
     ######## --------------------------------- Output UI  ---------------------------------  ########
     #################################################################################################
+
+    ############################################################
+    ###### Tab 1 Design
+    ############################################################
     insertTab(inputId = "mainTabset",
               tabPanel(title = "Mean annual patterns", value = "outputs1",
-                       sidebarLayout(position = "left",
-                                     sidebarPanel(
 
-                                       # If future is turned on
-                                       conditionalPanel(
-                                         condition = "input.future == 1",
-                                         # Select a RCP -----------------
-                                         selectInput("RCP", "Select a RCP:",
-                                                     c("RCP 4.5" = "RCP45",
-                                                       "RCP 8.5" = "RCP85"))
-                                       ),
+                       fluidRow(
+                         box(title = 'What Does An Average Year Look Like?',  width = 12,
+                             "Box content here", br(), "More box content")
+                       ),
+                       br(),
+                       br(),
+                       br(),
 
-                                       # DO you want to add a specific year?
-                                       radioButtons("yearButton", label = h4("Individual year?"),
-                                                    choices = list('Yes' = 1, 'No' = 2),
-                                                    inline = TRUE, # side-by-side
-                                                    selected = 2),
+                       fluidRow(
+                         box(plotlyOutput("WL_SM_Plots", height = "700px"), width = 6),
 
-                                       conditionalPanel(
-                                         condition = "input.yearButton == 1",
+                      ############################################################
+                      ###### Side bar options
+                      ############################################################
+                       box(title = 'Plot Controls', width = 4,
+                         # If future is turned on
+                         conditionalPanel(
+                           condition = "input.future == 1",
+                             # Select a RCP -----------------
+                           selectInput("RCP", "Select a RCP:",
+                                       c("RCP 4.5" = "RCP45",
+                                         "RCP 8.5" = "RCP85"))
+                         ),
 
-                                         # Select a specific year ----------
-                                         numericInput("years2", label = "Select a year:",
-                                                      min = 1916, max = 2015,
-                                                      value = c(2012))
-                                       ),
+                         # DO you want to add a specific year?
+                         radioButtons("yearButton", label = h4("Individual year?"),
+                                      choices = list('Yes' = 1, 'No' = 2),
+                                      inline = TRUE, # side-by-side
+                                      selected = 2),
 
-                                       # If future is turned on
-                                       conditionalPanel(
-                                         condition = "input.future == 1",
+                         conditionalPanel(
+                           condition = "input.yearButton == 1",
 
-                                         # DO you want to add a GCM?
-                                         radioButtons("gcmsButton", label = h4("Individual GCM?"),
-                                                      choices = list('Yes' = 1, 'No' = 2),
-                                                      inline = TRUE, # side-by-side
-                                                      selected = 2),
+                           # Select a specific year ----------
+                           numericInput("years2", label = "Select a year:",
+                                        min = 1916, max = 2013,
+                                        value = c(2012))
+                         ),
 
-                                         conditionalPanel(
-                                           condition = "input.gcmsButton == 1",
+                         # If future is turned on
+                         conditionalPanel(
+                           condition = "input.future == 1",
 
-                                           # Select GCMs --------------------
-                                           selectInput("gcms2", "",
-                                                       c(my_names)))
-                                       )
-                                     ), # end of sidebar layout
+                           # DO you want to add a GCM?
+                           radioButtons("gcmsButton", label = h4("Individual GCM?"),
+                                        choices = list('Yes' = 1, 'No' = 2),
+                                        inline = TRUE, # side-by-side
+                                        selected = 2),
 
-                                     # Main panel for outputs ----
-                                     mainPanel("",
-                                               plotOutput("WL_DSM_Plots", height = 700, width = 700)
-                                     )
-                       ) # end of sidebarlayout
+                           conditionalPanel(
+                             condition = "input.gcmsButton == 1",
+
+                             # Select GCMs --------------------
+                             selectInput("gcms2", "Select a GCM:",
+                                         c(my_names)))
+                         )
+                         )# end of sidebar layout boxx
+                      ),
+                      br(),
+                      br(),
+                      fluidRow(
+                        box(title = 'Notes',  width = 12,
+                            "Box content here", br(), "More box content")
+                      )
               ), # end of tab
               target = "Site-by-site", position = 'after')
 
+    ############################################################
+    ###### TAB 2 DESIGN
+    ############################################################
     insertTab(inputId = "mainTabset",
               tabPanel(title = "Long-term past and future", value = "outputs2",
-                       sidebarLayout(position = "left",
-                                     sidebarPanel(
+
+                       fluidRow(
+                         box(title = 'What will the future hold?',  width = 12,
+                             "Box content here", br(), "More box content")
+                       ),
+                       br(),
+                       br(),
+                       br(),
+
+                       fluidRow(
+                        box( plotlyOutput("TimeSeries"), width = 8),
+
+                        box(title = 'Plot Controls',
+                             solidHeader = TRUE,
+                             width = 4,
+                             background = 'black',
+
+                             br(),
                                        #time-step
                                        selectInput("times", "Time-step:",
                                                    c("Annual" = "Annual",
@@ -173,51 +214,52 @@ server <- function(input, output, session) {
                                        # "Month" = "Month")),
                                        #variable
                                        selectInput("variables", "Variable:",
-                                                   c("Soil Moisture" = "Inter",
-                                                     "Temp" = "avg_C",
-                                                     "Precip" = "ppt")),
+                                                   c("Soil Moisture (SWP)" = "Soil Moisture (SWP, -MPa)",
+                                                     "Temperature (C) " = "Average Temperature (C)",
+                                                     "Precipitation (cm)" = "Precipitation (cm)")),
                                        #Years
-                                       sliderInput("years", label = "years", min = 1916, max = 2015,
-                                                   value = c(1916, 2015), sep = ""),
+                                       sliderInput("years", label = "years", min = 1916, max = 2013,
+                                                   value = c(1916, 2013), sep = "")
+                                     ) # end of box layout
+                         ), #end of row 2
+                       br(),
+                       br(),
 
-                                       # If future is turned on
-                                       conditionalPanel(
-                                         condition = "input.future == 1",
-                                       # GCMs
-                                         my_checkboxGroupInput("gcms", "GCMS:",
-                                                               choices = my_names,
-                                                               selected= my_selected,
-                                                               colors= my_colors)
-                                       )
-                                     ), # end of sidebar layout
+                       fluidRow(
+                         box(title = 'Notes',  width = 8,
+                             "Box content here", br(), "More box content")
+                       ),
+
+                       br(),
+
+                       if(input$future == 1) {# BOX PLOT - only if future == 1
+                         fluidRow(
+                           box( plotlyOutput("BoxPlots"), width = 12)
+                           ) #end of row 3
+                       }
 
 
-                                     # Main panel for outputs ----
-                                     mainPanel("Long-Term Historical Perspectives",
-                                               plotOutput("TS_BP_Plots",  height = 700, width = 700)
-                                                          #hover = "plot_hover"), # for hovering specific years
-                                               #verbatimTextOutput("info")
-                                     )
-                       ) # end of sidebarlayout
-              ), # end of tab
+
+
+                       ), # end of tab
               target = "outputs1", position = 'after')
 
 
     updateTabsetPanel(session, "mainTabset", selected = "outputs1")
 
   })
-  # 
-  # #################################################################################################
-  # #################################################################################################
-  # ######## ---------------------------- Output Reactivity  -----------------------------  ########
-  # #################################################################################################
-  # #################################################################################################
-  # 
-  # #################################################################################################
-  # ######## ---------------- - - - - - - -----  Tab 1  ---- - - - - - - - -----------------  ########
-  # #################################################################################################
-  # 
-  output$TS_BP_Plots <- renderPlot({
+
+  #################################################################################################
+  #################################################################################################
+  ######## ---------------------------- Output Reactivity  -----------------------------  ########
+  #################################################################################################
+  #################################################################################################
+
+  #################################################################################################
+  ######## ---------------- - - - - - - -----  Tab 1  ---- - - - - - - - -----------------  ########
+  #################################################################################################
+
+  output$TimeSeries <- renderPlotly({
 
     req(input$years) #input$years doesn't initally have values .. need this
     data <- run$outs
@@ -232,42 +274,21 @@ server <- function(input, output, session) {
     dataTS <- formatDataTS(data = data2, variable = input$variables, time = input$times)
     dataRM <- getroll(dataTS, input$times)
 
-    # Boxplot controls ----------------------------------------------------------------------
-    ## GCMs from checkbox input --------
-    load('data/fillGCM.RData')
-    fillScale <- scale_fill_manual(name = "GCM",values = fillGCM, guide = FALSE)
-
-    data3 <- data[data$GCM %in% c('Current', input$gcms), ]
-    dataBP <- formatDataBP(data = data3, variable = input$variables, time = input$times)
-
     # PLOTTING    --------------------------------------------------------------------------------
     if(input$times == 'Annual'){
+
       # TIME SERIES PLOT
       TREND <- ggplot(dataTS, aes(Year, value))+
         geom_line(data=dataTS, alpha=.3)+
         geom_line(data=dataRM, aes(Year, MA), size=1.5) +
         labs(
-           x = 'years'
+          x = 'years',
+          y = paste(unique(input$variables))
         )+
-      theme_bw()+
-      uniformTheme
-
-      # BOX PLOT - only if future == 1
-      if(input$future == 1){
-        BOXPLOT <- ggplot(dataBP, aes(RCP, value, fill = fct_reorder(scenario, value, median))) +
-          #bplots
-          geom_boxplot(lwd=.8,position=position_dodge(.9)) +
-          #shading and coloring
-          fillScale +
-          #other
-          theme_bw()+
-          uniformTheme +
-          theme(legend.position = "bottom",
-                strip.background = element_rect(fill="white"),
-                strip.text = element_text(size =10)) +
-          facet_grid(. ~ TP, scales = 'free', space = 'free_x')
-      }
-    }
+        theme_bw()+
+        ggtitle("Long-Term Historical Perspectives") +
+        theme(plot.title = element_text(hjust = 0.5))
+          }
 
     if(input$times == 'Season'){
       # TIME SERIES PLOT
@@ -275,15 +296,86 @@ server <- function(input, output, session) {
         geom_line(data=dataTS, alpha=.3)+
         geom_line(data=dataRM, aes(Year, MA), size=1.5) +
         labs(
-          x = 'years'
+          x = 'years',
+          y = paste(unique(input$variables))
         )+
         theme_bw()+
-        uniformTheme +
         scale_color_manual(values=colors2) +
-        theme(legend.position=c(.5,0.07), legend.title=element_blank(),legend.direction="horizontal")
+        theme(legend.position=c(.5,0.07), legend.title=element_blank()) +
+        ggtitle("Long-Term Historical Perspectives") +
+        theme(plot.title = element_text(hjust = 0.5))
+    }
+    ggplotly(TREND)
+  })
 
-      # BOX PLOT - only if future == 1
-      if(input$future == 1) {
+  output$BoxPlots <- renderPlotly({
+
+    # Boxplot controls ----------------------------------------------------------------------
+    ## GCMs from checkbox input --------
+    load('data/fillGCM.RData')
+    fillScale <- scale_fill_manual(name = "GCM",values = fillGCM, guide = FALSE)
+  #  data3 <- data[data$GCM %in% c('Current', input$gcms), ]
+    data <- run$outs
+    data <- data[[1]]
+
+    # Var value from drop down / select Input - get variable ------------------------------------
+    data <- data[data$variable %in% c(input$variables), ]
+    dataBP <- formatDataBP(data = data, variable = input$variables, time = input$times)
+
+    dataBP$RCP2 <- paste(dataBP$RCP, dataBP$TP, sep = '_')
+    dataBP$RCP2 <- factor(dataBP$RCP2, levels = c('Current_Current', "RCP45_Near", "RCP85_Near", "RCP45_Late", "RCP85_Late" ))
+    levels(dataBP$RCP2) <- c('Historical',  "RCP45 ", "RCP85 ", "RCP45", "RCP85")
+
+    Hist <- dataBP[dataBP$RCP2 == 'Historical', ]
+    dataBP2 <- dataBP[!dataBP$RCP2 == 'Historical', ]
+
+    dataBP2 <- dataBP2 %>%
+      group_by(GCM) %>%
+      mutate(med = median(value)) %>%
+      arrange(GCM, med)
+
+    MAX <- max(dataBP$value, na.rm = TRUE)
+    if(input$variables == "Soil Moisture (SWP, -MPa)") Mult <- -.5
+    if(input$variables == "Average Temperature (C)") Mult <- .1
+    if(input$variables == "Precipitation (cm)") Mult <- .05
+
+    topText <- list(
+      x = c(1.5, 3.5),
+      y =  rep(MAX + (Mult * MAX), 2),
+      text = c( '2020-2059',  '2060-2099'),
+      showarrow = FALSE,
+      font = list(size = 15)
+    )
+
+    xaxis <- list(title = "")
+    yaxis <- list(title =  paste(unique(droplevels(dataBP$variable))[1]),
+                  range  =c(min(dataBP$value, na.rm = TRUE), topText$y[1] + .1))
+
+    colors2 <- c(brewer.pal(11, 'Paired'))
+
+
+    if(input$times == 'Annual'){
+
+          BOXPLOT <-
+            plot_ly(dataBP2, x = ~RCP2, y = ~value, color = ~GCM, type = 'box',
+                  colors = 'Paired') %>%
+                  add_trace(data = Hist, y = ~value, x = ~RCP2, showlegend = FALSE,
+                            color = I('white'), type = 'violin', box = list(visible = TRUE),line = list( color = 'black')) %>%
+            layout(boxmode = 'group',
+                  boxgap = 0.1,
+                  title = "Predicted Distribution of Future Values",
+                  yaxis = yaxis,
+                  xaxis = xaxis,
+                  annotations = topText,
+                  legend = list(x = 100, y = 0.5),
+                  shapes = list(
+                    list(type = 'line', color = 'grey', opacity = .5, y0 = floor(yaxis$range[1]), y1 = ceiling(yaxis$range[2]), x0 =2.5, x1 = 2.5),
+                    list(type = 'line', color = 'black', opacity = .9, y0 = median(Hist$value,  na.rm = TRUE), y1 = median(Hist$value,  na.rm = TRUE), x0 = .5, x1 = 4.7))
+            )
+      }
+
+    if(input$times == 'Season'){
+
         dataBP$Season <- factor(dataBP$Season, levels = c('Winter', 'Spring', 'Summer', 'Fall'))
 
         BOXPLOT <- ggplot(dataBP, aes(RCP, value,  fill = fct_reorder(scenario, value, median))) +
@@ -293,140 +385,326 @@ server <- function(input, output, session) {
           fillScale +
           #other
           theme_bw()+
-          uniformTheme +
           theme(legend.position = "bottom",
                 strip.background = element_rect(fill="white"))+#,
                 #strip.text = element_text(size =10)) +
           facet_grid(Season ~ TP, scales = 'free', space = 'free_x')
-      }
     }
 
-    if(input$future == 1){
-      if(input$times == 'Annual'){
-        grid.arrange(TREND, BOXPLOT, nrow =2)
-      }
-      if(input$times == 'Season') {
-        grid.arrange(TREND, BOXPLOT, layout_matrix = cbind(c(rep(1,2), rep(2,6))))
-      }
-    } else {
-      grid.arrange(TREND)
-    }
+    BOXPLOT
 
   }) #end of TS and BP Plots / Tab 1 Plots
 
-  ######### Hover ----- workup
-
-  output$info <- renderText({
-
-     xy_str <- function(e) {
-      if(is.null(e)) return("NULL\n")
-      paste0("year =", e$x, 0, ", y =", e$y, "\n")
-    }
-
-     paste0(
-       "hover: ", xy_str(input$plot_hover)
-     )
-
-  }) # end of tab 1 hover
 
   #################################################################################################
   ######## ---------------- - - - - - - -----  Tab 2  ---- - - - - - - - ----------------  ########
   #################################################################################################
-  output$WL_DSM_Plots <- renderPlot({
+  output$WL_SM_Plots <- renderPlotly({
 
     req(input$years) #input$years doesn't initally have values .. need this
     data <- run$outs
 
     # Walter-Leith controls ----------------------------------------------------------------------
     dataWL <- formatDataWL(data = data[[1]], future = input$future)
+    dataWL2 <- dataWL[[1]]
 
-    # Daily Soil Moisture Plot controls ----------------------------------------------------------
-    dataDSM <- formatDataDSM(data = data[[2]], RCP = input$RCP)
+    #  Soil Moisture Plot controls ----------------------------------------------------------
+    dataSM <- formatDataSM(data = data[[1]], RCP = input$RCP)
+    dataSM2 <- dataSM[[2]][dataSM[[2]]$TP == 'Current',]
+    dataSM2 <- rbind(dataSM2[1,], dataSM2, dataSM2[12,])
+    dataSM2$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                         'August', 'September', 'October', 'November', 'December', 'December2')
+    dataSM2$Month2 <- factor(dataSM2$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                         'August', 'September', 'October', 'November', 'December', 'December2'))
+
+    y_DSM <- list( # Need this year because range argument can't be populated until now
+      title = "soil water potential (-MPa)",
+      range = c(dataSM[[3]], 0),
+      showgrid = FALSE,
+      linecolor = "black",
+      linewidth = 0.5)
 
     # PLOTTING    --------------------------------------------------------------------------------
-    # Walter-Leith Plot ----------------------------------
-    diagwl2(dataWL[[1]], RCP = input$RCP,
-            Year = input$yearButton, YearChoice = input$years2,
-            GCM = input$gcmsButton, GCMc = input$gcms2,
-            FUTURE50 = input$future, FUTURE90 = input$future,
-            data[[1]], dataWL[[3]], dataWL[[2]],
-            est='',alt=NA, per='',margen=c(0.1, .5, 0.4, .2))
+    if(input$future == 2){
 
-    grid.echo()
-    WL_Plot <- grid.grab()
+      # Walter-Leith Plot ----------------------------------
+      topTextWL <- list(
+          x = c(2.4, 10.5),
+          y =  rep(68, 2),
+          text = c(
+            paste0('Current MAT: ', round(mean(dataWL2[2:13,'Temp']),1), ' C'),
+            paste0('Current MAP: ',round(sum(dataWL2[2:13, 'PPT'])), " mm")),
+          showarrow = FALSE,
+          font = list(size = 13)
+        )
 
-    # Daily Soil Moisture Plot ----------------------------------
+      WL <- plot_ly(data = dataWL2) %>%
+          add_lines(x = ~Month2, y = ~Temp , yaxis = 'y1',
+                    line = list(color='#a50f15'),
+                    name = 'Average Temp (C)', showlegend = FALSE) %>%
+          add_lines(x = ~Month2, y = ~PPT, yaxis = "y2",
+                    line = list(color='#08519c'),
+                    name = 'Precip (mm)', showlegend = FALSE)  %>%
+          layout(
+            annotations = topTextWL,
+            yaxis = y1_WL,
+            yaxis2 = y2_WL,
+            xaxis = x_DSMWL,
+            shapes =
+              list(type = 'line', color = 'black',
+                   y0 = 60, y1 = 60, x0 =0, x1 = 12.5)
+          )
+      # Soil Moisture ----------------------------------
+
+
+        SM_Plot <-  plot_ly() %>%
+          add_lines(data = dataSM2, x = ~Month2, y = ~median ,
+                    line = list(color= 'black', width = 2),
+                    name = 'Current SWP', showlegend = FALSE) %>%
+          layout(yaxis = y_DSM,
+                 xaxis = x_DSMWL)
+      }
+
     if(input$future == 1) {
 
-      RibbonDF <-  dataDSM[[2]][dataDSM[[2]]$TP %in% c('Near', 'Late'), ]
+      # Walter-Leith Plot ----------------------------------
 
-      DSM_Plot <-  ggplot() +
-            geom_line(data = dataDSM[[2]], aes(Day, median, color=as.factor(TP)),size=1.1)+
-            geom_ribbon(data = RibbonDF, aes(x = Day, ymin = min, ymax = max,fill = as.factor(TP)),
-                       alpha=0.2) +
-            #LEGEND
-            scale_color_manual(values=c('black','#b8ae23','#a223b8'),name="",labels=c('Current','Near', 'Long-term'))+
-            scale_fill_manual(values=c('#b8ae23','#a223b8'),name="",labels=c('Near', 'Long-term'),guide=FALSE) +
-            theme_bw()+
-            theme_DSM +
-            #AXES
-            labs(
-              y = 'soil water potential (-MPa)',
-              x = 'Month'
-            )+
-            scale_x_continuous(expand=c(0,0),breaks=c(1,29,60,91,121,152,182,213,244,274,305,335),
-                               labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
-            coord_cartesian(ylim = c(dataDSM[[3]],0)) +
-        #FORMATTING
-        uniformTheme
+      # # WL Future ----------------------------------------------------------------------------------------
+      DatEnsembSub <- as.data.frame(dataWL[[3]])
+      DatEnsembSub <- DatEnsembSub[DatEnsembSub$RCP %in% paste(input$RCP), ]
 
-      # EXTRA Lines (Ind. Years and GCMs.)
-      if(input$gcmsButton == 2 && input$yearButton == 1){
-        yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
-        DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
-      }
+      # -
+      DatEnsembSubNearTemp <- DatEnsembSub[DatEnsembSub$TP == 'Near' & DatEnsembSub$variable == "Average Temperature (C)", ]
+      DatEnsembSubNearTemp <- rbind(DatEnsembSubNearTemp[1,],DatEnsembSubNearTemp,DatEnsembSubNearTemp[12,])
+      DatEnsembSubNearTemp$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                          'August', 'September', 'October', 'November', 'December', 'December2')
+      DatEnsembSubNearTemp$Month2 <- factor(DatEnsembSubNearTemp$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                         'August', 'September', 'October', 'November', 'December', 'December2'))
+      # -
+      DatEnsembSubNearPrecip <- DatEnsembSub[DatEnsembSub$TP == 'Near' & DatEnsembSub$variable == "Precipitation (cm)", ]
+      DatEnsembSubNearPrecip <- rbind(DatEnsembSubNearPrecip[1,], DatEnsembSubNearPrecip, DatEnsembSubNearPrecip[12,])
+      DatEnsembSubNearPrecip$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                       'August', 'September', 'October', 'November', 'December', 'December2')
+      DatEnsembSubNearPrecip$Month2 <- factor(DatEnsembSubNearPrecip$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                                                   'August', 'September', 'October', 'November', 'December', 'December2'))
+      # -
+      DatEnsembSubLateTemp <- DatEnsembSub[DatEnsembSub$TP == 'Late' & DatEnsembSub$variable == "Average Temperature (C)", ]
+      DatEnsembSubLateTemp <- rbind(DatEnsembSubLateTemp[1,], DatEnsembSubLateTemp, DatEnsembSubLateTemp[12,])
+      DatEnsembSubLateTemp$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                       'August', 'September', 'October', 'November', 'December', 'December2')
+      DatEnsembSubLateTemp$Month2 <- factor(DatEnsembSubLateTemp$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                                                   'August', 'September', 'October', 'November', 'December', 'December2'))
+      # -
+      DatEnsembSubLatePrecip <- DatEnsembSub[DatEnsembSub$TP == 'Late' & DatEnsembSub$variable == "Precipitation (cm)", ]
+      DatEnsembSubLatePrecip <- rbind(DatEnsembSubLatePrecip[1,], DatEnsembSubLatePrecip, DatEnsembSubLatePrecip[12,])
+      DatEnsembSubLatePrecip$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                         'August', 'September', 'October', 'November', 'December', 'December2')
+      DatEnsembSubLatePrecip$Month2 <- factor(DatEnsembSubLatePrecip$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                                                       'August', 'September', 'October', 'November', 'December', 'December2'))
 
-      if(input$gcmsButton == 1 & input$yearButton == 2) {
-        GCMLineDat <- dataDSM[[1]][dataDSM[[1]]$GCM %in% input$gcms2, ]
-        GCMLineDat_near <- GCMLineDat[GCMLineDat$TP == 'Near', ]
-        head(GCMLineDat_near)
-        str(GCMLineDat_near)
-        DSM_Plot <- DSM_Plot + geom_line(data = GCMLineDat_near, aes(Day, mean), color = '#b8ae23', size = 1.1, linetype = 'dashed')
-        GCMLineDat_late <- GCMLineDat[GCMLineDat$TP == 'Late', ]
-        DSM_Plot <- DSM_Plot + geom_line(data = GCMLineDat_late, aes(Day, mean), color = '#a223b8', size = 1.1, linetype = 'dashed')
-      }
 
-    } else {
+      topTextWL <- list(
+        x = rep(c(2.4, 10.5),3),
+        y =  c(rep(68, 2), rep(65, 2), rep(62, 2)),
+        text = c(
+          paste0('Historical MAT: ', round(mean(dataWL2[2:13,'Temp']), 1), ' C'),
+          paste0('Historical MAP: ', round(sum(dataWL2[2:13, 'PPT'])), " mm"),
+          paste0('2020-2059 MAT: ', round(mean(DatEnsembSubNearTemp[2:13,'mean']), 1), ' C'),
+          paste0('2020-2059 MAP: ', round(sum(DatEnsembSubNearPrecip[2:13, 'mean'])), " mm"),
+          paste0('2060-2099 MAT: ', round(mean(DatEnsembSubLateTemp[2:13,'mean']), 1), ' C'),
+          paste0('2060-2099 MAP: ', round(sum(DatEnsembSubLatePrecip[2:13, 'mean'])), " mm")
+        ),
+        showarrow = FALSE,
+        font = list(size = 13)
+      )
 
-      dataDSM[[2]] <- dataDSM[[2]][dataDSM[[2]]$TP == 'Current',]
+      WL <- plot_ly() %>%
+        # near temp ---------------------------------------------------------------------
+        add_trace(data = DatEnsembSubNearTemp, x = ~Month2, y = ~max, type = 'scatter', mode = 'lines',
+                  line = list(color = 'transparent'),
+                  showlegend = FALSE, name = 'High 2020-2059') %>%
+        add_trace(data = DatEnsembSubNearTemp, x = ~Month2, y = ~min, type = 'scatter', mode = 'lines',
+                  fill = 'tonexty', fillcolor = "rgba(239, 59, 44, .4)", line = list(color = 'transparent'),
+                  showlegend = FALSE, name = 'Low 2020-2059') %>%
+        # late temp
+        add_trace(data = DatEnsembSubLateTemp, x = ~Month2, y = ~max, type = 'scatter', mode = 'lines',
+                  line = list(color = 'transparent'),
+                  showlegend = FALSE, name = 'High 2060-2099') %>%
+        add_trace(data = DatEnsembSubLateTemp, x = ~Month2, y = ~min, type = 'scatter', mode = 'lines',
+                  fill = 'tonexty', fillcolor = "rgba(252, 146, 114, .4)", line = list(color = 'transparent'),
+                  showlegend = FALSE, name = 'Low 2060-2099') %>%
+        # current temp
+        add_lines(data = dataWL2, x = ~Month2, y = ~Temp , yaxis = 'y1',
+                  line = list(color='#a50f15'),
+                  name = 'Average Temp (C)', showlegend = FALSE) %>%
 
-      DSM_Plot <-  ggplot() +
-        geom_line(data =  dataDSM[[2]],aes(Day, median, color=as.factor(TP)),size=1.1)+
-        #LEGEND
-        scale_color_manual(values=c('black'),name="",labels=c('Current'))+
-        theme_bw()+
-        theme_DSM +
-        #AXES
-        labs(
-          y = 'soil water potential (-MPa)',
-          x = 'Month'
-        )+
-        scale_x_continuous(expand=c(0,0),breaks=c(1,29,60,91,121,152,182,213,244,274,305,335),
-                           labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
-        coord_cartesian(ylim = c(dataDSM[[3]],0)) +
-        #FORMATTING
-        uniformTheme
+        # near ppt -----------------------------------------------------------------
+        add_trace(data = DatEnsembSubNearPrecip, x = ~Month2, y = ~max, type = 'scatter', mode = 'lines',
+                  line = list(color = 'transparent'), yaxis = "y2",
+                  showlegend = FALSE, name = 'High 2020-2059') %>%
+        add_trace(data = DatEnsembSubNearPrecip, x = ~Month2, y = ~min, type = 'scatter', mode = 'lines', yaxis = "y2",
+                  fill = 'tonexty', fillcolor = "rgba(44, 53, 232, .4)", line = list(color = 'transparent'),
+                  showlegend = FALSE, name = 'Low 2020-2059') %>%
+        # late ppt
+        add_trace(data = DatEnsembSubLatePrecip, x = ~Month2, y = ~max, type = 'scatter', mode = 'lines',
+                  line = list(color = 'transparent'), yaxis = "y2",
+                  showlegend = FALSE, name = 'High 2060-2099') %>%
+        add_trace(data = DatEnsembSubLatePrecip, x = ~Month2, y = ~min, type = 'scatter', mode = 'lines', yaxis = "y2",
+                  fill = 'tonexty', fillcolor = "rgba(158, 202, 225, .4)", line = list(color = 'transparent'),
+                  showlegend = FALSE, name = 'Low 2060-2099') %>%
+        # current ppt
+        add_lines(data = dataWL2, x = ~Month2, y = ~PPT, yaxis = "y2",
+                  line = list(color='#08519c'),
+                  name = 'Precip (mm)', showlegend = FALSE)  %>%
+        # --------------------------------------------------------------------------
+        layout(
+          annotations = topTextWL,
+          yaxis = y1_WL,
+          yaxis2 = y2_WL,
+          xaxis = x_DSMWL,
+          shapes =
+            list(type = 'line', color = 'black',
+                 y0 = 60, y1 = 60, x0 =0, x1 = 12.5)
+        )
 
-      if(input$yearButton == 1){
-        yearLineDat <- data[[2]][data[[2]]$Year %in% input$years2, ]
-        DSM_Plot <- DSM_Plot + geom_line(data = yearLineDat, aes(Day, value), color = 'black', size = 1.1, linetype = 'dashed')
-      }
+      # # SM Future ----------------------------------------------------------------------------------------
+      RibbonDFNear <-  dataSM[[2]][dataSM[[2]]$TP %in% c('Near'), ]
+      RibbonDFNear <- rbind(RibbonDFNear[1,], RibbonDFNear, RibbonDFNear[12,])
+      RibbonDFNear$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                               'August', 'September', 'October', 'November', 'December', 'December2')
+      RibbonDFNear$Month2 <- factor(RibbonDFNear$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                                   'August', 'September', 'October', 'November', 'December', 'December2'))
+
+      RibbonDFLate <-  dataSM[[2]][dataSM[[2]]$TP %in% c('Late'), ]
+      RibbonDFLate <- rbind(RibbonDFLate[1,], RibbonDFLate, RibbonDFLate[12,])
+      RibbonDFLate$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                               'August', 'September', 'October', 'November', 'December', 'December2')
+      RibbonDFLate$Month2 <- factor(RibbonDFLate$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                                   'August', 'September', 'October', 'November', 'December', 'December2'))
+
+
+      SM_Plot <- plot_ly() %>%
+        add_lines(data = dataSM2, x = ~Month2, y = ~median ,
+                  line = list(color= 'black', width = 2),
+                  name = 'Current SWP', showlegend = FALSE) %>%
+        add_trace(data = RibbonDFNear, x = ~Month2, y = ~max, type = 'scatter', mode = 'lines',
+                  line = list(color = 'transparent'),
+                  showlegend = FALSE, name = 'High 2020-2059') %>%
+        add_trace(data = RibbonDFNear, x = ~Month2, y = ~min, type = 'scatter', mode = 'lines',
+                  fill = 'tonexty', fillcolor = "rgba(184, 174, 35, .4)", line = list(color = 'transparent'),
+                  showlegend = FALSE, name = 'Low 2020-2059')  %>%
+        add_trace(data = RibbonDFLate, x = ~Month2, y = ~max, type = 'scatter', mode = 'lines',
+                  line = list(color = 'transparent'),
+                  showlegend = FALSE, name = 'High 2060-2099') %>%
+        add_trace(data = RibbonDFLate, x = ~Month2, y = ~min, type = 'scatter', mode = 'lines',
+                  fill = 'tonexty', fillcolor = "rgba(162, 35, 184, .4)", line = list(color = 'transparent'),
+                  showlegend = FALSE, name = 'Low 2060-2099') %>%
+        add_trace(data = RibbonDFNear, x = ~Month2, y = ~median, type = 'scatter', mode = 'lines',
+                  line = list(color = 'rgb(184, 174, 35)'), showlegend = TRUE, name = 'Near (2020-2059)') %>%
+        add_trace(data = RibbonDFLate, x = ~Month2, y = ~median, type = 'scatter', mode = 'lines',
+                  line = list(color = "rgb(162, 35, 184)"), showlegend = TRUE, name = 'Late (2060-2099)') %>%
+        layout(yaxis = y_DSM,
+               xaxis = x_DSMWL,
+               showlegend = TRUE,
+               legend = list(x = .05, y = .05))
 
     }
 
-    grid.arrange(WL_Plot, DSM_Plot)
+    # Individual Years -----------------------------------------
 
-  }) #end of Tab 2 Plots
+    if(input$yearButton == 1) {
+      yearLineDat <- data[[1]][data[[1]]$Year %in% input$years2, ]
+      yearLineDat <- dcast(yearLineDat, formula  = Year + Month + GCM + RCP + Season ~ variable)
+      yearLineDat <- rbind(yearLineDat[1,], yearLineDat, yearLineDat[12,])
+
+      yearLineDat$Month2 <- factor(dataWL2$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                             'August', 'September', 'October', 'November', 'December', 'December2')
+      )
+
+
+      WL <-  WL %>%
+        add_lines(data = yearLineDat,
+                  x = ~Month2, y = ~`Average Temperature (C)` , yaxis = 'y1',
+                  line = list(color='#a50f15', dash = 'dash'),
+                  name = paste0('Temp ', input$years2)) %>%
+        add_lines(data = yearLineDat,
+                  x = ~Month2, y = ~`Precipitation (cm)` , yaxis = 'y2',
+                  line = list(color='#08519c', dash = 'dash'),
+                  name = paste0('Precip ', input$years2))
+
+      SM_Plot <-  SM_Plot %>%
+        add_lines(data = yearLineDat,
+                  x = ~Month2, y = ~`Soil Moisture (SWP, -MPa)`,
+                  line = list(color='black', dash = 'dash'),
+                  name = paste0('SWP ', input$years2)) %>%
+        layout(showlegend = TRUE,
+               legend = list(x = .05, y = .05))
+    }
+
+    # Individual GCMs  -----------------------------------------
+    if(input$gcmsButton == 1) {
+
+      datGCMSub <- as.data.frame(dataWL[[2]])
+      datGCMSub <- datGCMSub[datGCMSub$RCP == input$RCP & datGCMSub$GCM == input$gcms2, ]
+      # -
+      datGCMSubNear <- datGCMSub[datGCMSub$TP == 'Near', ]
+      datGCMSubNear <- dcast(datGCMSubNear, RCP + TP + GCM + Month ~ variable)
+      datGCMSubNear <- rbind(datGCMSubNear[1,], datGCMSubNear, datGCMSubNear[12,])
+      datGCMSubNear$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                               'August', 'September', 'October', 'November', 'December', 'December2')
+      datGCMSubNear$Month2 <- factor(datGCMSubNear$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                                   'August', 'September', 'October', 'November', 'December', 'December2'))
+
+      # -
+      datGCMSubLate <- datGCMSub[datGCMSub$TP == 'Late', ]
+      datGCMSubLate <- dcast(datGCMSubLate, RCP + TP + GCM + Month ~ variable)
+      datGCMSubLate <- rbind(datGCMSubLate[1,], datGCMSubLate, datGCMSubLate[12,])
+      datGCMSubLate$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                'August', 'September', 'October', 'November', 'December', 'December2')
+      datGCMSubLate$Month2 <- factor(datGCMSubLate$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                                     'August', 'September', 'October', 'November', 'December', 'December2'))
+
+
+      WL <-  WL %>%
+        add_lines(data = datGCMSubNear,
+                  x = ~Month2, y = ~`Average Temperature (C)` , yaxis = 'y1',
+                  line = list(color='#a50f15', dash = 'dot'),
+                  name = paste0(input$gcms2, ' Near Temp'),
+                  showlegend = FALSE) %>%
+        add_lines(data = datGCMSubNear,
+                  x = ~Month2, y = ~`Precipitation (cm)` , yaxis = 'y2',
+                  line = list(color='#08519c', dash = 'dot'),
+                  name = paste0(input$gcms2, ' Near Precip '),
+                  showlegend = FALSE) %>%
+        add_lines(data = datGCMSubLate,
+                  x = ~Month2, y = ~`Average Temperature (C)` , yaxis = 'y1',
+                  line = list(color='#a50f15', dash = 'dashdot'),
+                  name = paste0(input$gcms2, ' Late Temp'),
+                  showlegend = FALSE) %>%
+        add_lines(data = datGCMSubLate,
+                  x = ~Month2, y = ~`Precipitation (cm)` , yaxis = 'y2',
+                  line = list(color='#08519c', dash = 'dashdot'),
+                  name = paste0(input$gcms2, ' Late Precip '),
+                  showlegend = FALSE)
+
+    # ----------------------------------------------------------------
+      SM_Plot <-  SM_Plot %>%
+        add_lines(data = datGCMSubNear,
+                  x = ~Month2, y = ~`Soil Moisture (SWP, -MPa)`,
+                  line = list(color='#b8ae23', dash = 'dot'),
+                  name = paste0(input$gcms2, ' Near')) %>%
+        add_lines(data = datGCMSubLate,
+                  x = ~Month2, y = ~`Soil Moisture (SWP, -MPa)`,
+                  line = list(color='#a223b8', dash = 'dashdot'),
+                  name = paste0(input$gcms2, ' Late')) %>%
+        layout(showlegend = TRUE,
+               legend = list(x = .05, y = .05))
+    }
+
+    subplot(WL, SM_Plot, nrows = 2, shareX = TRUE, titleY = TRUE)
+
+  })
+
 
 }
 # Run the app ----

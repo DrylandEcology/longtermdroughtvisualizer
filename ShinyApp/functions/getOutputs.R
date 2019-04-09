@@ -6,18 +6,22 @@ get_output <- function(){
   Scenarios <- list.dirs(path_3Runs)
 
   # Soils
-  SoilsDf <- data.frame(variable= paste0('Lyr_', 1:7), Layer= c(rep('Shallow', 2),
-                                                            rep('Inter', 3),
-                                                            rep('Deep', 2)))
+  SoilsDf <- data.frame(variable= paste0('Lyr_', 1:8), Layer= c(rep('Shallow', 2), # 10, 20
+                                                            rep('Inter', 3), # 40, 60, 80
+                                                            rep('Deep', 3))) # 100, 150, 200
   #SeasonDF
   SeasonsDF <- data.frame(Month = c(1:12), Season = c(rep('Winter',2),
                                                       rep('Spring', 3),
                                                       rep('Summer', 3),
                                                       rep('Fall', 3),
                                                       rep('Winter', 1)))
+  #Variables
+  VarDF <- data.frame(variable = c('Shallow', 'Inter', 'Deep', 'max_C', 'min_C', 'avg_C', 'ppt'),
+                      variable2 = c('Shallow', 'Soil Moisture (SWP, -MPa)', 'Deep', 'max_C', 'min_C', 'Average Temperature (C)', 'Precipitation (cm)'))
+
+
   # Read in and format data
   AllVars <- data.frame()
-  DailySWP <- data.frame()
 
   for(i in 2:length(Scenarios)){
     success <- try(load(file.path(Scenarios[i], 'sw_output_sc1.RData')))
@@ -33,6 +37,7 @@ get_output <- function(){
       SWPMean$value <- SWPMean$value * -0.1
 
       Temp <- data.frame(runDataSC@TEMP@Month)
+      Temp$surfaceTemp_C <- NULL
       Temp <- reshape2::melt(Temp, id.vars = c('Year', 'Month'))
 
       PPT <- data.frame(runDataSC@PRECIP@Month)[1:3]
@@ -42,24 +47,13 @@ get_output <- function(){
       Vars <- rbind(SWPMean, Temp)
       Vars <- rbind(Vars, PPT)
 
-      # Daily -----------------------------------------------------------------
-      SWPd <-  data.frame(runDataSC@SWPMATRIC@Day)
-      SWPd <- reshape2::melt(SWPd, id.vars = c('Year', 'Day'))
-      SWPd <- suppressMessages(plyr::join(SWPd, SoilsDf))
-
-      DailySWPd <- setDT(SWPd)[,.(value = mean(value)),.(Year, Day, Layer)] #Probably need to get VWC and convert
-      names(DailySWPd)[3] <- 'variable'
-      DailySWPd <- DailySWPd[DailySWPd$variable == 'Inter', ]
-      DailySWPd$value <- DailySWPd$value * -0.1
-
       # Details -------------------------------------------------------------
 
       Scenario <- sapply(strsplit(Scenarios[i],'_'), "[", 5)
-      Vars$GCM <- DailySWPd$GCM <- if(Scenario == 'Current') 'Current' else sapply(strsplit(Scenario,'\\.'), "[", 4)
-      Vars$RCP <- DailySWPd$RCP <- if(Scenario == 'Current') 'Current'else sapply(strsplit(Scenario,'\\.'), "[", 3)
+      Vars$GCM <-  if(Scenario == 'Current') 'Current' else sapply(strsplit(Scenario,'\\.'), "[", 4)
+      Vars$RCP <- if(Scenario == 'Current') 'Current'else sapply(strsplit(Scenario,'\\.'), "[", 3)
 
       AllVars <- rbind(AllVars, Vars)
-      DailySWP <- rbind(DailySWP, DailySWPd)
 
     } else{
       next
@@ -67,7 +61,12 @@ get_output <- function(){
   }
 
   AllVars <- suppressMessages(plyr::join(AllVars,SeasonsDF))
-  return(list(AllVars, DailySWP))
+  AllVars <- suppressMessages(plyr::join(AllVars,VarDF))
+  AllVars$variable <- NULL
+  names(AllVars)[7] <- 'variable'
+  AllVars <- AllVars[AllVars$Year %in% c(1915:2013, 2020:2099), ]
+
+  return(list(AllVars))
 
 
 }
@@ -75,12 +74,13 @@ get_output <- function(){
 formatDataTS <- function(data, variable, time){
   #first subset just to historical/current!
   data <- data[data$GCM == 'Current', ]
+  data <- data[data$Year <= 2013, ]
 
   if(time == 'Season'){
   # Get proper value - mean or sum - across TPs.
-  if(variable == 'ppt'){
+  if(variable == 'Precipitation (cm)'){
 
-    data2 <- setDT(data)[,.(value = sum(value)),.(Year, Season, variable)]
+    data2 <- setDT(data)[,.(value = sum(value)/10),.(Year, Season, variable)]
   }else{
     data2 <- setDT(data)[,.(value = mean(value)),.(Year, Season, variable)]
   }
@@ -88,8 +88,8 @@ formatDataTS <- function(data, variable, time){
 
   if(time == 'Annual'){
     # Get proper value - mean or sum - across TPs.
-    if(variable == 'ppt'){
-      data2 <- setDT(data)[,.(value = sum(value)),.(Year, variable)]
+    if(variable == 'Precipitation (cm)'){
+      data2 <- setDT(data)[,.(value = sum(value)/10),.(Year, variable)]
     }else{
       data2 <- setDT(data)[,.(value = mean(value)),.(Year, variable)]
     }
@@ -122,17 +122,17 @@ getroll <- function(data, time){
 formatDataBP <- function(data, variable, time){
 
   #Step 1: Create TPs (Near: 2020 - 2059, 2060 - 2099) - Just data formatting, doesn't affect any aggreggations
-  TP_DF <- data.frame(Year = c(1976:2015,2020:2099), TP = c(rep('Current', 40), rep('Near',40), rep('Late', 40)))
+  TP_DF <- data.frame(Year = c(1974:2013,2020:2099), TP = c(rep('Current', 40), rep('Near',40), rep('Late', 40)))
   data <- suppressMessages(plyr::join(TP_DF, data))
-  data2 <- data[data$Year == 2015, ]
-  data2 <- data2[data2$GCM == 'Current', ]
-  data <- data[data$Year != 2015, ]
-  data <- rbind(data, data2)
+  #data2 <- data[data$Year == 2015, ]
+  #data2 <- data2[data2$GCM == 'Current', ]
+  #data <- data[data$Year != 2015, ]
+  #data <- rbind(data, data2)
 
   if(time == 'Season'){
     # Get proper value - mean or sum - across TPs.
-    if(variable == 'ppt'){
-      data2 <- setDT(data)[,.(value = sum(value)),.(RCP, GCM, TP, Year, Season, variable)]
+    if(variable == 'Precipitation (cm)'){
+      data2 <- setDT(data)[,.(value = sum(value)/10),.(RCP, GCM, TP, Year, Season, variable)]
     }else{
       data2 <- setDT(data)[,.(value = mean(value)),.(RCP, GCM, TP, Year, Season, variable)]
     }
@@ -140,8 +140,8 @@ formatDataBP <- function(data, variable, time){
 
   if(time == 'Annual'){
     # Get proper value - mean or sum - across TPs.
-    if(variable == 'ppt'){
-      data2 <- setDT(data)[,.(value = sum(value)),.(RCP, GCM, TP, Year, variable)]
+    if(variable == 'Precipitation (cm)'){
+      data2 <- setDT(data)[,.(value = sum(value)/10),.(RCP, GCM, TP, Year, variable)]
     }else{
       data2 <- setDT(data)[,.(value = mean(value)),.(RCP, GCM, TP, Year, variable)]
     }
@@ -157,21 +157,28 @@ formatDataBP <- function(data, variable, time){
 formatDataWL <- function(data, future) {
 
   # need a numeric vector that 12 columsn long and then ppt, min_C, max_C, min_C again
-  DataC <- data[data$Year %in% c(1976:2015), ]
+  DataC <- data[data$Year %in% c(1974:2013), ]
   DataC <- DataC[DataC$GCM %in% 'Current', ]
-  DataC <- DataC[DataC$variable %in% c('ppt', 'max_C', 'min_C'), ]
+  DataC <- DataC[DataC$variable %in% c('Precipitation (cm)', 'max_C', 'min_C'), ]
   DataC <- reshape2::dcast(DataC, Month ~ variable, value.var = "value", fun.aggregate = mean)
-  DataC <- t(DataC)
-  DataC <- DataC[c('ppt', 'min_C', 'max_C', 'min_C'),]
+  names(DataC)[4] <- 'PPT'
+  DataC$Temp <- rowMeans(DataC[,2:3])
+
+  DataC <- rbind(DataC[1,], DataC, DataC[12,])
+  DataC$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                     'August', 'September', 'October', 'November', 'December', 'December2')
+  DataC$Month2 <- factor(DataC$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                   'August', 'September', 'October', 'November', 'December', 'December2'))
+
 
   if(future == 1) {
     ##### Future data
     dataFut <- data[data$Year %in% c(2020:2099), ]
     TP_DF <- data.frame(Year = c(2020:2099), TP = c(rep('Near',40), rep('Late', 40)))
-    dataFut <- suppressMessages(plyr::join(dataFut,TP_DF))
+    dataFut <- suppressMessages(plyr::join(dataFut, TP_DF))
 
     DatGCM <- setDT(dataFut)[,.(mean = mean(value)),
-                           .(TP, RCP, GCM, Month, variable)]
+                          .(TP, RCP, GCM, Month, variable)]
 
     DatEnsemb <- setDT(DatGCM)[,.(mean = mean(mean),
                                 median = median(mean),
@@ -187,30 +194,35 @@ formatDataWL <- function(data, future) {
 }
 
 
-formatDataDSM <- function(data, RCP) {
+formatDataSM <- function(data, RCP) {
 
-  data <- data[data$variable %in% 'Inter', ]
+  data <- data[data$variable %in% 'Soil Moisture (SWP, -MPa)', ]
+  data$Month2 <- c( 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                        'August', 'September', 'October', 'November', 'December' )
+  data$Month2 <- factor(data$Month2, levels =c( 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                                         'August', 'September', 'October', 'November', 'December'))
 
-  data2 <- data[data$Year == 2015, ]
-  data2 <- data2[data2$GCM == 'Current', ]
-  data <- data[data$Year != 2015, ]
-  data <- rbind(data, data2)
+  #data2 <- data[data$Year == 2015, ]
+  #data2 <- data2[data2$GCM == 'Current', ]
+  #data <- data[data$Year != 2015, ]
+  #data <- rbind(data, data2)
 
   # Subset by RCP
   eval(parse(text = paste0("data <- data[data$RCP %in% c('Current','", RCP, "'), ]")))
 
   # Get TPs
-  TP_DF <- data.frame(Year = c(1976:2015, 2020:2099), TP = c(rep('Current', 40), rep('Near',40), rep('Late', 40)))
+  TP_DF <- data.frame(Year = c(1974:2013, 2020:2099), TP = c(rep('Current', 40), rep('Near',40), rep('Late', 40)))
   data <- suppressMessages(plyr::join(TP_DF, data))
 
   DatGCM <- setDT(data)[,.(mean = mean(value)),
-                        .(TP, RCP, GCM, Day, variable)]
+                        .(TP, RCP, GCM, Month, Month2, variable)]
 
   DatEnsemb <- setDT(DatGCM)[,.(mean = mean(mean),
                                 median = median(mean),
                                 min = min(mean), #change ranks
                                 max = max(mean)),
-                             .(TP, RCP, Day, variable)]
+                             .(TP, RCP, Month, Month2, variable)]
+
 
   ### ysub for plotting
   lowVal <- -8
@@ -225,27 +237,3 @@ formatDataDSM <- function(data, RCP) {
   return(list(DatGCM, DatEnsemb, ysub))
 
 }
-
-
-# -------------------------------------------------------------------------------
-
-# Time Series settings
-legendbkrd <- adjustcolor(col = '#FFFFFF',alpha.f = 0)
-colors2 = c( '#FF7F50', '#99d594','#d53e4f','#3288bd')
-
-# Dail Soil Moisture theme
-legendbkrd <- adjustcolor(col = '#FFFFFF',alpha.f = 0)
-
-theme_DSM <- theme(legend.position = c(.855,0.125),
-                  legend.background = element_rect(fill = legendbkrd),
-                  #legend.margin=unit(-0.6,"cm"),
-                  legend.key.height=unit(0, "cm"),
-                  legend.text=element_text(size=10,face='plain'))
-
-#Set uniform themes
-uniformTheme <-     theme(panel.grid.minor = element_blank(),
-                          #text
-                          text = element_text(family = 'Frutiger LT Pro 45 Light',size = 12,face='bold'),
-                          axis.title.x=element_blank(),
-                          axis.title = element_text(family='Frutiger LT Pro 45 Light',size= 12,face='plain'),
-                          axis.text = element_text(family='Frutiger LT Pro 45 Light',size = 12,face='plain'))
