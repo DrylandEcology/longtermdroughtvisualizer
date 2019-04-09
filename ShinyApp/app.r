@@ -118,14 +118,22 @@ server <- function(input, output, session) {
               tabPanel(title = "Mean annual patterns", value = "outputs1",
 
                        fluidRow(
-                         box(title = 'What Does An Average Year Look Like?',  width = 12,
-                             "Box content here", br(), "More box content")
-                       ),
-                       br(),
+                         box(title = h1('What does an average year look like? What will it look like in the future?'),  width = 10,
+                            h4(paste0("The plots below depict monthly averages of climate and soil moisture for
+                              site ", round(input$lat, 2), ", ", round(input$lng, 2) ,".Use the plot controls to explore different
+                              representation concentration pathways (RCPs),
+                              and how individual years and climate models (GCMs) compare to the mean. Variables represented
+                              here include average temperature (C), total precipitation (cm), and mean soil moisture (measured as soil
+                              water potential, -MPa) at intermediate (20–80cm) soil depths.
+                               "))
+                       )
+                       ), #end of row 1
+
                        br(),
                        br(),
 
                        fluidRow(
+                         box(width = 1),
                          box(plotlyOutput("WL_SM_Plots", height = "700px"), width = 6),
 
                       ############################################################
@@ -174,15 +182,9 @@ server <- function(input, output, session) {
                                          c(my_names)))
                          )
                          )# end of sidebar layout boxx
-                      ),
-                      br(),
-                      br(),
-                      fluidRow(
-                        box(title = 'Notes',  width = 12,
-                            "Box content here", br(), "More box content")
                       )
               ), # end of tab
-              target = "Site-by-site", position = 'after')
+              target = "Inputs", position = 'after')
 
     ############################################################
     ###### TAB 2 DESIGN
@@ -191,11 +193,26 @@ server <- function(input, output, session) {
               tabPanel(title = "Long-term past and future", value = "outputs2",
 
                        fluidRow(
-                         box(title = 'What will the future hold?',  width = 12,
-                             "Box content here", br(), "More box content")
+                         box(title = h1('What are the historical patterns of climate and soil moisture? How might they change in the future?'),  width = 10,
+                        br(),
+                        h4(paste0("The plots below depict long-term patterns of climate and soil moisture for
+                             site ", round(input$lat, 2), ", ", round(input$lng, 2) ,". Data can be explored either as yearly or seasonal means, by selecting
+                             from the time-step menu. Variables include average temperature (C),
+                             total precipitation (cm), and mean soil moisture (measured as soil water potential, -MPa)
+                             at intermediate (20–80cm) soil depths.")))
                        ),
                        br(),
                        br(),
+
+                       fluidRow(
+                         box(title = 'Long-term Historical Perspectives Plot',  width = 8,
+                             paste0("This plot depicts long-term historical fluctuations. This long-term perspective is useful for
+                                    identifying unusual historical years and for recognizing the range of
+                                    typical variation among years over the past century. Mean values for each year
+                                    from 1916 to 2013 and are shown in the thin line, and the 10-year moving average
+                                    is shown in the thick line.")
+                             )
+                             ), #END OF ROW 3
                        br(),
 
                        fluidRow(
@@ -225,18 +242,36 @@ server <- function(input, output, session) {
                        br(),
                        br(),
 
-                       fluidRow(
-                         box(title = 'Notes',  width = 8,
-                             "Box content here", br(), "More box content")
-                       ),
-
+                       if(input$future == 1) {# BOX PLOT - only if future == 1
+                         fluidRow(
+                           box( title = 'Predicted Distribution of Future Values Plot', width = 10,
+                                paste0("This plot depicts the distribution of annual values, derived
+                                       from observed historical conditions (1974-2013; black boxplot
+                                       and violin plot on left) and derived from a suite of climate
+                                       models (colored box plots on right) for two future time periods
+                                       (2020-2059 and 2060-2099) and two representative concentration
+                                       pathways (RCPs).  Comparing conditions under historical climate
+                                       with conditions expected in the future enables users to identify
+                                       the direction and magnitude of robust changes in which all or
+                                       most climate models agree.  Because the distributions represent
+                                       variation among years, users can detect not only changes in typical
+                                       conditions (e.g. mean or median years) but also changes in extreme years
+                                       (e.g. the tails of the distributions represented in the boxplots).
+                                       In addition, users can identify and choose particular climate models
+                                       to view, allowing direct comparison with other climate synthesis efforts or
+                                       publications that may have focused on climate projections from specific models. ")
+                                )
+                          )#end of row 4
+                       },
                        br(),
 
                        if(input$future == 1) {# BOX PLOT - only if future == 1
                          fluidRow(
                            box( plotlyOutput("BoxPlots"), width = 12)
-                           ) #end of row 3
+                         )
                        }
+                       #end of row 5
+
 
 
 
