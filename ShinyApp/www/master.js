@@ -1,4 +1,4 @@
-inValidate/*
+/*
  * In house javascript
  */
 // value of radio buttons, initialized
@@ -252,8 +252,8 @@ function validateInputs(){
     compTxt = "<pre>Veg composition will be generated based on ?????</pre>";
   }
   // write feedback status text
-  changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat + ", " +
-                     long + "]</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
+  changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat.toFixed(3) + ", " +
+                     long.toFixed(3) + "]</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
                      "</span>.<br><br>" + soilsTxt + compTxt, false);
   changeFeedbackText("<span id='imp'>Click Simulate to begin simulation...</span>", true);
   $("#simBtn").show();
@@ -304,8 +304,8 @@ function sendToR(){
       compTxt = "<pre>Veg composition generated based on ?????</pre>";
     }
     // write feedback status text
-    changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat + ", " +
-                       long + "]</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
+    changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat.toFixed(3) + ", " +
+                       long.toFixed(3) + "]</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
                        "</span>.<br><br>" + soilsTxt + compTxt, false);
     changeFeedbackText("<span id='imp'>Calculation Running...</span>", true);
     // Give the user feedback in realtime
