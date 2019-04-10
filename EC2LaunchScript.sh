@@ -82,8 +82,19 @@
       R -e "install.packages('sp', repos='http://cran.rstudio.com/')"
       R -e "install.packages('maps', repos='http://cran.rstudio.com/')"
       R -e "install.packages('maptools', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('shinydashboard', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('httr', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('hexbin', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('tidyr', repos='http://cran.rstudio.com/')"
 
+      # TO DOGet dev version of plotly
+      git clone 'https://github.com/ropensci/plotly'
+      cd plotly/
+      R CMD INSTALL --library= /usr/lib64/R/library .
+      cd ../
+      rm -r plotly/
 
+      #devtools::install_github("ropensci/plotly")
 
       # clone and install rSOILWAT2
       git clone -b master --single-branch --recursive https://github.com/DrylandEcology/rSOILWAT2.git rSOILWAT2
@@ -105,7 +116,7 @@
       usermod -a -G appallow devel
       usermod -a -G appallow shiny
       chown -R :appallow /srv/shiny-server/longtermdroughtsimulator
-      #chmod -R g+rwx /srv/shiny-server/longtermdroughtsimulator
+      chmod -R g+rwx /srv/shiny-server/longtermdroughtsimulator
 
       # download data from the S3 environment to the longtermdroughtsimulator folder
       cd /srv/shiny-server/longtermdroughtsimulator

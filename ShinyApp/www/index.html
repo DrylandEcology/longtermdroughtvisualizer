@@ -25,7 +25,8 @@
     <!-- Content container with borders on either side -->
     <div class="container">
       <h1 class="centered"><b>Long-term Drought Simulator</b></h1>
-      <h3 class="centered">Welcome to the Long-term Drought Simulator!</h3><br>
+      <h3 class="centered">Welcome to the Long-term Drought Simulator! An application to explore site-specific, historical and future, climate and drought patterns. </h3><br>
+
         <!-- Top navbar links -->
           <div class="centeredDiv">
             <ul class="navBar1">
@@ -44,7 +45,7 @@
             are interested in exploring long-term historical and future patterns of soil moisture and plant
             available water for their specific site. Historical simulations illustrate long-term, site-specific
             perspectives on drought variability and provide context on a site’s natural range of variability.
-            Future projections of 21 st century drought help quantify expected deviations from historical
+            Future projections of 21st century drought help quantify expected deviations from historical
             variability that represent potential risk of novel drought exposure.
             Here, users can utilize the Long-term Drought Simulator by specifying a focal location and users
             have the option to provide additional site-specific information, including soil texture, and
@@ -62,7 +63,11 @@
             simulate and specify if they would like results for historical conditions only, or historical and
             future. Additionally, users have the option of specifying soil texture and vegetation composition
             for their site or utilizing gridded soils and vegetation conditions that are estimated from mean
-            climate conditions.
+            climate conditions.<br><br>
+            Enter information in the <i>Simulation Inputs</i> box to the right. More information about each input is listed
+            in the dropdowns below. Once your inputs are ready select the <b>Validate</b> button. Inputs will be verified for
+            simulation compatibility. If results are valid, the Simulate button will appear. Click the <b>Simulate</b> button once to begin simulation
+            and watch the status of your project progress below.
           </p>
           <!-- Dropdown accordion -->
           <div class="accordionWrapper">
@@ -73,9 +78,9 @@
                     <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
                     <p>
                     Location is designated as coordinates (lat, long) in the WGS84 coordinate reference system. <br><br>
-                    Select your location by either clicking on the map or by <span class="highlight">entering coordinates</span> into the latitude and
+                    Select your location by either clicking on the map or by entering coordinates into the latitude and
                     longitude boxes provided.<br><br>
-                    Note: Currently, only locations in Arizona, New Mexico, Colorado, and Utah are operational.
+                    <i>Note: Currently, only locations in Arizona, New Mexico, Colorado, and Utah are operational.</i>
                   </p>
                   </div>
                 </div>
@@ -84,7 +89,7 @@
                   <div class="accordionItemContent">
                     <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
                     <p>
-                      Users have the option of selecting to simulate long-term historical (1916 – 2017) patterns of
+                      Users have the option of selecting to simulate long-term historical (1916 – 2013) patterns of
                       water availability alone or to simulate both historical and future (2020 – 2099) water availability.
                       Future simulations occur for 11 different general circulation models (GCMs), that are believed to
                       best predict future climate in the American Southwest.<br><br>
@@ -100,11 +105,12 @@
                     <p>
                       Soil texture influences the availability of a site to retain moisture in the soil profile. Here soil
                       texture is described as percent sand, silt, and clay, where these must sum to 100%.
-                      <br><br>If you know your site’s texture or soil type select <b>choose</b>. This will give you the option to either:
-                      (A) Enter specific texture values in the input boxes provide or (B) Click on the soil texture
-                      diagram to generate mean values for that soil texture type.
+                      <br><br>If you know your site’s texture or soil type select <b>choose</b>. This will give you the option to
+                      enter specific texture values in the input boxes provide.
                       <br><br>Otherwise, select <b>obtain</b>. Selecting obtain will grab soil texture values for the latitude and
-                      longitude provided from a gridded soils map.
+                      longitude provided from gridded soils data
+                      <a href="https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/dc7b283a-8f19-45e1-aaed-e9bd515119bc" target="_blank">(ISRIC WISE30sec)</a>.
+
                     </p>
                   </div>
                 </div>
@@ -124,7 +130,7 @@
                       composition based on site-specific climate. Potential vegetation composition of the three
                       functional groups, mean monthly biomass, litter, and phenology are based on climate
                       relationships and calculated for each cell and climate condition (detailed description in Bradford
-                      et al.(2014)).
+                      et al. 2014).
                     </p>
                   </div>
                 </div>
@@ -132,7 +138,7 @@
         <!-- Dropdown note, displayed directly below dropdown menu -->
         <p><strong>Note:</strong> Click on the above text to expand or collapse 'how to' tips.</p>
         <!-- Status box -->
-          <br><h3 class="centered"><b>Status</b><i class='glyphicon glyphicon-info-sign' style="margin-left:5px; margin-bottom:1px;" id="moreTip5" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Status messages related to running the simulation. See highlighted tab for more."></i></a></h3>
+          <br><h3 class="centered"><b>Status</b><i class='glyphicon glyphicon-info-sign' style="margin-left:5px; margin-bottom:1px;" id="moreTip5" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Status messages related to running the simulation."></i></a></h3>
           <div id="feedback" class="greyBack">
             <!-- Content for status box, is updated dynamically using javascript in master.js-->
             <span id="imp">Input simulation configuration...</span>
@@ -182,7 +188,7 @@
           <div id="inputs" class="whiteBack">
             <!-- Location -->
             <p class="whiteBack" style="float:left;font-size:20px;margin-bottom:0px;color:#78909c">Simulation Inputs</p><br><br>
-            <h4 class="centered">Location <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip1" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Site location for simulation run. See highlighted tab for more."></i></a></h4>
+            <h4 class="centered">Location <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip1" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Site location for simulation run. See highlighted tab for more information."></i></a></h4>
             <div class="row">
               <div class="col-sm-3">
               </div>
@@ -203,7 +209,7 @@
               </div>
             </div>
             <!-- Future Simulations Options -->
-            <br><h4 class="centered">Past and Future Simulations <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip2" src="images/marker-icon.png" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Indicate whether you would like to run future scenarios in the simulation. See highlighted tab for more."></i></h4>
+            <br><h4 class="centered">Past and Future Simulations <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip2" src="images/marker-icon.png" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Indicate whether you would like to run future scenarios in the simulation. See highlighted tab for more information."></i></h4>
               <div class="row">
                 <div class="col-sm-3">
                 </div>
@@ -221,7 +227,7 @@
                 </div>
                   <br><br>
                 </div>
-              <h4 class="centered">Soil Texture <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip3" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set soils compositions or have the program extract them for you. See highlighted tabs for more."></i></h4>
+              <h4 class="centered">Soil Texture <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip3" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set soils compositions or have the program extract them for you. See highlighted tabs for more information."></i></h4>
                 <!-- Soils Composition -->
                 <div class="row">
                   <div class="col-sm-3">
@@ -294,7 +300,7 @@
                 </div>
 
                 <!-- Veg Composition -->
-                <h4 class="centered">Vegetation Structure <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip4" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set vegetation compositions or have the program extract them for you. See highlighted tabs for more."></i></h4>
+                <h4 class="centered">Vegetation Structure <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip4" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set vegetation compositions or have the program extract them for you. See highlighted tabs for more information."></i></h4>
                 <div class="row">
                   <div class="col-sm-3">
                   </div>
@@ -365,19 +371,19 @@
           <h2 id="moreInformation"> More Information </h2>
           <div style="word-wrap: break-word">
             <p style="font-size:18px">About the model</p>
-            The results presented here are generated with <a href="https://github.com/DrylandEcology/SOILWAT2">SOILWAT2</a>(Schlaepfer and Andrews 2018,
-            Schlaepfer and Murphy 2018) , which is a daily, site-specific, multi soil-layer, ecosystem water-
-            balance model, driven by daily meteorology, as well as site soil texture, soil depth, and
+            The results presented here are generated with <a href="https://github.com/DrylandEcology/SOILWAT2" target="_blank">SOILWAT2</a> (Schlaepfer and Andrews 2018,
+            Schlaepfer and Murphy 2018), which is a daily, site-specific, multi soil-layer, ecosystem water-balance
+            model, driven by daily meteorology, as well as site soil texture, soil depth, and
             vegetation.
             <br><br>
-            Daily meteorology includes historical weather data from <a href="http://ciresgroups.colorado.edu/livneh/data/daily-obserational-hydrometeorology-data-set-conus-extent-canadian-extent-columbia-river-basin"> University of Colorado’s Water and
+            Daily meteorology includes historical weather data from <a href="http://ciresgroups.colorado.edu/livneh/data/daily-obserational-hydrometeorology-data-set-conus-extent-canadian-extent-columbia-river-basin" target="_blank"> University of Colorado’s Water and
             Climate Research Group Laboratory</a>, derived from observed data at weather stations, as well as
             predictions derived from projections of future climate. The tool shows projections for two
             possible climate futures, one in which emissions peak around 2040 and then decline (RCP 4.5)
             and another in which emissions continue to rise throughout the 21st century (RCP 8.5). Both
             futures are considered possible depending on hypothetical trajectories of greenhouse
             gases. These climate projections have been downscaled on a temporal and spatial from 11 global
-            climate models from the <a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html">CMIP5</a> archive, using a hybrid-delta downscaling technique.
+            climate models from the <a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Complete%20Archives" target="_blank">CMIP5</a> archive, using a hybrid-delta downscaling technique.
             <br><br>
             <p style="font-size:18px">Guidance on using results</p>
             The results generated and presented here provide a long-term historical and future perspective on
@@ -405,17 +411,17 @@
             <img class="floatLeft" src="images/isricLogo.png" alt="no logo" style="margin-right: 40px;height: 100px;width:100px;">
             <ul class="noStyle" style="margin-left: 20px;">
               <li><h3 style="margin-top: 0px;">Harmonized Dataset of Derived Soil Properties for the World (WISE30sec)</h3></li>
-              <li><h4><a href="https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/dc7b283a-8f19-45e1-aaed-e9bd515119bc">ISRIC, World Soil Information, Wageningen, the Netherlands</a></h4></li>
+              <li><h4><a href="https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/dc7b283a-8f19-45e1-aaed-e9bd515119bc" target="_blank">ISRIC, World Soil Information, Wageningen, the Netherlands</a></h4></li>
             </ul><br><br><br>
             <img class="floatLeft" src="images/universityColoradoLogo.png" alt="no logo" style="margin-right: 40px;height: 100px;width:100px;">
             <ul class="noStyle" style="margin-left: 20px;">
               <li><h3 style="margin-top: 0px;">Gridded Historical Observed Meteorological and Hydrological Data</h3></li>
-              <li><h4><a href="http://ciresgroups.colorado.edu/livneh/">University of Colorado, Boulder </a></h4></li>
+              <li><h4><a href="http://ciresgroups.colorado.edu/livneh/" target="_blank">University of Colorado, Boulder </a></h4></li>
             </ul><br><br><br>
             <img class="floatLeft" src="images/soilwatLogo.jpg" alt="no logo" style="margin-right: 40px;height: 100px;width:100px;">
             <ul class="noStyle" style="margin-left: 20px;">
               <li><h3 style="margin-top: 0px;">SOILWAT2 - An Ecohydrological Water-balance Model</h3></li>
-              <li><h4><a href="https://github.com/DrylandEcology/SOILWAT2">Southwest Biological Science Center, USGS, Flagstaff, AZ</a></h4></li>
+              <li><h4><a href="https://github.com/DrylandEcology/SOILWAT2" target="_blank">Southwest Biological Science Center, USGS, Flagstaff, AZ</a></h4></li>
             </ul>
           </div>
         </div>
@@ -438,18 +444,18 @@
             <br>
             <li>
               Schlaepfer, D. R., and C. A. Andrews. 2018. rSFSW2: Simulation Framework for SOILWAT2.
-              R package version 3.0.0. <a href="https://github.com/DrylandEcology/rSFSW2">https://github.com/DrylandEcology/rSFSW2</a>
-            </li>
-            <br>
-            <li>
-              Taylor, K. E., R. J. Stouffer, and G. A. Meehl. 2011. An Overview of CMIP5 and the
-              Experiment Design. Bulletin of the American Meteorological Society 93:485-498.
+              R package version 3.0.0. <a href="https://github.com/DrylandEcology/rSFSW2" target="_blank">https://github.com/DrylandEcology/rSFSW2</a>
             </li>
             <br>
             <li>
               Schlaepfer, D. R., and R. Murphy. 2018. rSOILWAT2: An Ecohydrological Ecosystem-Scale
               Water Balance Simulation Model. R package version 2.3.2.
-              <a href="https://github.com/DrylandEcology/rSOILWAT2">https://github.com/DrylandEcology/rSOILWAT2</a>
+              <a href="https://github.com/DrylandEcology/rSOILWAT2" target="_blank">https://github.com/DrylandEcology/rSOILWAT2</a>
+            </li>
+            <br>
+            <li>
+              Taylor, K. E., R. J. Stouffer, and G. A. Meehl. 2011. An Overview of CMIP5 and the
+              Experiment Design. Bulletin of the American Meteorological Society 93:485-498.
             </li>
           </ul>
         </div>
