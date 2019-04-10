@@ -197,8 +197,10 @@ formatDataWL <- function(data, future) {
 formatDataSM <- function(data, RCP) {
 
   data <- data[data$variable %in% 'Soil Moisture (SWP, -MPa)', ]
-  data$Month2 <- c( 'January', 'February', 'March', 'April', 'May', 'June', 'July',
-                        'August', 'September', 'October', 'November', 'December' )
+  MonthDF <- data.frame(Month = 1:12, Month2 =  c( 'January', 'February', 'March', 'April', 'May', 'June', 'July',
+   'August', 'September', 'October', 'November', 'December' ))
+  data <- suppressMessages(plyr::join(data.frame(data), MonthDF))
+  
   data$Month2 <- factor(data$Month2, levels =c( 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                                          'August', 'September', 'October', 'November', 'December'))
 

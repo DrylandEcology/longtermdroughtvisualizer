@@ -35,9 +35,12 @@ annual2 <- annual2 %>%
   arrange(GCM, med)
 
 # Plot things
-xaxis <- list(title = "")
+xaxis <- list(title = "",        zeroline = FALSE,
+              showline = FALSE)
 yaxis <- list(title =  paste(unique(droplevels(annual$variable))),
-              range(min(annual$value), max(annual$value)))
+              range(min(annual$value), max(annual$value)),
+              zeroline = FALSE,
+              showline = FALSE)
 
 # Current plot
 current <- plot_ly(data = Hist, y = ~value,  x = ~RCP2, showlegend = FALSE, 
@@ -74,6 +77,7 @@ layout(
        xaxis = xaxis, 
        annotations = topText,
        legend = list(x = 100, y = 0.5),
+       margin = list(top = 20),
        shapes = list(
          list(type = 'line', color = 'grey', opacity = .5, y0 = floor(yaxis[[2]][1]), y1 = ceiling(yaxis[[2]][2]), x0 =2.5, x1 = 2.5),
          list(type = 'line', color = 'black',  y0 = median(Hist$value), y1 = median(Hist$value), x0 = .5, x1 = 4.7))
@@ -190,7 +194,17 @@ p <- subplot(winter, summer, nrows =2, shareX = TRUE)
 p
 
 
-
+ggplot(season, aes(RCP2, value,  fill = fct_reorder(GCM, value, median))) +
+  #bplots
+  geom_boxplot(lwd=.8,position=position_dodge(.9)) +
+  #shading and coloring
+  fillScale +
+  #other
+  theme_bw() +
+  theme(legend.position = "bottom",
+        strip.background = element_rect(fill="white"))+#,
+  #strip.text = element_text(size =10)) +
+  facet_grid(Season ~ TP, scales = 'free', space = 'free_x')
 
 p <- ggplot(season, aes(RCP2, value,  fill = GCM)) +
   #bplots
