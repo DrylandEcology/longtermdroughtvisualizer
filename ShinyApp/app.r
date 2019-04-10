@@ -24,8 +24,8 @@ source("functions/getOutputs.R")
 source("functions/themes.R")
 
 
-#devtools::load_all(pkg = '~/Documents/Git/rSFSW2/')
-#devtools::load_all(pkg = '~/Documents/Git/rSOILWAT2/')
+#devtools::load_all(pkg = '~/Desktop/Dryland Ecology/rSFSW2/')
+#devtools::load_all(pkg = '~/Desktop/Dryland Ecology/rSOILWAT2/')
 
 my_names <- list( 'CanESM2' = 'CanESM2',
                 'CESM1-CAM5' = 'CESM1-CAM5',  'CNRM-CM5' = 'CNRM-CM5',
@@ -40,138 +40,46 @@ my_selected <- c('CanESM2', 'CESM1-CAM5', 'CNRM-CM5',
                  'GISS-E2-R','inmcm4', 'IPSL-CM5A-MR',
                  'MIROC-ESM', 'MRI-CGCM3' )
 
-# Define UI ----
+
 ui <- fluidPage(
 
-  titlePanel("Long-term Drought Simulator"),
-
-    tabsetPanel(id = "mainTabset",               # IDEA: Two tabs - Inputs & multiple sites (file upload).
-
-
-# Sidebar layout with Inputs definitions ----
-      tabPanel("Inputs",
-         sidebarLayout(position = "left",
-
-            # IDEA: Inputs: choose 4 Inputs - These inputs actually control what will be simulated
-            # # (1) Site location, (2) whether or not you want future simulations, (3) soil type (4) Vegetation
-
-            # Sidebar panel for user inputs ----
-            sidebarPanel(
-
-                         ####################################################################
-                         ######## ------------------- LOCATIONS  -----------------  #########
-                         ####################################################################
-
-                         ## Location: Choose a location by entering coordinates or clicking on a map ----
-                         h4("Site Location"),
-
-                         leafletOutput("locMap"),#, height = 250, width = 250),
-
-                         fluidRow(
-                               splitLayout(
-                                numericInput("lat", "lat", "35.1983", min = 25, max = 49),
-                                numericInput("lng", "long", "-111.6513", min = -12, max = -100)
-                           )
-                         ),
-                         br(), # break
-
-                         ####################################################################
-                         ######## ------------------- FUTURE ----------------------  ########
-                         ####################################################################
+  #titlePanel("Long-term Drought Simulator"),
+  tabsetPanel(id = "mainTabset",               # IDEA: Two tabs - site-by-site & multiple sites (file upload).
 
 
-                         ### Checkbox for future simulations ----
-                         radioButtons("future", label = h4("Future Simulations?"),
-                                      choices =  list("Yes" = 1, "No" = 2),
-                                      selected = 1,
-                                      inline = TRUE), # side-by-side
-
-                         ####################################################################
-                         ######## ------------------- SOILS ----------------------  #########
-                         ####################################################################
-
-                         # TO DO -> Texture Triangle, not inputs
-
-                         radioButtons("soils", label = h4("Extract or Choose Soils?"),
-                                            choices = list('Extract' = 1, 'Choose' = 2),
-                                            inline = TRUE, # side-by-side
-                                            selected = 2),
-
-                         conditionalPanel(
-                           condition = "input.soils == 2",
-                           ### input slots for soil that appear of select == TRUE
-                           fluidRow(
-                             splitLayout(
-                                numericInput("sand", "sand", "34", min = 0, max = 100),
-                                numericInput("silt", "silt", "33", min = 0, max = 100),
-                                numericInput("clay", "clay", "33", min = 0, max = 100)
-                             )
-                           )
-
-                         ),
-
-                         br(),
-
-                         ####################################################################
-                         ######## -------------------- VEG -----------------------  #########
-                         ####################################################################
-
-                         radioButtons("comp", label = h4("Estimate or Choose Comp?"),
-                                      choices = list('Estimate' = 1, 'Choose' = 2),
-                                      inline = TRUE, # side-by-side
-                                      selected = 1),
-
-                         conditionalPanel(
-                           condition = "input.comp == 2",
-                           fluidRow(
-                             splitLayout(
-                               numericInput("trees", "trees", "0.0", min = 0, max = 1),
-                               numericInput("shrubs", "shrubs", "0.5", min = 0, max = 1),
-                               numericInput("grasses", "grasses", "0.5", min = 0, max = 1),
-                               numericInput("forbs", "forbs", "0.0", min = 0, max = 1),
-                               numericInput("bg", "bareground", "0.0", min = 0, max = 1)
-                             )
-                           )
-
-                         ),
-
-                         br(),
-
-                         ####################################################################
-                         ######## -------------------- GO! -----------------------  #########
-                         ####################################################################
-
-                         ## Just need this once for "... textInput"
-                         verbatimTextOutput("value"),
-
-                         actionButton("simulate", label = "Simulate!")
-            ), # end of side bar panel
-
-            # Main panel for outputs ----
-            mainPanel("Welcome to the long-term drought simulator!")
-            ) # end of side bar layout
-         ) #end of tab 1
-
-
-
-  ), # end of tabset
-# Important! : 'Freshly baked' tabs first enter here.
-uiOutput("creationPool", style = "display: none;")
-# End Important
+              # Sidebar layout with site-by-site definitions ----
+              tabPanel("Inputs",
+                       htmlTemplate("www/index.html")
+                     # Main panel for outputs ----
+                     #mainPanel("Welcome to the long-term drought simulator!")
+              ) #end of tab 1
+  )#, # end of tabset
+  # Important! : 'Freshly baked' tabs first enter here.
+  #uiOutput("creationPool", style = "display: none;")
+  # End Important
 )# end of UI
 
 
 
 # Define server logic ----
 server <- function(input, output, session) {
-
+  # reference to external UI elements
+  # leaflet map
+  tags$link(href = "leaflet.css")
+  tags$script(src = "leaflet.js")
+  # in house javascript
+  tags$script(src = "master.js")
+  # bootstrap
+  tags$link(href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
+  tags$script(src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+  tags$link(href = "stylesheets/custom.css")
   # Important! : creationPool should be hidden to avoid elements flashing before they are moved.
   #              But hidden elements are ignored by shiny, unless this option below is set.
   output$creationPool <- renderUI({})
   outputOptions(output, "creationPool", suspendWhenHidden = FALSE)
   # End Important
   # Important! : This is the make-easy wrapper for adding new tabPanels.
-  
+
   addTabToTabset <- function(Panels, tabsetName){
     titles <- lapply(Panels, function(Panel){return(Panel$attribs$title)})
     Panels <- lapply(Panels, function(Panel){Panel$attribs$title <- NULL; return(Panel)})
@@ -181,39 +89,6 @@ server <- function(input, output, session) {
   }
   # End Important
   #################################################################################################
-  ######## ------------------------------ UI Reactivity ---------------------------------  ########
-  #################################################################################################
-
-  # Leaflet map ---------------------------------------
-  output$locMap <- renderLeaflet({
-    m <- leaflet() %>%
-      addTiles() %>%
-      setView(lng = input$lng, lat = input$lat , zoom = 9) %>%
-      addMarkers(input$lng, input$lat)
-    })
-
-  # Click functionality -----------------------------------------------------------
-
-  observeEvent(input$locMap_click, { # input$MAPID_event = input$locMap_click
-
-    proxy <- leafletProxy("locMap")
-
-    #### 1 - Allow for visualization of click ----------------------------------
-    click <- input$locMap_click
-
-    proxy %>% clearMarkers() %>%
-      setView(lng = click$lng, lat = click$lat , zoom = 9) %>%
-      addMarkers(click$lng, click$lat)
-
-    #### 2 - Allow for click lat/long to update numeric lat/long  --------------
-
-    updateNumericInput(session, "lat",  value = round(input$locMap_click$lat, 4))
-    updateNumericInput(session, "lng", value = round(input$locMap_click$lng, 4))
-
-  })
-
-
-  #################################################################################################
   ######## ---------------------------- SIMULATION!  ------------------------------------  ########
   #################################################################################################
 
@@ -222,7 +97,7 @@ server <- function(input, output, session) {
   observeEvent(input$simulate, {
 
     begintime <- proc.time() # start timer clock
-    showModal(modalDialog("calculation running!"))
+    #showModal(modalDialog("calculation running!"))
 
     run$SW_out <- set_execute_SW(input$lat, input$lng, input$future, input$soils, input$sand, input$clay,
                                  input$comp, input$trees, input$shrubs, input$grasses, input$forbs, input$bg) # the actual calculation
@@ -232,40 +107,35 @@ server <- function(input, output, session) {
 
     endtime <- proc.time() - begintime
     showModal(modalDialog(paste("calculation finished in", round(unname(endtime[3]), 0), "seconds")))
-
     ##################################################################################################
     ######## --------------------------------- Output UI  ---------------------------------  ########
     #################################################################################################
-    
+
     ############################################################
     ###### Tab 1 Design
     ############################################################
     insertTab(inputId = "mainTabset",
               tabPanel(title = "Mean annual patterns", value = "outputs1",
-                       
+
                        fluidRow(
                          box(title = h1('What does an average year look like? What will it look like in the future?'),  width = 10,
-                            h4(paste0("The plots below depict monthly averages of climate and soil moisture for 
-                              site ", round(input$lat, 2), ", ", round(input$lng, 2) ,".Use the plot controls to explore different 
-                              representation concentration pathways (RCPs), 
-                              and how individual years and climate models (GCMs) compare to the mean. Variables represented 
-                              here include average temperature (C), total precipitation (cm), and mean soil moisture (measured as soil 
+                            h4(paste0("The plots below depict monthly averages of climate and soil moisture for
+                              site ", round(input$lat, 2), ", ", round(input$lng, 2) ,".Use the plot controls to explore different
+                              representation concentration pathways (RCPs),
+                              and how individual years and climate models (GCMs) compare to the mean. Variables represented
+                              here include average temperature (C), total precipitation (cm), and mean soil moisture (measured as soil
                               water potential, -MPa) at intermediate (20–80cm) soil depths.
                                "))
                        )
                        ), #end of row 1
-                       
+
                        br(),
                        br(),
-                       fluidRow(
-                         box(title = 'Walter-Lieth Plots', width = 3)
-                       ),
-                       
-                       br(),
+
                        fluidRow(
                          box(width = 1),
                          box(plotlyOutput("WL_SM_Plots", height = "700px"), width = 6),
-                       
+
                       ############################################################
                       ###### Side bar options
                       ############################################################
@@ -315,19 +185,19 @@ server <- function(input, output, session) {
                       )
               ), # end of tab
               target = "Inputs", position = 'after')
-    
+
     ############################################################
     ###### TAB 2 DESIGN
     ############################################################
     insertTab(inputId = "mainTabset",
               tabPanel(title = "Long-term past and future", value = "outputs2",
-                       
+
                        fluidRow(
                          box(title = h1('What are the historical patterns of climate and soil moisture? How might they change in the future?'),  width = 10,
                         br(),
-                        h4(paste0("The plots below depict long-term patterns of climate and soil moisture for 
+                        h4(paste0("The plots below depict long-term patterns of climate and soil moisture for
                              site ", round(input$lat, 2), ", ", round(input$lng, 2) ,". Data can be explored either as yearly or seasonal means, by selecting
-                             from the time-step menu. Variables include average temperature (C), 
+                             from the time-step menu. Variables include average temperature (C),
                              total precipitation (cm), and mean soil moisture (measured as soil water potential, -MPa)
                              at intermediate (20–80cm) soil depths.")))
                        ),
@@ -336,23 +206,23 @@ server <- function(input, output, session) {
 
                        fluidRow(
                          box(title = 'Long-term Historical Perspectives Plot',  width = 8,
-                             paste0("This plot depicts long-term historical fluctuations. This long-term perspective is useful for 
-                                    identifying unusual historical years and for recognizing the range of 
+                             paste0("This plot depicts long-term historical fluctuations. This long-term perspective is useful for
+                                    identifying unusual historical years and for recognizing the range of
                                     typical variation among years over the past century. Mean values for each year
-                                    from 1916 to 2013 and are shown in the thin line, and the 10-year moving average 
+                                    from 1916 to 2013 and are shown in the thin line, and the 10-year moving average
                                     is shown in the thick line.")
                              )
                              ), #END OF ROW 3
                        br(),
-                       
+
                        fluidRow(
                         box( plotlyOutput("TimeSeries"), width = 8),
-                         
-                        box(title = 'Plot Controls', 
+
+                        box(title = 'Plot Controls',
                              solidHeader = TRUE,
-                             width = 4, 
+                             width = 4,
                              background = 'black',
-                             
+
                              br(),
                                        #time-step
                                        selectInput("times", "Time-step:",
@@ -373,38 +243,39 @@ server <- function(input, output, session) {
                        br(),
 
                        if(input$future == 1) {# BOX PLOT - only if future == 1
-                         fluidRow( 
+                         fluidRow(
                            box( title = 'Predicted Distribution of Future Values Plot', width = 10,
                                 paste0("This plot depicts the distribution of annual values, derived
                                        from observed historical conditions (1974-2013; black boxplot
-                                       and violin plot on left) and derived from a suite of climate 
-                                       models (colored box plots on right) for two future time periods 
-                                       (2020-2059 and 2060-2099) and two representative concentration 
+                                       and violin plot on left) and derived from a suite of climate
+                                       models (colored box plots on right) for two future time periods
+                                       (2020-2059 and 2060-2099) and two representative concentration
                                        pathways (RCPs).  Comparing conditions under historical climate
-                                       with conditions expected in the future enables users to identify 
-                                       the direction and magnitude of robust changes in which all or 
+                                       with conditions expected in the future enables users to identify
+                                       the direction and magnitude of robust changes in which all or
                                        most climate models agree.  Because the distributions represent
                                        variation among years, users can detect not only changes in typical
-                                       conditions (e.g. mean or median years) but also changes in extreme years 
-                                       (e.g. the tails of the distributions represented in the boxplots). 
-                                       In addition, users can identify and choose particular climate models 
-                                       to view, allowing direct comparison with other climate synthesis efforts or 
+                                       conditions (e.g. mean or median years) but also changes in extreme years
+                                       (e.g. the tails of the distributions represented in the boxplots).
+                                       In addition, users can identify and choose particular climate models
+                                       to view, allowing direct comparison with other climate synthesis efforts or
                                        publications that may have focused on climate projections from specific models. ")
                                 )
                           )#end of row 4
                        },
                        br(),
-                       
+
                        if(input$future == 1) {# BOX PLOT - only if future == 1
-                         fluidRow( 
+                         fluidRow(
                            box( plotlyOutput("BoxPlots"), width = 12)
-                         )     
+                         )
                        }
                        #end of row 5
-                       
 
-                       
-                       
+
+
+
+
                        ), # end of tab
               target = "outputs1", position = 'after')
 
@@ -437,23 +308,23 @@ server <- function(input, output, session) {
     data2 <- data[data$Year %in% c(input$years[1]:input$years[2]), ]
     dataTS <- formatDataTS(data = data2, variable = input$variables, time = input$times)
     dataRM <- getroll(dataTS, input$times)
-    
+
     # PLOTTING    --------------------------------------------------------------------------------
     if(input$times == 'Annual'){
-      
+
       # TIME SERIES PLOT
       TREND <- ggplot(dataTS, aes(Year, value))+
         geom_line(data=dataTS, alpha=.3)+
         geom_line(data=dataRM, aes(Year, MA), size=1.5) +
         labs(
-          x = 'years', 
+          x = 'years',
           y = paste(unique(input$variables))
         )+
         theme_bw()+
         ggtitle("Long-Term Historical Perspectives") +
         theme(plot.title = element_text(hjust = 0.5))
           }
-    
+
     if(input$times == 'Season'){
       # TIME SERIES PLOT
       TREND <- ggplot(dataTS, aes(Year, value, color = Season))+
@@ -464,14 +335,14 @@ server <- function(input, output, session) {
           y = paste(unique(input$variables))
         )+
         theme_bw()+
-        scale_color_manual(values=colors2) + 
-        theme(legend.position=c(.5,0.07), legend.title=element_blank()) + 
+        scale_color_manual(values=colors2) +
+        theme(legend.position=c(.5,0.07), legend.title=element_blank()) +
         ggtitle("Long-Term Historical Perspectives") +
         theme(plot.title = element_text(hjust = 0.5))
     }
     ggplotly(TREND)
   })
-  
+
   output$BoxPlots <- renderPlotly({
 
     # Boxplot controls ----------------------------------------------------------------------
@@ -481,7 +352,7 @@ server <- function(input, output, session) {
   #  data3 <- data[data$GCM %in% c('Current', input$gcms), ]
     data <- run$outs
     data <- data[[1]]
-    
+
     # Var value from drop down / select Input - get variable ------------------------------------
     data <- data[data$variable %in% c(input$variables), ]
     dataBP <- formatDataBP(data = data, variable = input$variables, time = input$times)
@@ -489,20 +360,20 @@ server <- function(input, output, session) {
     dataBP$RCP2 <- paste(dataBP$RCP, dataBP$TP, sep = '_')
     dataBP$RCP2 <- factor(dataBP$RCP2, levels = c('Current_Current', "RCP45_Near", "RCP85_Near", "RCP45_Late", "RCP85_Late" ))
     levels(dataBP$RCP2) <- c('Historical',  "RCP45 ", "RCP85 ", "RCP45", "RCP85")
-   
+
     Hist <- dataBP[dataBP$RCP2 == 'Historical', ]
     dataBP2 <- dataBP[!dataBP$RCP2 == 'Historical', ]
-    
-    dataBP2 <- dataBP2 %>% 
+
+    dataBP2 <- dataBP2 %>%
       group_by(GCM) %>%
       mutate(med = median(value)) %>%
       arrange(GCM, med)
-    
+
     MAX <- max(dataBP$value, na.rm = TRUE)
     if(input$variables == "Soil Moisture (SWP, -MPa)") Mult <- -.5
     if(input$variables == "Average Temperature (C)") Mult <- .1
     if(input$variables == "Precipitation (cm)") Mult <- .05
-    
+
     topText <- list(
       x = c(1.5, 3.5),
       y =  rep(MAX + (Mult * MAX), 2),
@@ -510,26 +381,26 @@ server <- function(input, output, session) {
       showarrow = FALSE,
       font = list(size = 15)
     )
-    
+
     xaxis <- list(title = "")
     yaxis <- list(title =  paste(unique(droplevels(dataBP$variable))[1]),
                   range  =c(min(dataBP$value, na.rm = TRUE), topText$y[1] + .1))
 
     colors2 <- c(brewer.pal(11, 'Paired'))
 
-    
+
     if(input$times == 'Annual'){
-      
-          BOXPLOT <- 
+
+          BOXPLOT <-
             plot_ly(dataBP2, x = ~RCP2, y = ~value, color = ~GCM, type = 'box',
                   colors = 'Paired') %>%
-                  add_trace(data = Hist, y = ~value, x = ~RCP2, showlegend = FALSE, 
+                  add_trace(data = Hist, y = ~value, x = ~RCP2, showlegend = FALSE,
                             color = I('white'), type = 'violin', box = list(visible = TRUE),line = list( color = 'black')) %>%
             layout(boxmode = 'group',
                   boxgap = 0.1,
                   title = "Predicted Distribution of Future Values",
                   yaxis = yaxis,
-                  xaxis = xaxis, 
+                  xaxis = xaxis,
                   annotations = topText,
                   legend = list(x = 100, y = 0.5),
                   shapes = list(
@@ -564,14 +435,13 @@ server <- function(input, output, session) {
   ######## ---------------- - - - - - - -----  Tab 2  ---- - - - - - - - ----------------  ########
   #################################################################################################
   output$WL_SM_Plots <- renderPlotly({
-
     req(input$years) #input$years doesn't initally have values .. need this
     data <- run$outs
 
     # Walter-Leith controls ----------------------------------------------------------------------
     dataWL <- formatDataWL(data = data[[1]], future = input$future)
     dataWL2 <- dataWL[[1]]
-    
+
     #  Soil Moisture Plot controls ----------------------------------------------------------
     dataSM <- formatDataSM(data = data[[1]], RCP = input$RCP)
     dataSM2 <- dataSM[[2]][dataSM[[2]]$TP == 'Current',]
@@ -580,29 +450,29 @@ server <- function(input, output, session) {
                          'August', 'September', 'October', 'November', 'December', 'December2')
     dataSM2$Month2 <- factor(dataSM2$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                                          'August', 'September', 'October', 'November', 'December', 'December2'))
-    
+
     y_DSM <- list( # Need this year because range argument can't be populated until now
       title = "soil water potential (-MPa)",
-      range = c(dataSM[[3]], 0), 
+      range = c(dataSM[[3]], 0),
       showgrid = FALSE,
       linecolor = "black",
       linewidth = 0.5)
-    
+
     # PLOTTING    --------------------------------------------------------------------------------
     if(input$future == 2){
-      
+
       # Walter-Leith Plot ----------------------------------
       topTextWL <- list(
           x = c(2.4, 10.5),
           y =  rep(68, 2),
-          text = c( 
-            paste0('Current MAT: ', round(mean(dataWL2[2:13,'Temp']),1), ' C'), 
+          text = c(
+            paste0('Current MAT: ', round(mean(dataWL2[2:13,'Temp']),1), ' C'),
             paste0('Current MAP: ',round(sum(dataWL2[2:13, 'PPT'])), " mm")),
           showarrow = FALSE,
           font = list(size = 13)
         )
-        
-      WL <- plot_ly(data = dataWL2) %>%  
+
+      WL <- plot_ly(data = dataWL2) %>%
           add_lines(x = ~Month2, y = ~Temp , yaxis = 'y1',
                     line = list(color='#a50f15'),
                     name = 'Average Temp (C)', showlegend = FALSE) %>%
@@ -614,29 +484,29 @@ server <- function(input, output, session) {
             yaxis = y1_WL,
             yaxis2 = y2_WL,
             xaxis = x_DSMWL,
-            shapes = 
+            shapes =
               list(type = 'line', color = 'black',
                    y0 = 60, y1 = 60, x0 =0, x1 = 12.5)
           )
       # Soil Moisture ----------------------------------
 
-      
-        SM_Plot <-  plot_ly() %>%  
-          add_lines(data = dataSM2, x = ~Month2, y = ~median , 
+
+        SM_Plot <-  plot_ly() %>%
+          add_lines(data = dataSM2, x = ~Month2, y = ~median ,
                     line = list(color= 'black', width = 2),
                     name = 'Current SWP', showlegend = FALSE) %>%
           layout(yaxis = y_DSM,
                  xaxis = x_DSMWL)
       }
-      
+
     if(input$future == 1) {
-      
+
       # Walter-Leith Plot ----------------------------------
-      
+
       # # WL Future ----------------------------------------------------------------------------------------
       DatEnsembSub <- as.data.frame(dataWL[[3]])
       DatEnsembSub <- DatEnsembSub[DatEnsembSub$RCP %in% paste(input$RCP), ]
-      
+
       # -
       DatEnsembSubNearTemp <- DatEnsembSub[DatEnsembSub$TP == 'Near' & DatEnsembSub$variable == "Average Temperature (C)", ]
       DatEnsembSubNearTemp <- rbind(DatEnsembSubNearTemp[1,],DatEnsembSubNearTemp,DatEnsembSubNearTemp[12,])
@@ -665,24 +535,24 @@ server <- function(input, output, session) {
                                          'August', 'September', 'October', 'November', 'December', 'December2')
       DatEnsembSubLatePrecip$Month2 <- factor(DatEnsembSubLatePrecip$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                                                                        'August', 'September', 'October', 'November', 'December', 'December2'))
-      
-      
+
+
       topTextWL <- list(
         x = rep(c(2.4, 10.5),3),
         y =  c(rep(68, 2), rep(65, 2), rep(62, 2)),
-        text = c( 
-          paste0('Historical MAT: ', round(mean(dataWL2[2:13,'Temp']), 1), ' C'), 
+        text = c(
+          paste0('Historical MAT: ', round(mean(dataWL2[2:13,'Temp']), 1), ' C'),
           paste0('Historical MAP: ', round(sum(dataWL2[2:13, 'PPT'])), " mm"),
-          paste0('2020-2059 MAT: ', round(mean(DatEnsembSubNearTemp[2:13,'mean']), 1), ' C'), 
-          paste0('2020-2059 MAP: ', round(sum(DatEnsembSubNearPrecip[2:13, 'mean'])), " mm"),  
-          paste0('2060-2099 MAT: ', round(mean(DatEnsembSubLateTemp[2:13,'mean']), 1), ' C'), 
+          paste0('2020-2059 MAT: ', round(mean(DatEnsembSubNearTemp[2:13,'mean']), 1), ' C'),
+          paste0('2020-2059 MAP: ', round(sum(DatEnsembSubNearPrecip[2:13, 'mean'])), " mm"),
+          paste0('2060-2099 MAT: ', round(mean(DatEnsembSubLateTemp[2:13,'mean']), 1), ' C'),
           paste0('2060-2099 MAP: ', round(sum(DatEnsembSubLatePrecip[2:13, 'mean'])), " mm")
         ),
         showarrow = FALSE,
         font = list(size = 13)
       )
-      
-      WL <- plot_ly() %>%  
+
+      WL <- plot_ly() %>%
         # near temp ---------------------------------------------------------------------
         add_trace(data = DatEnsembSubNearTemp, x = ~Month2, y = ~max, type = 'scatter', mode = 'lines',
                   line = list(color = 'transparent'),
@@ -701,7 +571,7 @@ server <- function(input, output, session) {
         add_lines(data = dataWL2, x = ~Month2, y = ~Temp , yaxis = 'y1',
                   line = list(color='#a50f15'),
                   name = 'Average Temp (C)', showlegend = FALSE) %>%
-        
+
         # near ppt -----------------------------------------------------------------
         add_trace(data = DatEnsembSubNearPrecip, x = ~Month2, y = ~max, type = 'scatter', mode = 'lines',
                   line = list(color = 'transparent'), yaxis = "y2",
@@ -726,7 +596,7 @@ server <- function(input, output, session) {
           yaxis = y1_WL,
           yaxis2 = y2_WL,
           xaxis = x_DSMWL,
-          shapes = 
+          shapes =
             list(type = 'line', color = 'black',
                  y0 = 60, y1 = 60, x0 =0, x1 = 12.5)
         )
@@ -738,17 +608,17 @@ server <- function(input, output, session) {
                                'August', 'September', 'October', 'November', 'December', 'December2')
       RibbonDFNear$Month2 <- factor(RibbonDFNear$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                                                    'August', 'September', 'October', 'November', 'December', 'December2'))
-      
+
       RibbonDFLate <-  dataSM[[2]][dataSM[[2]]$TP %in% c('Late'), ]
       RibbonDFLate <- rbind(RibbonDFLate[1,], RibbonDFLate, RibbonDFLate[12,])
       RibbonDFLate$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                'August', 'September', 'October', 'November', 'December', 'December2')
       RibbonDFLate$Month2 <- factor(RibbonDFLate$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                                                    'August', 'September', 'October', 'November', 'December', 'December2'))
-      
-      
-      SM_Plot <- plot_ly() %>%  
-        add_lines(data = dataSM2, x = ~Month2, y = ~median , 
+
+
+      SM_Plot <- plot_ly() %>%
+        add_lines(data = dataSM2, x = ~Month2, y = ~median ,
                   line = list(color= 'black', width = 2),
                   name = 'Current SWP', showlegend = FALSE) %>%
         add_trace(data = RibbonDFNear, x = ~Month2, y = ~max, type = 'scatter', mode = 'lines',
@@ -771,21 +641,21 @@ server <- function(input, output, session) {
                xaxis = x_DSMWL,
                showlegend = TRUE,
                legend = list(x = .05, y = .05))
-      
+
     }
-    
+
     # Individual Years -----------------------------------------
-    
-    if(input$yearButton == 1) { 
+
+    if(input$yearButton == 1) {
       yearLineDat <- data[[1]][data[[1]]$Year %in% input$years2, ]
       yearLineDat <- dcast(yearLineDat, formula  = Year + Month + GCM + RCP + Season ~ variable)
       yearLineDat <- rbind(yearLineDat[1,], yearLineDat, yearLineDat[12,])
-      
+
       yearLineDat$Month2 <- factor(dataWL2$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                                              'August', 'September', 'October', 'November', 'December', 'December2')
       )
-      
-      
+
+
       WL <-  WL %>%
         add_lines(data = yearLineDat,
                   x = ~Month2, y = ~`Average Temperature (C)` , yaxis = 'y1',
@@ -795,7 +665,7 @@ server <- function(input, output, session) {
                   x = ~Month2, y = ~`Precipitation (cm)` , yaxis = 'y2',
                   line = list(color='#08519c', dash = 'dash'),
                   name = paste0('Precip ', input$years2))
-      
+
       SM_Plot <-  SM_Plot %>%
         add_lines(data = yearLineDat,
                   x = ~Month2, y = ~`Soil Moisture (SWP, -MPa)`,
@@ -804,10 +674,10 @@ server <- function(input, output, session) {
         layout(showlegend = TRUE,
                legend = list(x = .05, y = .05))
     }
-    
+
     # Individual GCMs  -----------------------------------------
-    if(input$gcmsButton == 1) { 
-      
+    if(input$gcmsButton == 1) {
+
       datGCMSub <- as.data.frame(dataWL[[2]])
       datGCMSub <- datGCMSub[datGCMSub$RCP == input$RCP & datGCMSub$GCM == input$gcms2, ]
       # -
@@ -818,7 +688,7 @@ server <- function(input, output, session) {
                                'August', 'September', 'October', 'November', 'December', 'December2')
       datGCMSubNear$Month2 <- factor(datGCMSubNear$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                                                    'August', 'September', 'October', 'November', 'December', 'December2'))
-      
+
       # -
       datGCMSubLate <- datGCMSub[datGCMSub$TP == 'Late', ]
       datGCMSubLate <- dcast(datGCMSubLate, RCP + TP + GCM + Month ~ variable)
@@ -827,8 +697,8 @@ server <- function(input, output, session) {
                                 'August', 'September', 'October', 'November', 'December', 'December2')
       datGCMSubLate$Month2 <- factor(datGCMSubLate$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                                                      'August', 'September', 'October', 'November', 'December', 'December2'))
-      
-      
+
+
       WL <-  WL %>%
         add_lines(data = datGCMSubNear,
                   x = ~Month2, y = ~`Average Temperature (C)` , yaxis = 'y1',
@@ -850,7 +720,7 @@ server <- function(input, output, session) {
                   line = list(color='#08519c', dash = 'dashdot'),
                   name = paste0(input$gcms2, ' Late Precip '),
                   showlegend = FALSE)
-      
+
     # ----------------------------------------------------------------
       SM_Plot <-  SM_Plot %>%
         add_lines(data = datGCMSubNear,
@@ -864,12 +734,12 @@ server <- function(input, output, session) {
         layout(showlegend = TRUE,
                legend = list(x = .05, y = .05))
     }
-      
+
     subplot(WL, SM_Plot, nrows = 2, shareX = TRUE, titleY = TRUE)
-    
+
   })
-   
+
 
 }
 # Run the app ----
-shinyApp(ui = ui, server = server)
+shinyApp(ui = c(htmlTemplate("www/header.html"), htmlTemplate("www/headerImages.html"), ui, htmlTemplate("www/footer.html")), server = server)

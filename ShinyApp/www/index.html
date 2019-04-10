@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Encoding type -->
+  <meta charset="utf-8">
+  <!-- Initialie scale correctly, helps UI look the same on older browsers -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Tell html where to find external resources -->
+  <script src="shared/jquery.js" type="text/javascript"></script>
+  <script src="shared/shiny.js" type="text/javascript"></script>
+  <script src="leaflet.js" type="text/javascript"></script>
+  <script src="master.js" type="text/javascript"></script>
+  <script type="text/javascript" src="wz_jsgraphics.js"></script>
+  <link rel="stylesheet" type="text/css" href="master.css"/>
+  <link rel="stylesheet" type="text/css" href="shared/shiny.css"/>
+  <link rel="stylesheet" type="text/css" href="leaflet.css"/>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+<!-- Begin UI, doesn't contain the header or footer, see footer.html and header.html -->
+<!-- Wrap in full width container -->
+<div class="container-fluid">
+  <body>
+    <!-- Content container with borders on either side -->
+    <div class="container">
+      <h1 class="centered"><b>Long-term Drought Simulator</b></h1>
+      <h3 class="centered">Welcome to the Long-term Drought Simulator!</h3><br>
+        <!-- Top navbar links -->
+          <div class="centeredDiv">
+            <ul class="navBar1">
+              <li class="topnav-centered"><a href="#moreInformation">MORE INFORMATION</a></li>
+              <li class="navlink"><a href="#dataSources">DATA SOURCES</a></li>
+              <li class="navlink"><a href="#references">REFERENCES</a></li>
+            </ul>
+          </div>
+      <br>
+      <hr>
+        <div class="col col-sm-6 col-md-6 col-lg-6">
+          <!-- Description about the long term simulation -->
+          <p id="aboutBox" class="whiteBack">
+            <p  style="float:left;font-size:20px;margin-bottom:0px;color:#78909c">About</p><br><br>
+            This tool is designed for resource managers who
+            are interested in exploring long-term historical and future patterns of soil moisture and plant
+            available water for their specific site. Historical simulations illustrate long-term, site-specific
+            perspectives on drought variability and provide context on a site’s natural range of variability.
+            Future projections of 21 st century drought help quantify expected deviations from historical
+            variability that represent potential risk of novel drought exposure.
+            Here, users can utilize the Long-term Drought Simulator by specifying a focal location and users
+            have the option to provide additional site-specific information, including soil texture, and
+            vegetation structure. Historical and future climate data are compiled for the focal location, and
+            climate, soil and vegetation information are integrated into a process-based, ecosystem water-
+            balance model that estimates water fluxes and soil water content at a daily time step. The tool
+            provides interactive, site-specific figures where seasonal and annual patterns of water availability
+            for both the past and the future, under different models of climate change, can be explored and
+            downloaded.
+          </p>
+          <!-- Description of how to use the application -->
+          <p id="howToBox" class="whiteBack">
+            <p style="float:left;font-size:20px;margin-bottom:0px;color:#78909c">How to</p><br><br>
+            This tool is designed to simulate site-specific results dynamically. Users must select a location to
+            simulate and specify if they would like results for historical conditions only, or historical and
+            future. Additionally, users have the option of specifying soil texture and vegetation composition
+            for their site or utilizing gridded soils and vegetation conditions that are estimated from mean
+            climate conditions.
+          </p>
+          <!-- Dropdown accordion -->
+          <div class="accordionWrapper">
+            <!-- All accordionItems are initialized as closed -->
+            <div class="accordionItem close">
+                  <h4 class="accordionItemHeading" id="accordionItemHeading1">Location <b class="caret"></b></h4>
+                  <div class="accordionItemContent">
+                    <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
+                    <p>
+                    Location is designated as coordinates (lat, long) in the WGS84 coordinate reference system. <br><br>
+                    Select your location by either clicking on the map or by <span class="highlight">entering coordinates</span> into the latitude and
+                    longitude boxes provided.<br><br>
+                    Note: Currently, only locations in Arizona, New Mexico, Colorado, and Utah are operational.
+                  </p>
+                  </div>
+                </div>
+                <div class="accordionItem close">
+                  <h4 class="accordionItemHeading" id="accordionItemHeading2">Past and Future Simulations <b class="caret"></b></h4>
+                  <div class="accordionItemContent">
+                    <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
+                    <p>
+                      Users have the option of selecting to simulate long-term historical (1916 – 2017) patterns of
+                      water availability alone or to simulate both historical and future (2020 – 2099) water availability.
+                      Future simulations occur for 11 different general circulation models (GCMs), that are believed to
+                      best predict future climate in the American Southwest.<br><br>
+                      Selecting <b>yes</b> to simulate future simulations increase simulation time approximately from 30
+                      seconds to 2 minutes and 30 seconds.
+                    </p>
+                  </div>
+                </div>
+                <div class="accordionItem close">
+                  <h4 class="accordionItemHeading" id="accordionItemHeading3">Soils Texture <b class="caret"></b></h4>
+                  <div class="accordionItemContent">
+                    <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
+                    <p>
+                      Soil texture influences the availability of a site to retain moisture in the soil profile. Here soil
+                      texture is described as percent sand, silt, and clay, where these must sum to 100%.
+                      <br><br>If you know your site’s texture or soil type select <b>choose</b>. This will give you the option to either:
+                      (A) Enter specific texture values in the input boxes provide or (B) Click on the soil texture
+                      diagram to generate mean values for that soil texture type.
+                      <br><br>Otherwise, select <b>obtain</b>. Selecting obtain will grab soil texture values for the latitude and
+                      longitude provided from a gridded soils map.
+                    </p>
+                  </div>
+                </div>
+                <div class="accordionItem close">
+                  <h4 class="accordionItemHeading" id="accordionItemHeading4">Vegetation Structure <b class="caret"></b></h4>
+                  <div class="accordionItemContent">
+                    <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
+                    <p>
+                      Vegetation structure influences how much moisture reaches the soil profile (via interception) and
+                      how soil moisture is utilized (via transpiration). Here vegetation structure is defined as the
+                      composition of 4 plant functional types (Trees, shrubs, grasses, forbs) and as bare-ground. One
+                      or all 5 types can exist on a site, but they must sum to 1. Other information about the vegetation
+                      types (i.e. biomass, percent live) is generated by the model.
+                      <br><br>If you know your site’s vegetation structure select <b>choose</b>. This will give you the option to enter
+                      vegetation composition values, summing to 1.
+                      <br><br>Otherwise, select <b>generate</b>. Selecting generate tells the model to simulate vegetation
+                      composition based on site-specific climate. Potential vegetation composition of the three
+                      functional groups, mean monthly biomass, litter, and phenology are based on climate
+                      relationships and calculated for each cell and climate condition (detailed description in Bradford
+                      et al.(2014)).
+                    </p>
+                  </div>
+                </div>
+            </div>
+        <!-- Dropdown note, displayed directly below dropdown menu -->
+        <p><strong>Note:</strong> Click on the above text to expand or collapse 'how to' tips.</p>
+        <!-- Status box -->
+          <br><h3 class="centered"><b>Status</b><i class='glyphicon glyphicon-info-sign' style="margin-left:5px; margin-bottom:1px;" id="moreTip5" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Status messages related to running the simulation. See highlighted tab for more."></i></a></h3>
+          <div id="feedback" class="greyBack">
+            <!-- Content for status box, is updated dynamically using javascript in master.js-->
+            <span id="imp">Input simulation configuration...</span>
+            <br>
+          </div>
+        </div>
+          <!-- Leaflet map -->
+          <div class="col col-sm-6 col-md-6 col-lg-6">
+            <div id="greyBack">
+              <div id='map'>
+              <script>
+                /* Leaflet requires some inline javascript to init the map */
+                var latLong = [35.1983, -111.6513];
+                var map = L.map('map').setView(latLong, 9);
+                var layerGroup = L.layerGroup().addTo(map);
+                L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                var marker = L.marker(latLong, {draggable: true}).addTo(layerGroup);
+                // update lat long on marker drag
+                marker.on('drag', function(e){
+                  document.getElementById("latMap").value = marker.getLatLng().lat;
+                  document.getElementById("longMap").value = marker.getLatLng().lng;
+                })
+                // update marker location on mouse click
+                map.on("click", function (event) {
+              	if (marker) {
+                      marker._icon.style.transition = "transform 0.3s ease-out";
+                      marker._shadow.style.transition = "transform 0.3s ease-out";
+
+                  	  marker.setLatLng(event.latlng);
+                      document.getElementById("latMap").value = marker.getLatLng().lat;
+                      document.getElementById("longMap").value = marker.getLatLng().lng;
+                      setTimeout(function () {
+                          marker._icon.style.transition = null;
+                          marker._shadow.style.transition = null;
+                      }, 300);
+                      return;
+                  }
+              });
+              </script>
+            </div>
+          </div>
+          <!-- Simulation Inputs Box-->
+          <br>
+          <div id="inputs" class="whiteBack">
+            <!-- Location -->
+            <p class="whiteBack" style="float:left;font-size:20px;margin-bottom:0px;color:#78909c">Simulation Inputs</p><br><br>
+            <h4 class="centered">Location <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip1" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Site location for simulation run. See highlighted tab for more."></i></a></h4>
+            <div class="row">
+              <div class="col-sm-3">
+              </div>
+              <div class="col-sm-3">
+                <div class="centered" style="background-color:white;">
+                  <label for="latMap">Lat</label><br>
+                  <input type="number" id="latMap" name="latMap" value="35.1983" min="31.3325" max="41.9993" step=".01" onchange="changeMarkerXY(); unValidate();" >
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="centered" style="background-color:white;">
+                  <label for="longMap">Long</label><br>
+                  <input type="number" id="longMap" name="longMap" value="-111.6513" min="-114.8126" max="-102.0424" step=".01" onchange="changeMarkerXY(); unValidate();">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <br>
+              </div>
+            </div>
+            <!-- Future Simulations Options -->
+            <br><h4 class="centered">Past and Future Simulations <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip2" src="images/marker-icon.png" data-toggle="tooltip" data-placement="right" alt="alternative text" title="Indicate whether you would like to run future scenarios in the simulation. See highlighted tab for more."></i></h4>
+              <div class="row">
+                <div class="col-sm-3">
+                </div>
+                <div class="col-sm-3">
+                  <div class="centered" style="background-color:white;">
+                    <input type="radio" name="futureSim" value="futureTrue"> Yes
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="centered" style="background-color:white;">
+                    <input type="radio" name="futureSim" value="futureFalse"> No
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                </div>
+                  <br><br>
+                </div>
+              <h4 class="centered">Soil Texture <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip3" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set soils compositions or have the program extract them for you. See highlighted tabs for more."></i></h4>
+                <!-- Soils Composition -->
+                <div class="row">
+                  <div class="col-sm-3">
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="centered" style="background-color:white;">
+                      <input type="radio" name="chooseSoils" value="chooseFalse"> Obtain
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="centered" style="background-color:white;">
+                      <input type="radio" name="chooseSoils" value="chooseTrue"> Choose
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                  </div>
+                    <br><br>
+                </div>
+                <br>
+                <div id="chooseSoils">
+                  <!-- Soils texture triangle -->
+                  <div id="soilsTriangle" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <!-- Put in image -->
+                    <img src="images/soilTexTri.png" height="50%" width="100%"/></img>
+                    <script language="javascript">
+                      var canvas = new jsGraphics("soilsTriangle");
+                      /* Draw a point at x, y cooridinates */
+                      function drawPoint(x, y){
+                        canvas.clear(); // clear previous points
+                        canvas.setColor("red"); // set color
+                        // algorithm for where to draw the point
+                        var xOff = 570;
+                        var yOff = 482;
+                        var yCoord = ((parseInt(yOff) - 477 * parseFloat(y) * 0.01) + 715);
+                        var xCoord = ((parseInt(xOff) - 557 * parseFloat(x) * 0.01 - 0.5 * parseFloat(y) * 555 * 0.01) - 12);
+                        // actually draw the point
+                        canvas.fillEllipse(xCoord,yCoord, 10, 10);
+                        canvas.paint();
+                      }
+                    </script>
+                    <!-- Allow dragging of an image onto the soils texture triangle -->
+                    <!--
+                    <p>Drag the marker onto the soils texture triangle or select composition below:</p>
+                    <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                  <br>
+                    <img id="drag1" src="images/marker-icon.png" draggable="true" ondragstart="drag(event)" width="10%" height="10%">
+                  --></div>
+                  <!-- Soils composition options -->
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="sand">Sand</label><br>
+                        <input type="number" id="sand" name="sand" value="34" min="0" max="100" step="1" onchange="adjustSilt(); unValidate();">
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="clay">Clay</label><br>
+                        <input type="number" id="clay" name="clay" value="33" min="0" max="100" step="1" onchange="adjustSilt(); unValidate();">
+                    </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="silt">Silt</label><br>
+                        <input type="number" id="silt" name="silt" value="33" min="0" max="100" step="1" disabled>
+                      </div>
+                    </div>
+                    <br><br>
+                  </div>
+                </div>
+
+                <!-- Veg Composition -->
+                <h4 class="centered">Vegetation Structure <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip4" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set vegetation compositions or have the program extract them for you. See highlighted tabs for more."></i></h4>
+                <div class="row">
+                  <div class="col-sm-3">
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="centered" style="background-color:white;">
+                      <input type="radio" name="chooseComp" value="chooseCompFalse"> Generate
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="centered" style="background-color:white;">
+                      <input type="radio" name="chooseComp" value="chooseCompTrue"> Choose
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                  </div>
+                    <br><br>
+                </div>
+                <br>
+                <!-- Veg composition options -->
+                <div id="chooseComp">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="trees">Trees</label>
+                        <input type="number" id="trees" name="trees" value="20" min="0" max="100" step="1" onchange="unValidate();">
+                      </div>
+                      <div class="centered" style="background-color:white;">
+                        <br><label for="shrubs">Shrubs</label>
+                        <input type="number" id="shrubs" name="shrubs" value="20" min="0" max="100" step="1" onchange="unValidate();">
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="grasses">Grasses</label>
+                        <input type="number" id="grasses" name="grasses" value="20" min="0" max="100" step="1" onchange="unValidate();">
+                      </div>
+                      <div class="centered" style="background-color:white;">
+                        <br><label for="forbs">Forbs</label>
+                        <input type="number" id="forbs" name="forbs" value="20" min="0" max="100" step="1" onchange="unValidate();"><br><br>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="centered" style="background-color:white;">
+                        <label for="bareground">Bg</label><br>
+                        <input type="number" id="bareground" name="bareground" value="20" min="0" max="100" step="1" onchange="unValidate();">
+                      </div>
+                    </div>
+                    <br><br>
+                  </div>
+                </div>
+                <!-- Validation text, updates dyanamically with javascript in master.js -->
+                <div class="centered">
+                  <span id="validTxt">Click to validate inputs and see summary</span>
+                </div>
+                <br>
+                <!-- Validate and simulation buttons -->
+                <div class="centeredDiv1">
+                  <button id="validateBtn" onclick="validateInputs()">Validate</button><br>
+                  <button id="simBtn" onclick="sendToR()">Simulate</button><br><br>
+              </div>
+            </div>
+            </div>
+          <br>
+        </div>
+        <!-- More information -->
+        <div class="row">
+          <hr>
+          <h2 id="moreInformation"> More Information </h2>
+          <div style="word-wrap: break-word">
+            <p style="font-size:18px">About the model</p>
+            The results presented here are generated with <a href="https://github.com/DrylandEcology/SOILWAT2">SOILWAT2</a>(Schlaepfer and Andrews 2018,
+            Schlaepfer and Murphy 2018) , which is a daily, site-specific, multi soil-layer, ecosystem water-
+            balance model, driven by daily meteorology, as well as site soil texture, soil depth, and
+            vegetation.
+            <br><br>
+            Daily meteorology includes historical weather data from <a href="http://ciresgroups.colorado.edu/livneh/data/daily-obserational-hydrometeorology-data-set-conus-extent-canadian-extent-columbia-river-basin"> University of Colorado’s Water and
+            Climate Research Group Laboratory</a>, derived from observed data at weather stations, as well as
+            predictions derived from projections of future climate. The tool shows projections for two
+            possible climate futures, one in which emissions peak around 2040 and then decline (RCP 4.5)
+            and another in which emissions continue to rise throughout the 21st century (RCP 8.5). Both
+            futures are considered possible depending on hypothetical trajectories of greenhouse
+            gases. These climate projections have been downscaled on a temporal and spatial from 11 global
+            climate models from the <a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html">CMIP5</a> archive, using a hybrid-delta downscaling technique.
+            <br><br>
+            <p style="font-size:18px">Guidance on using results</p>
+            The results generated and presented here provide a long-term historical and future perspective on
+            soil moisture and climate at a specific site. The resulting site-specific projections of moisture
+            availability is intended to allow users to recognize novel drought risk and to develop hypotheses
+            about how plant species and ecosystems will respond to changing soil water conditions.
+            Projections are based on GCMs that were were selected from all models that participated in the
+            fifth phase of the Climate Model Intercomparison Project (Taylor et al. 2011; CMIP5) to include
+            both the most independent (Knutti et al. 2013) and best performing subset (for the western
+            United States; Rupp et al. 2013) of GCMs.. While users can explore projected climate and soil
+            moisture conditions from individual climate models, ensembles are also presented to represent
+            the mean consensus amongst models.
+        </div>
+      </div>
+        <!-- Data sources -->
+        <div class="row">
+          <hr>
+          <h2 id="dataSources"> Data Sources </h2>
+          <div style="word-wrap: break-word">
+            <img class="floatLeft" src="images/livermoreLogo.png" alt="no logo" style="margin-right: 20px;height: 100px;width:100px;">
+            <ul class="noStyle">
+              <li><h3>LOCA Downscaled CMIP5 Climate Daily Projections</a></h3></li>
+              <li><h4><a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Complete%20Archives">Green Data Oasis, Lawrence Livermore National Laboratory, Livermore, CA</a></h4></li>
+            </ul><br><br><br>
+            <img class="floatLeft" src="images/isricLogo.png" alt="no logo" style="margin-right: 20px;height: 100px;width:100px;">
+            <ul class="noStyle" style="margin-left: 20px;">
+              <li><h3 style="margin-top: 0px;">Harmonized Dataset of Derived Soil Properties for the World (WISE30sec)</h3></li>
+              <li><h4><a href="https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/dc7b283a-8f19-45e1-aaed-e9bd515119bc">ISRIC, World Soil Information, Wageningen, the Netherlands</a></h4></li>
+            </ul><br><br><br>
+            <img class="floatLeft" src="images/universityColoradoLogo.png" alt="no logo" style="margin-right: 20px;height: 100px;width:100px;">
+            <ul class="noStyle" style="margin-left: 20px;">
+              <li><h3 style="margin-top: 0px;">Gridded Historical Observed Meteorological and Hydrological Data</h3></li>
+              <li><h4><a href="http://ciresgroups.colorado.edu/livneh/">University of Colorado, Boulder </a></h4></li>
+            </ul><br><br><br>
+            <img class="floatLeft" src="images/soilwatLogo.jpg" alt="no logo" style="margin-right: 20px;height: 100px;width:100px;">
+            <ul class="noStyle" style="margin-left: 20px;">
+              <li><h3 style="margin-top: 0px;">SOILWAT2 - An Ecohydrological Water-balance Model</h3></li>
+              <li><h4><a href="https://github.com/DrylandEcology/SOILWAT2">Southwest Biological Science Center, USGS, Flagstaff, AZ</a></h4></li>
+            </ul>
+          </div>
+        </div>
+        <!-- References -->
+        <div>
+          <hr>
+          <h2 id="references"> References </h2>
+          <h4>Methods</h4>
+          <ul>
+            <li>
+              Knutti, R., D. Masson, and A. Gettelman. 2013. Climate model genealogy: Generation CMIP5
+              and how we got there. Geophysical Research Letters 40:1194-1199.
+            </li>
+            <br>
+            <li>
+              Rupp, D. E., J. T. Abatzoglou, K. C. Hegewisch, and P. W. Mote. 2013. Evaluation of CMIP5
+              20th century climate simulations for the Pacific Northwest USA. Journal of Geophysical
+              Research: Atmospheres 118:2013JD020085.
+            </li>
+            <br>
+            <li>
+              Schlaepfer, D. R., and C. A. Andrews. 2018. rSFSW2: Simulation Framework for SOILWAT2.
+              R package version 3.0.0. <a href="https://github.com/DrylandEcology/rSFSW2">https://github.com/DrylandEcology/rSFSW2</a>
+            </li>
+            <br>
+            <li>
+              Taylor, K. E., R. J. Stouffer, and G. A. Meehl. 2011. An Overview of CMIP5 and the
+              Experiment Design. Bulletin of the American Meteorological Society 93:485-498.
+            </li>
+            <br>
+            <li>
+              Schlaepfer, D. R., and R. Murphy. 2018. rSOILWAT2: An Ecohydrological Ecosystem-Scale
+              Water Balance Simulation Model. R package version 2.3.2.
+              <a href="https://github.com/DrylandEcology/rSOILWAT2">https://github.com/DrylandEcology/rSOILWAT2</a>
+            </li>
+          </ul>
+        </div>
+          <br>
+          <div>
+            <h4>SOILWAT2 Publications</h4>
+            <ul>
+              <li>
+                Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, and I. C. Burke. 2014. Shifts in plant
+                functional types have time-dependent and regionally variable impacts on dryland
+                ecosystem water balance. Journal of Ecology 102:1408-1418.
+              </li>
+            </ul>
+        </div>
+        <hr>
+      </div>
+    </div>
+  </div>
+  </body>
+</div>
+</html>
