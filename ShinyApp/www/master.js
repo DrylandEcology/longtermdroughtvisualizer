@@ -308,21 +308,63 @@ function sendToR(){
                        long.toFixed(3) + "]</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
                        "</span>.<br><br>" + soilsTxt + compTxt, false);
     changeFeedbackText("<span id='imp'>Calculation Running...</span>", true);
+    toggleSimButtonActive();
+    document.getElementById("validTxt").innerHTML = "Simulation currently running";
     // Give the user feedback in realtime
     // given the async nature of javascript, time should be absolute not relative
     if (calcFutures == 1){
-      repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 5000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 10000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Simulating future ecohydrology...", true)}, 25000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 80000, 1);
+      if (chooseSoils == 2){
+        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 5000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 10000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating future ecohydrology...", true)}, 25000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 80000, 1);
+        repeatWithTimer(function(){toggleSimButtonActive()}, 80000, 1);
+      }
+      else{
+        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Obtaining Soils...", true)}, 10000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 15000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 20000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating future ecohydrology...", true)}, 35000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 90000, 1);
+        repeatWithTimer(function(){toggleSimButtonActive()}, 90000, 1);
+      }
     }
     else if (calcFutures == 2){
-      repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 10000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 15000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 20000, 1);
+      if (chooseSoils == 2){
+        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 10000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 15000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 20000, 1);
+        repeatWithTimer(function(){toggleSimButtonActive()}, 20000, 1);
+      }
+      else{
+        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Obtaining Soils...", true)}, 10000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 15000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 20000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 25000, 1);
+        repeatWithTimer(function(){toggleSimButtonActive()}, 25000, 1);
+      }
     }
+  }
+}
+/*
+ * Toggle the sim button being clickable. Ie, if the button is clickable when
+ * function is called it will become unclickable and vice versa.
+ */
+function toggleSimButtonActive(){
+  if (document.getElementById("simBtn").disabled){
+    document.getElementById("simBtn").disabled = false;
+    document.getElementById("validTxt").innerHTML = "Inputs valid, simluation ready";
+    // change button color
+    document.getElementById("simBtn").style.background = '#FFFFFF';
+  }
+  else{
+    document.getElementById("simBtn").disabled = true;
+    // change button color
+    document.getElementById("simBtn").style.background = '#000000';
   }
 }
   /*
