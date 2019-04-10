@@ -83,8 +83,17 @@
       R -e "install.packages('maps', repos='http://cran.rstudio.com/')"
       R -e "install.packages('maptools', repos='http://cran.rstudio.com/')"
       R -e "install.packages('shinydashboard', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('httr', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('hexbin', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('tidyr', repos='http://cran.rstudio.com/')"
 
       # TO DOGet dev version of plotly
+      git clone 'https://github.com/ropensci/plotly'
+      cd plotly/
+      R CMD INSTALL --library= /usr/lib64/R/library .
+      cd ../
+      rm -r plotly/
+
       #devtools::install_github("ropensci/plotly")
 
       # clone and install rSOILWAT2
