@@ -277,12 +277,20 @@ function sendToR(){
                        "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
                        "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>", false);
     changeFeedbackText("<span id='imp'>Calculation Running...</span>", true);
+    // Give the user feedback in realtime
+    // given the async nature of javascript, time should be absolute not relative
     if (calcFutures == 1){
       repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Setting up simulation...", true)}, 5000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 5000, 1);
       repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 10000, 1);
       repeatWithTimer(function(){changeFeedbackText("Simulating future ecohydrology...", true)}, 25000, 1);
       repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 80000, 1);
+    }
+    else if (calcFutures == 2){
+      repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 10000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 15000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 20000, 1);
     }
   }
 }
