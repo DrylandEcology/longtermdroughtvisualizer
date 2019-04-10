@@ -30,3 +30,4 @@ DatEnsemb <- setDT(DatGCM)[,.(mean = mean(mean),
                               min = min(mean), #change ranks
                               max = max(mean)),
                            .(TP, RCP, Month, variable)]      
+legendgroup = 'group1'
