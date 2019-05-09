@@ -195,13 +195,13 @@
               <div class="col-sm-3">
                 <div class="centered" style="background-color:white;">
                   <label for="latMap">Lat</label><br>
-                  <input type="number" id="latMap" name="latMap" value="35.1983" min="31.3325" max="41.9993" step=".01" onchange="changeMarkerXY(); unValidate();" >
+                  <input type="number" id="latMap" name="latMap" value="35.1983" min="31.3325" max="41.9993" step=".01" onchange="changeMarkerXY(); inValidate();" >
                 </div>
               </div>
               <div class="col-sm-3">
                 <div class="centered" style="background-color:white;">
                   <label for="longMap">Long</label><br>
-                  <input type="number" id="longMap" name="longMap" value="-111.6513" min="-114.8126" max="-102.0424" step=".01" onchange="changeMarkerXY(); unValidate();">
+                  <input type="number" id="longMap" name="longMap" value="-111.6513" min="-114.8126" max="-102.0424" step=".01" onchange="changeMarkerXY(); inValidate();">
                 </div>
               </div>
               <div class="col-sm-3">
@@ -250,7 +250,7 @@
                 <div id="chooseSoils">
                   <!-- Soils texture triangle -->
                   <div id="soilsTriangle" ondrop="drop(event)" ondragover="allowDrop(event)">
-                    <!-- Put in image -->
+                    <!-- Render triangle image -->
                     <img src="images/soilTexTri.png" height="50%" width="100%"/></img>
                     <script language="javascript">
                       var canvas = new jsGraphics("soilsTriangle");
@@ -280,13 +280,13 @@
                     <div class="col-sm-4">
                       <div class="centered" style="background-color:white;">
                         <label for="sand">Sand</label><br>
-                        <input type="number" id="sand" name="sand" value="34" min="0" max="100" step="1" onchange="adjustSilt(); unValidate();">
+                        <input type="number" id="sand" name="sand" value="34" min="0" max="100" step="1" onchange="adjustSilt(); inValidate();">
                       </div>
                     </div>
                     <div class="col-sm-4">
                       <div class="centered" style="background-color:white;">
                         <label for="clay">Clay</label><br>
-                        <input type="number" id="clay" name="clay" value="33" min="0" max="100" step="1" onchange="adjustSilt(); unValidate();">
+                        <input type="number" id="clay" name="clay" value="33" min="0" max="100" step="1" onchange="adjustSilt(); inValidate();">
                     </div>
                     </div>
                     <div class="col-sm-4">
@@ -298,7 +298,6 @@
                     <br><br>
                   </div>
                 </div>
-
                 <!-- Veg Composition -->
                 <h4 class="centered">Vegetation Structure <i class='glyphicon glyphicon-info-sign' class="hoverable" id="moreTip4" data-toggle="tooltip" data-placement="right" title="Specify whether you would like to manually set vegetation compositions or have the program extract them for you. See highlighted tabs for more information."></i></h4>
                 <div class="row">
@@ -325,27 +324,27 @@
                     <div class="col-sm-4">
                       <div class="centered" style="background-color:white;">
                         <label for="trees">Trees</label>
-                        <input type="number" id="trees" name="trees" value="20" min="0" max="100" step="1" onchange="unValidate();">
+                        <input type="number" id="trees" name="trees" value="20" min="0" max="100" step="1" onchange="inValidate();">
                       </div>
                       <div class="centered" style="background-color:white;">
                         <br><label for="shrubs">Shrubs</label>
-                        <input type="number" id="shrubs" name="shrubs" value="20" min="0" max="100" step="1" onchange="unValidate();">
+                        <input type="number" id="shrubs" name="shrubs" value="20" min="0" max="100" step="1" onchange="inValidate();">
                       </div>
                     </div>
                     <div class="col-sm-4">
                       <div class="centered" style="background-color:white;">
                         <label for="grasses">Grasses</label>
-                        <input type="number" id="grasses" name="grasses" value="20" min="0" max="100" step="1" onchange="unValidate();">
+                        <input type="number" id="grasses" name="grasses" value="20" min="0" max="100" step="1" onchange="inValidate();">
                       </div>
                       <div class="centered" style="background-color:white;">
                         <br><label for="forbs">Forbs</label>
-                        <input type="number" id="forbs" name="forbs" value="20" min="0" max="100" step="1" onchange="unValidate();"><br><br>
+                        <input type="number" id="forbs" name="forbs" value="20" min="0" max="100" step="1" onchange="inValidate();"><br><br>
                       </div>
                     </div>
                     <div class="col-sm-4">
                       <div class="centered" style="background-color:white;">
                         <label for="bareground">Bg</label><br>
-                        <input type="number" id="bareground" name="bareground" value="20" min="0" max="100" step="1" onchange="unValidate();">
+                        <input type="number" id="bareground" name="bareground" value="20" min="0" max="100" step="1" onchange="inValidate();">
                       </div>
                     </div>
                     <br><br>
@@ -403,25 +402,66 @@
           <hr>
           <h2 id="dataSources"> Data Sources </h2>
           <div style="word-wrap: break-word">
-            <img class="floatLeft" src="images/livermoreLogo.png" alt="no logo" style="margin-right: 20px;height: 100px;width:100px;">
-            <ul class="noStyle">
-              <li><h3>LOCA Downscaled CMIP5 Climate Daily Projections</a></h3></li>
-              <li><h4><a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Complete%20Archives" target="_blank">Green Data Oasis, Lawrence Livermore National Laboratory, Livermore, CA</a></h4></li>
-            </ul><br><br><br>
-            <img class="floatLeft" src="images/isricLogo.png" alt="no logo" style="margin-right: 20px;height: 100px;width:100px;">
-            <ul class="noStyle" style="margin-left: 20px;">
-              <li><h3 style="margin-top: 0px;">Harmonized Dataset of Derived Soil Properties for the World (WISE30sec)</h3></li>
-              <li><h4><a href="https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/dc7b283a-8f19-45e1-aaed-e9bd515119bc" target="_blank">ISRIC, World Soil Information, Wageningen, the Netherlands</a></h4></li>
-            </ul><br><br><br>
-            <img class="floatLeft" src="images/universityColoradoLogo.png" alt="no logo" style="margin-right: 20px;height: 100px;width:100px;">
+            <img class="floatLeft" src="images/universityColoradoLogo.png" alt="no logo" style="margin-right: 40px;height: 100px;width:100px;">
             <ul class="noStyle" style="margin-left: 20px;">
               <li><h3 style="margin-top: 0px;">Gridded Historical Observed Meteorological and Hydrological Data</h3></li>
               <li><h4><a href="http://ciresgroups.colorado.edu/livneh/" target="_blank">University of Colorado, Boulder </a></h4></li>
+              <li>
+                <!-- Description of data source -->
+                <p style="margin-left: 120px;">
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                 sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </p>
+              </li>
             </ul><br><br><br>
-            <img class="floatLeft" src="images/soilwatLogo.jpg" alt="no logo" style="margin-right: 20px;height: 100px;width:100px;">
+            <img class="floatLeft" src="images/livermoreLogo.png" alt="no logo" style="margin-right: 20px;height: 100px;width:120px;">
+            <ul class="noStyle">
+              <li><h3 style="margin-top: 0px;">LOCA Downscaled CMIP5 Climate Daily Projections</a></h3></li>
+              <li><h4><a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Complete%20Archives">Green Data Oasis, Lawrence Livermore National Laboratory, Livermore, CA</a></h4></li>
+              <li>
+                <p style="margin-left: 140px;">
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                 sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </p>
+              </li>
+            </ul><br><br><br>
+            <img class="floatLeft" src="images/isricLogo.png" alt="no logo" style="margin-right: 40px;height: 100px;width:100px;">
+            <ul class="noStyle" style="margin-left: 20px;">
+              <li><h3 style="margin-top: 0px;">Harmonized Dataset of Derived Soil Properties for the World (WISE30sec)</h3></li>
+              <li><h4><a href="https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/dc7b283a-8f19-45e1-aaed-e9bd515119bc" target="_blank">ISRIC, World Soil Information, Wageningen, the Netherlands</a></h4></li>
+              <li>
+                <p style="margin-left: 120px;">
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                 sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </p>
+              </li>
+            </ul><br><br><br>
+            <img class="floatLeft" src="images/soilwatLogo.jpg" alt="no logo" style="margin-right: 40px;height: 100px;width:100px;">
             <ul class="noStyle" style="margin-left: 20px;">
               <li><h3 style="margin-top: 0px;">SOILWAT2 - An Ecohydrological Water-balance Model</h3></li>
               <li><h4><a href="https://github.com/DrylandEcology/SOILWAT2" target="_blank">Southwest Biological Science Center, USGS, Flagstaff, AZ</a></h4></li>
+              <li>
+                <p style="margin-left: 120px;">
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                 sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </p>
+              </li>
             </ul>
           </div>
         </div>

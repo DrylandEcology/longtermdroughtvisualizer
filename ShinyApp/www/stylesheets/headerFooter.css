@@ -36,9 +36,10 @@ hr {
   width: 100%;
   margin-top: 42px;
 }
+/* Modify horizontal rule only on screen above width */
 @media only screen and (max-width:490px) {
     hr {
-    margin-top: 60px;
+      margin-top: 60px;
     }
 }
 /* header (only) nav */
