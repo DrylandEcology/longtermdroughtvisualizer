@@ -86,15 +86,14 @@
       R -e "install.packages('httr', repos='http://cran.rstudio.com/')"
       R -e "install.packages('hexbin', repos='http://cran.rstudio.com/')"
       R -e "install.packages('tidyr', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('rmarkdown', repos='http://cran.rstudio.com/')"
 
-      # TO DOGet dev version of plotly
+      # Get dev version of plotly
       git clone 'https://github.com/ropensci/plotly'
       cd plotly/
       R CMD INSTALL --library= /usr/lib64/R/library .
       cd ../
       rm -r plotly/
-
-      #devtools::install_github("ropensci/plotly")
 
       # clone and install rSOILWAT2
       git clone -b master --single-branch --recursive https://github.com/DrylandEcology/rSOILWAT2.git rSOILWAT2
@@ -106,6 +105,15 @@
 
       # clone and install Shiny App Code
       git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/longtermdroughtsimulator
+
+      # copy rshint conf file
+      cp /srv/shiny-server/longtermdroughtsimulator/awslogs.conf /etc/shiny-server/shiny-server.conf 
+
+      # copy awslog conf file, get latest awslog agents, enable cloud watch agents, setup to start on boot
+      cp /srv/shiny-server/longtermdroughtsimulator/awslogs.conf /etc/awslogs/awslogs.conf
+      yum install -y awslogs
+      systemctl start awslogsd
+      systemctl enable awslogsd.service
 
       # ensure that shiny server service file installed in the correct place
       cp /opt/shiny-server/config/systemd/shiny-server.service /etc/systemd/system
@@ -121,12 +129,6 @@
       # download data from the S3 environment to the longtermdroughtsimulator folder
       cd /srv/shiny-server/longtermdroughtsimulator
       aws s3 sync s3://sbsc-upload-data .
-
-	  # copy awslog conf file, get latest awslog agents, enable cloud watch agents, setup to start on boot
-	  cp /srv/shiny-server/longtermdroughtsimulator/awslogs.conf /etc/awslogs/awslogs.conf
-	  sudo yum install -y awslogs
-	  sudo systemctl start awslogsd
-	  sudo systemctl enable awslogsd.service
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'
