@@ -106,8 +106,8 @@
       # clone and install Shiny App Code
       git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/longtermdroughtsimulator
 
-      # copy rshint conf file
-      cp /srv/shiny-server/longtermdroughtsimulator/awslogs.conf /etc/shiny-server/shiny-server.conf 
+      # copy rshiny conf file
+      cp /srv/shiny-server/longtermdroughtsimulator/shiny-server.conf /etc/shiny-server/shiny-server.conf
 
       # copy awslog conf file, get latest awslog agents, enable cloud watch agents, setup to start on boot
       cp /srv/shiny-server/longtermdroughtsimulator/awslogs.conf /etc/awslogs/awslogs.conf
