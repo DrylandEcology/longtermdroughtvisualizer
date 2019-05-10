@@ -122,6 +122,11 @@
       cd /srv/shiny-server/longtermdroughtsimulator
       aws s3 sync s3://sbsc-upload-data .
 
+	  # copy awslog conf file, get latest awslog agents, enable cloud watch agents, setup to start on boot
+	  cp /srv/shiny-server/longtermdroughtsimulator/awslogs.conf /etc/awslogs/awslogs.conf
+	  sudo yum install -y awslogs
+	  sudo systemctl start awslogsd
+	  sudo systemctl enable awslogsd.service
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'
