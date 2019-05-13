@@ -3,6 +3,7 @@ import os
 import logging
 import sys
 import datetime
+import argparse
 
 # global/config variables
 __author__ = 'jhensleigh@usgs.gov'
@@ -13,40 +14,45 @@ LOGGING = True
 LOG_LEVEL = logging.INFO
 LOG_TIME_FORMAT = '%Y%m%d%H%M%S%f'
 
-
-# script config/defaultsx
-BUCKET_NAME = 'sbsc-upload-data'
-
 def execute(bucket_name,
             output_directory = os.getcwd(),
             file_size_limit_in_bytes = 500000000000):
   ''' loops over s3 bucket and downloads all files with a size less than or equal to the file size limit
 
-      keyword arguments:
+    keyword arguments:
 
-      bucket_name -- the name of the bucket to loop over
-      output_directory -- directory to write the files to (defaults to the executing directory of the script)
-      file_size_limit_in_bytes -- file size limit of files to download in bytes (defaults to 500 GB)
-
-
-
+    bucket_name -- the name of the bucket to loop over
+    output_directory -- directory to write the files to (defaults to the executing directory of the script)
+    file_size_limit_in_bytes -- file size limit of files to download in bytes (defaults to 500 GB)
   '''
 
   s3 = boto3.resource('s3')
-  bucket = s3.Bucket(BUCKET_NAME)
+  bucket = s3.Bucket(bucket_name)
 
   for obj in bucket.objects.all():  
   
-    obj = s3.Object(BUCKET_NAME, obj.key)
+    obj = s3.Object(bucket_name, obj.key)
 
-    if obj.content_length <= file_size_limit_in_bytes:
+    if obj.content_length <= file_size_limit_in_bytes and \
+    obj.content_type != 'application/x-directory':
 
       try:
-        
+
+        # get name, s3 path, and file system path
         object_name = os.path.basename(obj.key)
+        object_s3_path = os.path.dirname(obj.key)
+        output_path = os.path.join(output_directory,
+                                   object_s3_path)
+
+        # if output path does not exist create all folders and sub folders
+        if os.path.exists(output_path) != True:
+
+          os.makedirs(output_path)
+
+        # download the file to the output path
         logging.info('DOWNLOADING: %s' % object_name)
-        obj.download_file(os.path.join(output_directory,object_name))
-        logging.info('DOWNLOAD COMPLETE: %s' % object_name)
+        obj.download_file(os.path.join(output_path, object_name))
+        logging.info('DOWNLOAD COMPLETE AT: %s' % os.path.join(output_path, object_name))
 
       except Exception as ex:
 
@@ -61,7 +67,8 @@ if __name__ == '__main__':
 
   # check that the log directory exists
   log_directory = os.path.join(executing_directory,
-                               'resources%slog' % os.sep)
+                               '%s-resources%slog' % (SCRIPT_ALIAS,
+                                                     os.sep))
   if not os.path.isdir(log_directory):
 
     os.makedirs(log_directory)
@@ -79,9 +86,30 @@ if __name__ == '__main__':
 
 
   try:
+    # create a basic argument parser
+    arguments_parser = argparse.ArgumentParser(description = """Loops over S3 bucket and downloads all files with a size less than or equal to the file size limit.
+                                                                  Questions? Please contact %s""" % __author__)
+
+    # add input parameters
+    arguments_parser.add_argument('bucket_name',
+                                   default='',
+                                   help='Bucket to download data from')
+    arguments_parser.add_argument('output_directory',
+                                   default = os.path.dirname(os.path.realpath(__file__)),
+                                   help = 'Folder output rasters will be written to.')
+    arguments_parser.add_argument('file_size_limit_in_bytes',
+                                   default=500000000000.0,
+                                   help='file size limit of files to download in bytes (defaults to 500 GB',
+                                   type = float)
+
+    # parse arguments into a variable
+    args = arguments_parser.parse_args()
+
 
     # execute
-    execute(BUCKET_NAME)
+    execute(args.bucket_name,
+            args.output_directory,
+            args.file_size_limit_in_bytes)
 
   except Exception as ex:
 
