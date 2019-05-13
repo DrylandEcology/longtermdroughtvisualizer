@@ -128,7 +128,7 @@
 
       # download data from the S3 environment to the longtermdroughtsimulator folder
       cd /srv/shiny-server/longtermdroughtsimulator
-      aws s3 sync s3://sbsc-upload-data .
+      aws s3 sync  --region us-west-2 s3://sbsc-upload-data/ .
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'
