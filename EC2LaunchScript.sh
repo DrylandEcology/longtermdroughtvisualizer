@@ -130,7 +130,7 @@
       yum install python-pip
       yum pip install boto3
       cd /srv/shiny-server/longtermdroughtsimulator
-      python s3-download-all-contents-of-bucket.py 'sbsc-upload-data' . 5000000
+      python s3-download-all-contents-of-bucket.py 'sbsc-upload-data' . 500000000000
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'
