@@ -126,9 +126,11 @@
       chown -R :appallow /srv/shiny-server/longtermdroughtsimulator
       chmod -R g+rwx /srv/shiny-server/longtermdroughtsimulator
 
-      # download data from the S3 environment to the longtermdroughtsimulator folder
+      # download data from the S3 environment to the longtermdroughtsimulator using boto
+      yum install python-pip
+      yum pip install boto3
       cd /srv/shiny-server/longtermdroughtsimulator
-      aws s3 sync  --region us-west-2 s3://sbsc-upload-data/ .
+      python s3-download-all-contents-of-bucket.py 'sbsc-upload-data' . 5000000
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'
