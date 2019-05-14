@@ -77,7 +77,7 @@
       R -e "install.packages('rgeos', repos='http://cran.rstudio.com/')"
       R -e "install.packages('ncdf4', repos='http://cran.rstudio.com/')"
       R -e "install.packages('RCurl', repos='http://cran.rstudio.com/')"
-      R -e "install.packages('gridGraphics', repos='http://cran.rstudio.com/')"
+    #  R -e "install.packages('gridGraphics', repos='http://cran.rstudio.com/')"
       R -e "install.packages('dplyr', repos='http://cran.rstudio.com/')"
       R -e "install.packages('sp', repos='http://cran.rstudio.com/')"
       R -e "install.packages('maps', repos='http://cran.rstudio.com/')"
@@ -127,10 +127,15 @@
       chmod -R g+rwx /srv/shiny-server/longtermdroughtsimulator
 
       # download data from the S3 environment to the longtermdroughtsimulator using boto
-      yum install python-pip
-      yum pip install boto3
+      #yum install python-pip
+      #yum pip install boto3
+      #cd /srv/shiny-server/longtermdroughtsimulator
+      #python s3-download-all-contents-of-bucket.py 'sbsc-upload-data' . 500000000000
+
+      # download data from the S3 environment to the longtermdroughtsimulator folder
+      yum install -y s3cmd
       cd /srv/shiny-server/longtermdroughtsimulator
-      python s3-download-all-contents-of-bucket.py 'sbsc-upload-data' . 500000000000
+      s3cmd sync --region us-west-2 s3://sbsc-upload-data/Data .
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'
