@@ -249,7 +249,7 @@ function validateInputs(){
               "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span></pre><br>";
   }
   else{
-    compTxt = "<pre>Veg composition will be generated based on ?????</pre>";
+    compTxt = "<pre>Veg composition will be generated based on site-specific climate</pre>";
   }
   // write feedback status text
   changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat.toFixed(3) + ", " +
