@@ -296,12 +296,12 @@ function sendToR(){
       soilsTxt = "<pre>Obtaining soils composition from ISRIC dataset</pre>";
     }
     if (chooseComp == 2){
-      compTxt = "<pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
+      compTxt = "<pre>   Vegetation composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
                 "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
                 "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span></pre><br>";
     }
     else{
-      compTxt = "<pre>Veg composition generated based on ?????</pre>";
+      compTxt = "<pre> Vegetation composition will be generated based on site-specific climate </pre>";
     }
     // write feedback status text
     changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat.toFixed(3) + ", " +
