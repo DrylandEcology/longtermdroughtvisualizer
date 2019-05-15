@@ -77,7 +77,7 @@
       R -e "install.packages('rgeos', repos='http://cran.rstudio.com/')"
       R -e "install.packages('ncdf4', repos='http://cran.rstudio.com/')"
       R -e "install.packages('RCurl', repos='http://cran.rstudio.com/')"
-      R -e "install.packages('gridGraphics', repos='http://cran.rstudio.com/')"
+    #  R -e "install.packages('gridGraphics', repos='http://cran.rstudio.com/')"
       R -e "install.packages('dplyr', repos='http://cran.rstudio.com/')"
       R -e "install.packages('sp', repos='http://cran.rstudio.com/')"
       R -e "install.packages('maps', repos='http://cran.rstudio.com/')"
@@ -86,15 +86,14 @@
       R -e "install.packages('httr', repos='http://cran.rstudio.com/')"
       R -e "install.packages('hexbin', repos='http://cran.rstudio.com/')"
       R -e "install.packages('tidyr', repos='http://cran.rstudio.com/')"
+      R -e "install.packages('rmarkdown', repos='http://cran.rstudio.com/')"
 
-      # TO DOGet dev version of plotly
+      # Get dev version of plotly
       git clone 'https://github.com/ropensci/plotly'
       cd plotly/
       R CMD INSTALL --library= /usr/lib64/R/library .
       cd ../
       rm -r plotly/
-
-      #devtools::install_github("ropensci/plotly")
 
       # clone and install rSOILWAT2
       git clone -b master --single-branch --recursive https://github.com/DrylandEcology/rSOILWAT2.git rSOILWAT2
@@ -107,6 +106,15 @@
       # clone and install Shiny App Code
       git clone -b master --single-branch https://code.chs.usgs.gov/candrews/longtermdroughtsimulator /srv/shiny-server/longtermdroughtsimulator
 
+      # copy rshiny conf file
+      cp /srv/shiny-server/longtermdroughtsimulator/shiny-server.conf /etc/shiny-server/shiny-server.conf
+
+      # copy awslog conf file, get latest awslog agents, enable cloud watch agents, setup to start on boot
+      cp /srv/shiny-server/longtermdroughtsimulator/awslogs.conf /etc/awslogs/awslogs.conf
+      yum install -y awslogs
+      systemctl start awslogsd
+      systemctl enable awslogsd.service
+
       # ensure that shiny server service file installed in the correct place
       cp /opt/shiny-server/config/systemd/shiny-server.service /etc/systemd/system
       systemctl restart shiny-server
@@ -118,10 +126,16 @@
       chown -R :appallow /srv/shiny-server/longtermdroughtsimulator
       chmod -R g+rwx /srv/shiny-server/longtermdroughtsimulator
 
-      # download data from the S3 environment to the longtermdroughtsimulator folder
-      cd /srv/shiny-server/longtermdroughtsimulator
-      aws s3 sync s3://sbsc-upload-data .
+      # download data from the S3 environment to the longtermdroughtsimulator using boto
+      #yum install python-pip
+      #yum pip install boto3
+      #cd /srv/shiny-server/longtermdroughtsimulator
+      #python s3-download-all-contents-of-bucket.py 'sbsc-upload-data' . 500000000000
 
+      # download data from the S3 environment to the longtermdroughtsimulator folder
+      yum install -y s3cmd
+      cd /srv/shiny-server/longtermdroughtsimulator
+      s3cmd sync --region us-west-2 s3://sbsc-upload-data/Data .
 
       echo END
       date '+%Y-%m-%d %H:%M:%S'
