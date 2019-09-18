@@ -1,4 +1,4 @@
-inValidate/*
+/*
  * In house javascript
  */
 // value of radio buttons, initialized
@@ -232,13 +232,29 @@ function validateInputs(){
   // change options to make more user friendly
   if (calcFutures == 2) {calcFuturesTxt = "No";}
   else                  {calcFuturesTxt = "Yes";}
-  // setup feedback status text
-  changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat + ", " +
-                     long + "]</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
-                     "</span>.<br><br><pre>     Soils composition set to: </pre><span id='imp'>" +
-                    "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Silt: <span id='imp'>" + silt + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
-                     "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
-                     "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>", false);
+  // determine soils and comp text based on user input
+  var soilsTxt = "";
+  var compTxt = "";
+  if (chooseSoils == 2){
+    soilsTxt = "<pre>     Soils composition set to: </pre><span id='imp'>" +
+    "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Silt: <span id='imp'>" + silt + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span></pre><br><br>";
+  }
+  else{
+    soilsTxt = "<pre>Soils composition will be obtained from ISRIC dataset</pre>";
+
+  }
+  if (chooseComp == 2){
+    compTxt = "<pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
+              "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
+              "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span></pre><br>";
+  }
+  else{
+    compTxt = "<pre>Veg composition will be generated based on site-specific climate</pre>";
+  }
+  // write feedback status text
+  changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat.toFixed(3) + ", " +
+                     long.toFixed(3) + "]</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
+                     "</span>.<br><br>" + soilsTxt + compTxt, false);
   changeFeedbackText("<span id='imp'>Click Simulate to begin simulation...</span>", true);
   $("#simBtn").show();
   $("#validateBtn").hide();
@@ -269,21 +285,86 @@ function sendToR(){
     Shiny.onInputChange("forbs", forbs / 100);
     Shiny.onInputChange("bg", bareground / 100);
     Shiny.onInputChange("simulate", true);
-    // setup feedback status text
-    changeFeedbackText("<br>Simulation running on location <span id='imp'>[" + lat + ", " +
-                       long + "]</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
-                       "</span>.<br><br><pre>     Soils composition set to: </pre><span id='imp'>" +
-                       "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span><br><br><pre>   Veg composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
-                       "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
-                       "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span><br>", false);
-    changeFeedbackText("<span id='imp'>Calculation Running...</span>", true);
-    if (calcFutures == 1){
-      repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Setting up simulation...", true)}, 5000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 10000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Simulating future ecohydrology...", true)}, 25000, 1);
-      repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 80000, 1);
+    // determine soils and comp text based on user input
+    var soilsTxt = "";
+    var compTxt = "";
+    if (chooseSoils == 2){
+      soilsTxt = "<pre>     Soils composition set to: </pre><span id='imp'>" +
+      "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Silt: <span id='imp'>" + silt + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span></pre><br><br>";
     }
+    else{
+      soilsTxt = "<pre>Obtaining soils composition from ISRIC dataset</pre>";
+    }
+    if (chooseComp == 2){
+      compTxt = "<pre>   Vegetation composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
+                "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
+                "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span></pre><br>";
+    }
+    else{
+      compTxt = "<pre> Vegetation composition will be generated based on site-specific climate </pre>";
+    }
+    // write feedback status text
+    changeFeedbackText("<br>Simulation will be run on location <span id='imp'>[" + lat.toFixed(3) + ", " +
+                       long.toFixed(3) + "]</span> with calculate futures set to <span id='imp'>" + calcFuturesTxt +
+                       "</span>.<br><br>" + soilsTxt + compTxt, false);
+    changeFeedbackText("<span id='imp'>Calculation Running...</span>", true);
+    toggleSimButtonActive();
+    document.getElementById("validTxt").innerHTML = "Simulation currently running";
+    // Give the user feedback in realtime
+    // given the async nature of javascript, time should be absolute not relative
+    if (calcFutures == 1){
+      if (chooseSoils == 2){
+        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 5000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 10000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating future ecohydrology...", true)}, 25000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 80000, 1);
+        repeatWithTimer(function(){toggleSimButtonActive()}, 80000, 1);
+      }
+      else{
+        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Obtaining Soils...", true)}, 10000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 15000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 20000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating future ecohydrology...", true)}, 35000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 90000, 1);
+        repeatWithTimer(function(){toggleSimButtonActive()}, 90000, 1);
+      }
+    }
+    else if (calcFutures == 2){
+      if (chooseSoils == 2){
+        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 10000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 15000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 20000, 1);
+        repeatWithTimer(function(){toggleSimButtonActive()}, 20000, 1);
+      }
+      else{
+        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Obtaining Soils...", true)}, 10000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 15000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 20000, 1);
+        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 25000, 1);
+        repeatWithTimer(function(){toggleSimButtonActive()}, 25000, 1);
+      }
+    }
+  }
+}
+/*
+ * Toggle the sim button being clickable. Ie, if the button is clickable when
+ * function is called it will become unclickable and vice versa.
+ */
+function toggleSimButtonActive(){
+  if (document.getElementById("simBtn").disabled){
+    document.getElementById("simBtn").disabled = false;
+    document.getElementById("validTxt").innerHTML = "Inputs valid, simluation ready";
+    // change button color
+    document.getElementById("simBtn").style.background = '#FFFFFF';
+  }
+  else{
+    document.getElementById("simBtn").disabled = true;
+    // change button color
+    document.getElementById("simBtn").style.background = '#000000';
   }
 }
   /*

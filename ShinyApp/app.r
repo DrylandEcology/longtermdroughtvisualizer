@@ -14,7 +14,7 @@ library(ggplot2)
 library(gridExtra)
 library(RColorBrewer)
 library(forcats)
-library(gridGraphics)
+#library(gridGraphics)
 library(plotly)
 
 
@@ -140,17 +140,17 @@ server <- function(input, output, session) {
                        fluidRow(
                          box(title = 'Walter-Leith Climate Diagram and Monthly Mean Soil-Moisture',  width = 3,
                              "These plots depict average monthly fluctuations in climate and soil
-                             moisture. The solid lines represent the median values for the 
-                             current time period (1974 – 2013), while the shaded polygons represent the range of 
-                             potential values across 11 climate models (GCMs), ensembled on a monthly basis, for each 
+                             moisture. The solid lines represent the median values for the
+                             current time period (1974 – 2013), while the shaded polygons represent the range of
+                             potential values across 11 climate models (GCMs), ensembled on a monthly basis, for each
                              representative concentration pathway (RCP), and for two future time periods (2020 - 2059,
                              2060 - 2099). Individual GCMs and historical years can be overlain.",
                              br(), br(),
-                             
-                             "This graph allows the user to visualize the inter-play between temperature, precipitation, 
-                             and soil moisture. Comparing conditions under historical climate with conditions expected in the 
-                             future enables users to identify the direction and magnitude of robust changes in which all or most climate models agree. 
-                             Additionally, individual historical years of interest (i.e. known to be wetter or drier than usual) 
+
+                             "This graph allows the user to visualize the inter-play between temperature, precipitation,
+                             and soil moisture. Comparing conditions under historical climate with conditions expected in the
+                             future enables users to identify the direction and magnitude of robust changes in which all or most climate models agree.
+                             Additionally, individual historical years of interest (i.e. known to be wetter or drier than usual)
                              can be compared to expected future conditions."
                              ),
                          box(plotlyOutput("WL_SM_Plots", height = "800px"), width = 6),
