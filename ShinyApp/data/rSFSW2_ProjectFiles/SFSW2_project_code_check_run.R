@@ -20,7 +20,7 @@ actions <- list(
   sim_execute = TRUE,
   #   - Calculate aggregated response variables from  SOILWAT2 output and store
   #     results in temporary text files on disk (formerly, "aggregate')
-  sim_aggregate = TRUE,
+  sim_aggregate = FALSE,
 
   # Output handling
   #   - Copy simulation results from temporary text files to a output
