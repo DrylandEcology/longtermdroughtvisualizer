@@ -3,8 +3,8 @@
 y1_WL <- list(
   tickfont = list(color = "#a50f15"),
   side = "left",
-  title = "Temperature (C)",
-  range = c(-5, 69),
+  title = "Temperature (°C)",
+  range = c(-5, 79),
   autotick = FALSE,
   dtick = 10,
   linecolor = "black",
@@ -19,7 +19,7 @@ y2_WL <- list(
   overlaying = "y",
   side = "right",
   title = "Precipitation (mm)",
-  range = c(-10, 139),
+  range = c(-10, 159),
   autotick = FALSE,
   dtick = 20,
   showgrid = FALSE
