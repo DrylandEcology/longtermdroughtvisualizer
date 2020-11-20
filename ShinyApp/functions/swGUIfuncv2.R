@@ -76,7 +76,7 @@ set_IM <- function(environment, lat, lng, futuresim){
 
   # Set correct weather DB in environment ------------------
   environment[["fnames_in"]][["fdbWeather"]] <-
-    file.path("/srv/shiny-server/longtermdroughtsimulator/Data/WeatherDBs", paste0(state, "_dbWeatherData.sqlite3"))
+    file.path("/srv/shiny-server/Data/WeatherDBs", paste0(state, "_dbWeatherData.sqlite3"))
 
   ###########################################################
   #------------------ Only Current or All --------------------
