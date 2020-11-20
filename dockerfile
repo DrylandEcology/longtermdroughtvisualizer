@@ -1,6 +1,6 @@
 FROM rocker/shiny-verse
 LABEL maintainer="candrews@usgs.com"
-#COPY longtermdroughtsimulator/shiny-server.conf /etc/shiny-server/shiny-server.conf
+COPY longtermdroughtsimulator/shiny-server.conf /etc/shiny-server/shiny-server.conf
 
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
   && apt-get install -y libssl-dev  \
@@ -19,17 +19,23 @@ RUN R -e 'install.packages("/usr/local/app/LTDV/Packages/rSW2utils.tar.gz", repo
 RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSOILWAT2
 RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSFSW2
 
-COPY /usr/local/app/LTDV/shiny-app/ /srv/shiny-server/
+COPY ./shiny-app/ /srv/shiny-server/
+
+VOLUME /usr/local/app/LTDV/Data:/srv/shiny-server/Data
 
 RUN usermod -aG shiny shiny
-#USER shiny
 
 #https://serverfault.com/questions/772227/chmod-not-working-correctly-in-docker
+#https://support.rstudio.com/hc/en-us/articles/219044787-Root-requirements-for-Shiny-Server
 RUN /bin/bash -c 'ls -la; chown -R root:shiny /srv/shiny-server/; ls -la'
 RUN /bin/bash -c 'ls -la; chmod -R g+rwx /srv/shiny-server/; ls -la'
 
-#RUN chmod -R g+w /var/lib/shiny-server/
-#RUN chmod -R g+w /var/log/shiny-server/
+#read / write
+RUN /bin/bash -c 'ls -la; chown -R root:shiny /var/log/shiny-server/; ls -la'
+RUN /bin/bash -c 'ls -la; chmod -R g+rw /var/log/shiny-server/; ls -la'
 
-#RUN chown -R root:docker /srv/shiny-server/
-#RUN chmod -R g+rwx /srv/shiny-server/
+RUN /bin/bash -c 'ls -la; chown -R root:shiny /opt/shiny-server/; ls -la'
+RUN /bin/bash -c 'ls -la; chmod -R g+rw /opt/shiny-server/; ls -la'
+
+RUN /bin/bash -c 'ls -la; chown -R root:shiny /etc/shiny-server/; ls -la'
+RUN /bin/bash -c 'ls -la; chmod -R g+rw /etc/shiny-server/; ls -la'
