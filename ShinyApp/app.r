@@ -2,8 +2,12 @@ library(shiny)
 library(shinydashboard)
 library(leaflet)
 # analysis
-library(rSFSW2)
 library(rSOILWAT2)
+library(doParallel)
+library(parallel)
+library(foreach)
+
+library(lubridate)
 library(zoo)
 library(data.table)
 library(sp)
@@ -17,28 +21,24 @@ library(forcats)
 #library(gridGraphics)
 library(plotly)
 
+source('functions/set_execute_SW_functions.R')
+source('functions/getOutputs.R')
+source('functions/MiscFunctions.R')
+source('functions/themes.R')
+source('functions/weather_functions.R')
 
-source("functions/swGUIfuncv2.R")
-source("functions/MiscFunctions.R")
-source("functions/getOutputs.R")
-source("functions/themes.R")
+my_names <- list('BNU-ESM' = 'BNU-ESM', 
+                 'CNRM-CM5' = 'CNRM-CM5',
+                 'CSIRO-Mk3-6-0' = 'CSIRO-Mk3-6-0',
+                 'bcc-csm1-1' = 'bcc-csm1-1')
 
-
-#devtools::load_all(pkg = '~/Desktop/Dryland Ecology/rSFSW2/')
-#devtools::load_all(pkg = '~/Desktop/Dryland Ecology/rSOILWAT2/')
-
-my_names <- list( 'CanESM2' = 'CanESM2',
-                'CESM1-CAM5' = 'CESM1-CAM5',  'CNRM-CM5' = 'CNRM-CM5',
-                'CSIRO-Mk3-6-0' = 'CSIRO-Mk3-6-0', 'FGOALS-g2' = 'FGOALS-g2',
-                'HadGEM2-ES' = 'HadGEM2-ES', 'GISS-E2-R' = 'GISS-E2-R',
-                'inmcm4' = 'inmcm4', 'IPSL-CM5A-MR' = 'IPSL-CM5A-MR',
-                'MIROC-ESM' = 'MIROC-ESM', 'MRI-CGCM3' = 'MRI-CGCM3')
 my_colors <-  c("#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99", "#E31A1C",
                 "#FDBF6F", "#FF7F00", "#CAB2D6", "#6A3D9A", "#FFFF99")
-my_selected <- c('CanESM2', 'CESM1-CAM5', 'CNRM-CM5',
-                 'CSIRO-Mk3-6-0' , 'FGOALS-g2', 'HadGEM2-ES',
-                 'GISS-E2-R','inmcm4', 'IPSL-CM5A-MR',
-                 'MIROC-ESM', 'MRI-CGCM3' )
+
+my_selected <- c('BNU-ESM', 
+                 'CNRM-CM5',
+                 'CSIRO-Mk3-6-0',
+                 'bcc-csm1-1')
 
 
 ui <- fluidPage(
@@ -99,11 +99,14 @@ server <- function(input, output, session) {
     begintime <- proc.time() # start timer clock
     #showModal(modalDialog("calculation running!"))
 
-    run$SW_out <- set_execute_SW(input$lat, input$lng, input$future, input$soils, input$sand, input$clay,
-                                 input$comp, input$trees, input$shrubs, input$grasses, input$forbs, input$bg) # the actual calculation
+    run$outs <- set_execute_SW(input$lat, input$lng, input$future, 
+                                 dir = "../../../www.northwestknowledge.net/metdata/data/",
+                                 input$soils, input$sand, input$clay,
+                                 input$comp, input$trees, input$shrubs, 
+                                 input$grasses, input$forbs, input$bg) # the actual calculation
 
-    #print(run$SWout) - What is the point of the run object. Do I need it? will I access
-    run$outs <- get_output()
+    print(run$outs) #- What is the point of the run object. Do I need it? will I access
+    #run$outs <- get_output()
 
     endtime <- proc.time() - begintime
     showModal(modalDialog(paste("calculation finished in", round(unname(endtime[3]), 0), "seconds")))
@@ -179,7 +182,7 @@ server <- function(input, output, session) {
 
                            # Select a specific year ----------
                            numericInput("years2", label = "Select a year:",
-                                        min = 1916, max = 2013,
+                                        min = 1980, max = 2020,# fix!
                                         value = c(2012))
                          ),
 
@@ -493,14 +496,17 @@ server <- function(input, output, session) {
     req(input$years) #input$years doesn't initally have values .. need this
     data <- run$outs
 
-    # Walter-Leith controls ----------------------------------------------------------------------
-    dataWL <- formatDataWL(data = data[[1]], future = input$future)
+    # Walter-Leith controls ----------------------------------------------------
+    dataWL <- format_data_WL(data = data[[1]], future = input$future)
     dataWL2 <- dataWL[[1]]
 
-    #  Soil Moisture Plot controls ----------------------------------------------------------
-    dataSM <- formatDataSM(data = data[[1]], RCP = input$RCP)
+    #  Soil Moisture Plot controls ---------------------------------------------
+    debug(format_data_SM)
+    dataSM <- format_data_SM(data = data[[1]], RCP = input$RCP)
 
     dataSM2 <- dataSM[[2]][dataSM[[2]]$TP == 'Current',]
+    print(summary(dataSM2))
+    
     dataSM2 <- rbind(dataSM2[1,], dataSM2, dataSM2[12,])
     dataSM2$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                          'August', 'September', 'October', 'November', 'December', 'December2')

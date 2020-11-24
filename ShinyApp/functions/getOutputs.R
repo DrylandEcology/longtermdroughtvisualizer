@@ -1,74 +1,47 @@
 
-get_output <- function(){
+get_output <- function(sw_out, soils_info, soils_info_avg, 
+                       Scenario) {
 
-  # Set up paths
-  path_3Runs <- ("data/rSFSW2_ProjectFiles/3_Runs")
-  Scenarios <- list.dirs(path_3Runs)
-
-  # Soils
-  SoilsDf <- data.frame(variable= paste0('Lyr_', 1:8), Layer= c(rep('Shallow', 2), # 10, 20
-                                                            rep('Inter', 3), # 40, 60, 80
-                                                            rep('Deep', 3))) # 100, 150, 200
-  #SeasonDF
-  SeasonsDF <- data.frame(Month = c(1:12), Season = c(rep('Winter',2),
-                                                      rep('Spring', 3),
-                                                      rep('Summer', 3),
-                                                      rep('Fall', 3),
-                                                      rep('Winter', 1)))
-  #Variables
-  VarDF <- data.frame(variable = c('Shallow', 'Inter', 'Deep', 'max_C', 'min_C', 'avg_C', 'ppt'),
-                      variable2 = c('Shallow', 'Soil Moisture (SWP, -MPa)', 'Deep', 'max_C', 'min_C', 'Average Temperature (C)', 'Precipitation (cm)'))
-
-
-  # Read in and format data
-  AllVars <- data.frame()
-
-  for(i in 2:length(Scenarios)){
-    success <- try(load(file.path(Scenarios[i], 'sw_output_sc1.RData')))
-
-    if (!inherits(success, "try-error")) {
+  # Read in and format data ----------------------------------------------------
+  if (object.size(sw_out) > 10000) {
 
       # Monthly ----------------------------------------------------------------
-      SWP <- data.frame(runDataSC@SWPMATRIC@Month)
-      SWP <- reshape2::melt(SWP, id.vars = c('Year', 'Month'))
-      SWP <- suppressMessages(plyr::join(SWP, SoilsDf))
-      SWPMean <- setDT(SWP)[,.(value = mean(value)),.(Year, Month, Layer)] #Probably need to get VWC and convert
-      names(SWPMean)[3] <- 'variable'
-      SWPMean$value <- SWPMean$value * -0.1
+     
+      # Soil water potential
+      ### Get VWC and average
+      SWP <- data.table(sw_out@VWCMATRIC@Month)
+      SWP <- data.table::melt(SWP, id.vars = c('Year', 'Month'))
+      SWP <- merge(SWP, soils_info)
+      SWP <- SWP[,.(value = weighted.mean(value, width)), .(Year, Month, Depth)]
+      SWP <- merge(SWP, soils_info_avg, by = 'Depth')
+      # convert to SWP
+      SWP <- SWP[,.(value =  rSOILWAT2::VWCtoSWP(value, sand, clay)), 
+                  .(Year, Month, Depth)]
+      
+      names(SWP)[3] <- 'variable'
 
-      Temp <- data.frame(runDataSC@TEMP@Month)
+      # Temperature
+      Temp <- data.table(sw_out@TEMP@Month)
       Temp$surfaceTemp_C <- NULL
-      Temp <- reshape2::melt(Temp, id.vars = c('Year', 'Month'))
+      Temp <- data.table::melt(Temp, id.vars = c('Year', 'Month'))
 
-      PPT <- data.frame(runDataSC@PRECIP@Month)[1:3]
-      PPT <- reshape2::melt(PPT, id.vars = c('Year', 'Month'))
+      PPT <- data.table(sw_out@PRECIP@Month)[,1:3]
+      PPT <- data.table::melt(PPT, id.vars = c('Year', 'Month'))
       PPT$value <- PPT$value * 10 # now in mms
 
-      Vars <- rbind(SWPMean, Temp)
-      Vars <- rbind(Vars, PPT)
+      Vars <- rbind(SWP, Temp, PPT)
+      
+      # if(Scenario == 'Current') {
+      #   Vars2 <- Vars[Year != curr_year && Month != curr_month, ]
 
       # Details -------------------------------------------------------------
-
-      Scenario <- sapply(strsplit(Scenarios[i],'_'), "[", 5)
-      Vars$GCM <-  if(Scenario == 'Current') 'Current' else sapply(strsplit(Scenario,'\\.'), "[", 4)
-      Vars$RCP <- if(Scenario == 'Current') 'Current'else sapply(strsplit(Scenario,'\\.'), "[", 3)
-
-      AllVars <- rbind(AllVars, Vars)
-
-    } else{
-      next
+      Vars$GCM <-  if(Scenario == 'Current') 'Current' else substr(Scenario, 1, (nchar(Scenario) - 13))
+      Vars$RCP <- if(Scenario == 'Current') 'Current'else substr(Scenario, (nchar(Scenario) - 4), nchar(Scenario))
+    } else {
+      stop('SW output error')
     }
-  }
-
-  AllVars <- suppressMessages(plyr::join(AllVars,SeasonsDF))
-  AllVars <- suppressMessages(plyr::join(AllVars,VarDF))
-  AllVars$variable <- NULL
-  names(AllVars)[7] <- 'variable'
-  AllVars <- AllVars[AllVars$Year %in% c(1915:2013, 2020:2099), ]
-
-  return(list(AllVars))
-
-
+  
+  return(Vars)
 }
 
 formatDataTS <- function(data, variable, time){
@@ -102,22 +75,21 @@ formatDataTS <- function(data, variable, time){
 getroll <- function(data, time){
 
   if(time == 'Annual'){
-  data <- arrange(data,Year)
+  data <- plyr::arrange(data, Year)
   setDT(data)[, MA := rollmean(value, 10, na.pad = TRUE)]
   }
   if(time == 'Month'){
-    data <- arrange(data,Month)
+    data <-  plyr::arrange(data,Month)
     setDT(data)[, MA := rollmean(value, 10, na.pad = TRUE), by = .(Month)]
   }
   if(time == 'Season'){
-    data <- arrange(data,Season)
+    data <-  plyr::arrange(data,Season)
     setDT(data)[, MA := rollmean(value, 10, na.pad = TRUE), by = .(Season)]
   }
 
   return(data)
 
 }
-
 
 formatDataBP <- function(data, variable, time){
 
@@ -152,12 +124,10 @@ formatDataBP <- function(data, variable, time){
   return(data2)
 }
 
+format_data_WL <- function(data, future) {
 
-
-formatDataWL <- function(data, future) {
-
-  # need a numeric vector that 12 columsn long and then ppt, min_C, max_C, min_C again
-  DataC <- data[data$Year %in% c(1974:2013), ]
+  # need a numeric vector that 12 cols long and then ppt, min_C, max_C, min_C again
+  DataC <- data[data$Year %in% c(1980:2019), ]
   DataC <- DataC[DataC$GCM %in% 'Current', ]
   DataC <- DataC[DataC$variable %in% c('Precipitation (cm)', 'max_C', 'min_C'), ]
   DataC <- reshape2::dcast(DataC, Month ~ variable, value.var = "value", fun.aggregate = mean)
@@ -193,27 +163,24 @@ formatDataWL <- function(data, future) {
 
 }
 
-
-formatDataSM <- function(data, RCP) {
+format_data_SM <- function(data, RCP) {
 
   data <- data[data$variable %in% 'Soil Moisture (SWP, -MPa)', ]
-  MonthDF <- data.frame(Month = 1:12, Month2 =  c( 'January', 'February', 'March', 'April', 'May', 'June', 'July',
-   'August', 'September', 'October', 'November', 'December' ))
+  MonthDF <- data.frame(Month = 1:12,
+                        Month2 =  c( 'January', 'February', 'March',
+                                     'April', 'May', 'June', 'July',
+                                     'August', 'September', 'October',
+                                     'November', 'December' ))
   data <- suppressMessages(plyr::join(data.frame(data), MonthDF))
   
   data$Month2 <- factor(data$Month2, levels =c( 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                                                          'August', 'September', 'October', 'November', 'December'))
 
-  #data2 <- data[data$Year == 2015, ]
-  #data2 <- data2[data2$GCM == 'Current', ]
-  #data <- data[data$Year != 2015, ]
-  #data <- rbind(data, data2)
-
   # Subset by RCP
   eval(parse(text = paste0("data <- data[data$RCP %in% c('Current','", RCP, "'), ]")))
 
   # Get TPs
-  TP_DF <- data.frame(Year = c(1974:2013, 2020:2099), TP = c(rep('Current', 40), rep('Near',40), rep('Late', 40)))
+  TP_DF <- data.frame(Year = c(1980:2019, 2020:2099), TP = c(rep('Current', 40), rep('Near',40), rep('Late', 40)))
   data <- suppressMessages(plyr::join(TP_DF, data))
 
   DatGCM <- setDT(data)[,.(mean = mean(value)),
