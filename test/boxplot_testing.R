@@ -4,9 +4,9 @@
 #data2 <- data2[data2$GCM == 'Current', ]
 #data <- data[data$Year != 2015, ]
 #data <- rbind(data, data2)
-#data2 <- setDT(data)[,.(value = mean(value)),.(RCP, GCM, TP, Year, variable)]
+#data2 <- data.table::setDT(data)[,.(value = mean(value)),.(RCP, GCM, TP, Year, variable)]
 #write.csv(data2, "annualdummydata.csv", row.names = FALSE)
-#data2 <- setDT(data)[,.(value = mean(value)),.(RCP, GCM, TP, Year, Season, variable)]
+#data2 <- data.table::setDT(data)[,.(value = mean(value)),.(RCP, GCM, TP, Year, Season, variable)]
 #write.csv(data2, "seasonaldummydata.csv", row.names = FALSE)
 
 
@@ -29,7 +29,7 @@ Hist <- annual[annual$RCP2 == 'Historical', ]
 annual2 <- annual[!annual$RCP2 == 'Historical', ]
 annual2$GCM <- droplevels(annual2$GCM)
 
-annual2 <- annual2 %>% 
+annual2 <- annual2 %>%
   group_by(GCM) %>%
   mutate(med = median(value)) %>%
   arrange(GCM, med)
@@ -43,10 +43,10 @@ yaxis <- list(title =  paste(unique(droplevels(annual$variable))),
               showline = FALSE)
 
 # Current plot
-current <- plot_ly(data = Hist, y = ~value,  x = ~RCP2, showlegend = FALSE, 
-                   color = I('white'), type = 'violin') %>% 
+current <- plot_ly(data = Hist, y = ~value,  x = ~RCP2, showlegend = FALSE,
+                   color = I('white'), type = 'violin') %>%
   add_trace(box = list(visible = TRUE),line = list( color = 'black')) %>%
- 
+
   layout(yaxis = yaxis,
          xaxis = xaxis)
 
@@ -61,12 +61,12 @@ topText <- list(
   font = list(size = 16)
 )
 
-colors2 <- c( brewer.pal(11, 'Paired'))
+colors2 <- c(RColorBrewer::brewer.pal(11, 'Paired'))
 
-BOXPLOT <-  
+BOXPLOT <-
   plot_ly(annual2, x = ~RCP2, y = ~value, color = ~GCM, type = 'box',
           colors = 'Paired') %>%
-  add_trace(data = Hist, y = ~value,  x = ~RCP2, showlegend = FALSE, 
+  add_trace(data = Hist, y = ~value,  x = ~RCP2, showlegend = FALSE,
             color = I('white'), type = 'violin', box = list(visible = TRUE), line = list( color = 'black')) %>%
 
 layout(
@@ -74,7 +74,7 @@ layout(
        boxgap = 0.1,
        title = "Predicted Distribution of Future Values",
        yaxis = yaxis,
-       xaxis = xaxis, 
+       xaxis = xaxis,
        annotations = topText,
        legend = list(x = 100, y = 0.5),
        margin = list(top = 20),
@@ -82,7 +82,7 @@ layout(
          list(type = 'line', color = 'grey', opacity = .5, y0 = floor(yaxis[[2]][1]), y1 = ceiling(yaxis[[2]][2]), x0 =2.5, x1 = 2.5),
          list(type = 'line', color = 'black',  y0 = median(Hist$value), y1 = median(Hist$value), x0 = .5, x1 = 4.7))
        )
-                             
+
 
  BOXPLOT
 
@@ -99,15 +99,15 @@ p <- ggplot(annual, aes(RCP2, value, fill = fct_reorder(GCM, value, median)))+
   uniformTheme +
   theme(legend.position = "bottom",
         strip.background = element_rect(fill="white"),
-        strip.text = element_text(size =10)) 
+        strip.text = element_text(size =10))
 
 p
 
-ggplotly(p) %>% 
-  layout(boxmode = "group", 
+ggplotly(p) %>%
+  layout(boxmode = "group",
          title = "Distribution of Future Values",
          yaxis = yaxis,
-         xaxis = xaxis, 
+         xaxis = xaxis,
          annotations = topText)
 
 
@@ -122,7 +122,7 @@ levels(season$RCP2) <- c('Historical',  "RCP45 ", "RCP85 ", "RCP45", "RCP85")
 Hist <- season[season$RCP2 == 'Historical', ]
 season2 <- season[!season$RCP2 == 'Historical', ]
 
-season2 <- season2 %>% 
+season2 <- season2 %>%
   group_by(GCM, Season) %>%
   mutate(med = median(value)) %>%
   arrange(Season,GCM, med)
@@ -130,32 +130,32 @@ season2 <- season2 %>%
 summerHist <- Hist[Hist$Season == 'Summer', ]
 summerseason2 <-  season2[season2$Season == 'Summer', ]
 
-summer <- 
-  season2 %>% 
+summer <-
+  season2 %>%
   filter(Season == 'Summer') %>%
-  plot_ly() %>% 
+  plot_ly() %>%
   add_boxplot(data = summerHist, y = ~value,  x = ~RCP2, name = 'Historical', showlegend = FALSE,
               line = list(color = 'black'), marker = list(color = 'black')) %>%
   add_boxplot(data = season2, x = ~RCP2, y = ~value, color = ~GCM, legendgroup = ~GCM) %>%
-  layout(boxmode = "group", 
+  layout(boxmode = "group",
          boxgap = 0.2,
          title = "Distribution of Future Values by Season",
          yaxis = yaxis,
-         xaxis = xaxis, 
+         xaxis = xaxis,
          annotations = topText)
 
 
 winterHist <- Hist[Hist$Season == 'Winter', ]
 winterseason2 <-  season2[season2$Season == 'Winter', ]
-winter <- 
-  season2 %>% 
+winter <-
+  season2 %>%
   filter(Season == 'Winter') %>%
-  plot_ly() %>% 
+  plot_ly() %>%
   add_boxplot(data = winterHist, y = ~value,  x = ~RCP2, name = 'Historical', showlegend = FALSE,
               line = list(color = 'black'), marker = list(color = 'black')) %>%
   add_boxplot(data = season2, x = ~RCP2, y = ~value, color = ~GCM, showlegend = FALSE,
               legendgroup = ~GCM,  alignmentgroup = ~GCM) %>%
-  layout(boxmode = "group", 
+  layout(boxmode = "group",
          boxgap = 0.2,
          yaxis = yaxis,
          xaxis = xaxis
@@ -164,12 +164,12 @@ winter <-
 springHist <- Hist[Hist$Season == 'Spring', ]
 springseason2 <-  season2[season2$Season == 'Spring', ]
 
-spring <- plot_ly() %>% 
+spring <- plot_ly() %>%
   add_boxplot(data = springHist, y = ~value,  x = ~RCP2, name = 'Historical', showlegend = FALSE,
               line = list(color = 'black'), marker = list(color = 'black')) %>%
   add_boxplot(data = springseason2, x = ~RCP2, y = ~value, color = ~GCM, showlegend = FALSE,
               legendgroup = ~GCM, alignmentgroup = ~GCM) %>%
-  layout(boxmode = "group", 
+  layout(boxmode = "group",
          boxgap = 0.2,
          yaxis = yaxis,
          xaxis = xaxis
@@ -178,12 +178,12 @@ spring <- plot_ly() %>%
 fallHist <- Hist[Hist$Season == 'Fall', ]
 fallseason2 <-  season2[season2$Season == 'Fall', ]
 
-fall <- plot_ly() %>% 
+fall <- plot_ly() %>%
   add_boxplot(data = fallHist, y = ~value,  x = ~RCP2, name = 'Historical', showlegend = FALSE,
               line = list(color = 'black'), marker = list(color = 'black')) %>%
   add_boxplot(data = fallseason2, x = ~RCP2, y = ~value, color = ~GCM, showlegend = FALSE,
               legendgroup = ~GCM) %>%
-  layout(boxmode = "group", 
+  layout(boxmode = "group",
          boxgap = 0.2,
          yaxis = yaxis,
          xaxis = xaxis
@@ -216,7 +216,7 @@ p <- ggplot(season, aes(RCP2, value,  fill = GCM)) +
   facet_grid(Season ~ ., scales = 'free', space = 'free_x')
 
 p
-ggplotly(p) %>% 
+ggplotly(p) %>%
   layout(boxmode = "group")
 
 
@@ -255,13 +255,13 @@ p <- ggplot(annual, aes(RCP2, value, fill = fct_reorder(GCM, value, median))) +
   #bplots
   geom_boxplot(lwd=.8,position=position_dodge(.9)) +
   #shading and coloring
-  fillScale + 
+  fillScale +
   #other
   theme_bw()+
-  uniformTheme +   
-  theme(legend.position = "bottom", 
+  uniformTheme +
+  theme(legend.position = "bottom",
         strip.background = element_rect(fill="white"),
-        strip.text = element_text(size =10)) 
+        strip.text = element_text(size =10))
   #facet_grid(. ~ TP, scales = 'free', space = 'free_x')
 
 p
@@ -272,5 +272,3 @@ season <-read.csv("runSWwithUIs/seasonaldummydata.csv")
 season$TP <- factor(season$TP, levels =c ('Current','Near', 'Late'))
 season$scenario <- as.factor(paste(season$RCP, season$TP, season$GCM, sep="_"))
 season$Season <- factor(season$Season, levels = c('Winter', 'Spring', 'Summer', 'Fall'))
-
-                                     

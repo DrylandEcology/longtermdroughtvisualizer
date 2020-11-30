@@ -23,10 +23,10 @@ dataFut <- data[data$Year %in% c(2020:2099), ]
 TP_DF <- data.frame(Year = c(2020:2099), TP = c(rep('Near',40), rep('Late', 40)))
 dataFut <- suppressMessages(plyr::join(dataFut,TP_DF))
 
-DatGCM <- setDT(dataFut)[,.(mean = mean(value)),
+DatGCM <- data.table::setDT(dataFut)[,.(mean = mean(value)),
                              .(TP, RCP, GCM, Month, variable)]   
 
-DatEnsemb <- setDT(DatGCM)[,.(mean = mean(mean),
+DatEnsemb <- data.table::setDT(DatGCM)[,.(mean = mean(mean),
                                 median = median(mean),
                                 min = min(mean), #change ranks
                                 max = max(mean)),

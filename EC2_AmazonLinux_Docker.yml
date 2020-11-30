@@ -330,22 +330,9 @@ Resources:
            docker run -it \
               -p 3838:3838 \
               -v /srv/shinylog/:/var/log/shiny-server/ \
+              --mount source=/srv/shinylog/,target=/srv/shiny-server/ltdv/Data \
               ltdv
             #  -v "$(pwd)/shiny-app":/srv/shiny-server \
-              -v /srv/shinylog/:/var/log/shiny-server/ \
-              ltdv
-
-docker run --rm -p 3838:3838 \
-    -v /srv/shinyapps/:/srv/shiny-server/ \
-    -v /srv/shinylog/:/var/log/shiny-server/ \
-    rocker/shiny
-
-          docker run --user shiny -p 3838:3838 --rm rocker/shiny
-          docker run --user shiny -p 3838:3838   -v /srv/shinylog/:/var/log/shiny-server/ /usr/bin/shiny-server
-            # --mount source=/ltdv,target=/home/data
-          #docker run -t -i -p 3838:3838 -v "$(pwd)/shiny-app":/srv/shiny-server ltdv
-
-
           #docker run -dP --mount source=/ltdv,target=/home/data -v "$(pwd)/shiny-app":/srv/shiny-server/
 
           cd ../

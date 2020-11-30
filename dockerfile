@@ -13,12 +13,12 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
   libproj-dev \
   gdal-bin
 
-### INSTALL R PACKAGES ##################################################
+### INSTALL R PACKAGES ########################################################
 
-RUN ["install2.r", "shinydashboard", "leaflet", "ggplot2", "data.table", "ncdf4", "lubridate", "foreach", "doParallel", "RColorBrewer", "hexbin", "circular" ]
+RUN ["install2.r", "shinydashboard", "leaflet", "ggplot2", "data.table", "ncdf4", "lubridate", "foreach", "doParallel", "RColorBrewer", "hexbin", "circular", "zoo"]
 # hexbin is a dependecy of plotly
 # circular is a dependecy of rSW2utils
-#"Rcpp", "forcats", "raster", "RSQLite", "rgdal", "rgeos", "RCurl", "httr",, "rmarkdown"]
+#"Rcpp", "forcats", "raster", "RSQLite", "rgdal", "rgeos", "RCurl", "httr", "rmarkdown"]
 
 ### R Packages installed from source ------------------------------------------
 
@@ -30,11 +30,8 @@ RUN R -e 'install.packages("/usr/local/app/LTDV/Packages/rSW2utils.tar.gz", repo
 RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSOILWAT2
 RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSFSW2
 
-### COPY SHINY APP ###########################################################
-COPY ./shiny-app/ /srv/shiny-server/
-
-### MOUNT large dataset #######################################################
-VOLUME /usr/local/app/Data:/srv/shiny-server/Data
+### COPY SHINY APP ############################################################
+COPY ./shiny-app/ /srv/shiny-server/ltdv
 
 ### CHANGE PERMISSIONS TO SHINY FILES SO SHINY USER CAN ACCESS ################
 #https://serverfault.com/questions/772227/chmod-not-working-correctly-in-docker
@@ -55,12 +52,19 @@ RUN /bin/bash -c 'ls -la; chmod -R g+rw /opt/shiny-server/; ls -la'
 RUN /bin/bash -c 'ls -la; chown -R root:shiny /etc/shiny-server/; ls -la'
 RUN /bin/bash -c 'ls -la; chmod -R g+rw /etc/shiny-server/; ls -la'
 
-
 ### Usage instructions ########################################################
 
-# Build the images with docker
+# Build the images with docker ------
 # > cd /usr/local/app/LTDV
 # > docker build --tag ltdv .
+
+# Run with dockerfile ---------------
+#            docker run -it \
+#              -p 3838:3838 \
+#              -v /srv/shinylog/:/var/log/shiny-server/ \
+#              --mount type=bind,source=/usr/local/app/Data/,target=/srv/shiny-server/ltdv/Data/ \
+#              ltdv
+# then visit online at yourip:3838/ltdv
 
 # Build with docker compose
 

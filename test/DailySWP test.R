@@ -11,10 +11,10 @@ tail(data)
 TP_DF <- data.frame(Year = c(1976:2015, 2020:2099), TP = c(rep('Current', 40), rep('Near',40), rep('Late', 40)))
 data <- suppressMessages(plyr::join(TP_DF, data))
 
-DatGCM <- setDT(data)[,.(mean = mean(value)),
+DatGCM <- data.table::setDT(data)[,.(mean = mean(value)),
               .(TP, RCP, GCM, Day, variable)]   
 
-DatEnsemb <- setDT(DatGCM)[,.(mean = mean(mean),
+DatEnsemb <- data.table::setDT(DatGCM)[,.(mean = mean(mean),
                               median = median(mean),
                               min = min(mean), #change ranks
                               max = max(mean)),
