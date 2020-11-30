@@ -330,7 +330,7 @@ Resources:
            docker run -it \
               -p 3838:3838 \
               -v /srv/shinylog/:/var/log/shiny-server/ \
-              --mount source=/srv/shinylog/,target=/srv/shiny-server/ltdv/Data \
+              --mount type=bind,source=/usr/local/app/Data/,target=/srv/shiny-server/ltdv/Data/ \
               ltdv
             #  -v "$(pwd)/shiny-app":/srv/shiny-server \
           #docker run -dP --mount source=/ltdv,target=/home/data -v "$(pwd)/shiny-app":/srv/shiny-server/

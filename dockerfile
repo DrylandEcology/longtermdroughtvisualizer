@@ -28,7 +28,7 @@ RUN R CMD INSTALL /usr/local/app/LTDV/Packages/htmlwidgets
 RUN R CMD INSTALL --library= /usr/lib64/R/library /usr/local/app/LTDV/Packages/plotly
 RUN R -e 'install.packages("/usr/local/app/LTDV/Packages/rSW2utils.tar.gz", repos = NULL, type = "source")'
 RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSOILWAT2
-RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSFSW2
+# RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSFSW2
 
 ### COPY SHINY APP ############################################################
 COPY ./shiny-app/ /srv/shiny-server/ltdv
