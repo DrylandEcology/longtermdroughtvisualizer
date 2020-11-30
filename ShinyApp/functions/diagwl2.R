@@ -24,19 +24,19 @@ diagwl2 <- function (dat, RCP,
   ############## Subset necessary data  ####################
   ################################################################
   if(Year == 1) {
-    DataYearSub = setDT(DataYear)[Year == YearChoice, ]
+    DataYearSub = data.table::setDT(DataYear)[Year == YearChoice, ]
   }
     
   if(FUTURE50 == 1 || FUTURE90 ==1) {
     
     if(RCP == 'RCP45') {
-      DatEnsembSub <- setDT(DatEnsemb)[RCP == 'RCP45', ]
-      DatGCMSub <- setDT(DatGCM)[RCP == 'RCP45', ]
+      DatEnsembSub <- data.table::setDT(DatEnsemb)[RCP == 'RCP45', ]
+      DatGCMSub <- data.table::setDT(DatGCM)[RCP == 'RCP45', ]
     }
     
     if(RCP == 'RCP85') {
-      DatEnsembSub <- setDT(DatEnsemb)[RCP == 'RCP85', ]
-      DatGCMSub <- setDT(DatGCM)[RCP == 'RCP85', ]
+      DatEnsembSub <- data.table::setDT(DatEnsemb)[RCP == 'RCP85', ]
+      DatGCMSub <- data.table::setDT(DatGCM)[RCP == 'RCP85', ]
     }
     
     if(GCM == 1) {

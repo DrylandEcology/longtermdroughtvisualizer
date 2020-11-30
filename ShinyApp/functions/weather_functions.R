@@ -31,7 +31,7 @@ get_gridMET_data <- function(lat, lng, curr_year, dir) {
     
     # determine "data of last weather" here
     if(year == curr_year){
-      lastWeatherDate <- as.Date(length(vals), origin = paste0(currYear,"-01-01"))
+      lastWeatherDate <- as.Date(length(vals), origin = paste0(curr_year,"-01-01"))
     }
     
     wdata[wdata$Year == year, 'Tmax_C'][1:length(vals)] <- vals

@@ -1,25 +1,9 @@
 library(shiny)
 library(shinydashboard)
-library(leaflet)
-# analysis
-library(rSOILWAT2)
-library(doParallel)
-library(parallel)
 library(foreach)
-
-library(lubridate)
-library(zoo)
-library(data.table)
-library(sp)
-library(maps)
-library(maptools)
-# Plotting
 library(ggplot2)
-library(gridExtra)
-library(RColorBrewer)
-library(forcats)
-#library(gridGraphics)
 library(plotly)
+
 
 source('functions/set_execute_SW_functions.R')
 source('functions/getOutputs.R')
@@ -27,15 +11,15 @@ source('functions/MiscFunctions.R')
 source('functions/themes.R')
 source('functions/weather_functions.R')
 
-my_names <- list('BNU-ESM' = 'BNU-ESM', 
+my_names <- list('HadGEM2-CC365' = 'HadGEM2-CC365',
                  'CNRM-CM5' = 'CNRM-CM5',
-                 'CSIRO-Mk3-6-0' = 'CSIRO-Mk3-6-0',
+                 'MIROC5' = 'MIROC5',
                  'bcc-csm1-1' = 'bcc-csm1-1')
 
 my_colors <-  c("#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99", "#E31A1C",
                 "#FDBF6F", "#FF7F00", "#CAB2D6", "#6A3D9A", "#FFFF99")
 
-my_selected <- c('BNU-ESM', 
+my_selected <- c('HadGEM2-CC365',
                  'CNRM-CM5',
                  'CSIRO-Mk3-6-0',
                  'bcc-csm1-1')
@@ -99,10 +83,10 @@ server <- function(input, output, session) {
     begintime <- proc.time() # start timer clock
     #showModal(modalDialog("calculation running!"))
 
-    run$outs <- set_execute_SW(input$lat, input$lng, input$future, 
+    run$outs <- set_execute_SW(input$lat, input$lng, input$future,
                                  dir = "../../../www.northwestknowledge.net/metdata/data/",
                                  input$soils, input$sand, input$clay,
-                                 input$comp, input$trees, input$shrubs, 
+                                 input$comp, input$trees, input$shrubs,
                                  input$grasses, input$forbs, input$bg) # the actual calculation
 
     print(run$outs) #- What is the point of the run object. Do I need it? will I access
@@ -333,8 +317,8 @@ server <- function(input, output, session) {
     # Time Series controls ----------------------------------------------------------------------
     ## Years from slider input --------
     data2 <- data[data$Year %in% c(input$years[1]:input$years[2]), ]
-    dataTS <- formatDataTS(data = data2, variable = input$variables, time = input$times)
-    dataRM <- getroll(dataTS, input$times)
+    dataTS <- format_data_TS(data = data2, variable = input$variables, time = input$times)
+    dataRM <- get_roll(dataTS, input$times)
 
     # PLOTTING    --------------------------------------------------------------------------------
     if(input$times == 'Annual'){
@@ -385,7 +369,7 @@ server <- function(input, output, session) {
 
       # Var value from drop down / select Input - get variable ------------------------------------
       data <- data[data$variable %in% c(input$variables), ]
-      dataBP <- formatDataBP(data = data, variable = input$variables, time = input$times)
+      dataBP <- format_data_BP(data = data, variable = input$variables, time = input$times)
 
       dataBP$RCP2 <- paste(dataBP$RCP, dataBP$TP, sep = '_')
       dataBP$RCP2 <- factor(dataBP$RCP2, levels = c('Current_Current', "RCP45_Near", "RCP85_Near", "RCP45_Late", "RCP85_Late" ))
@@ -418,7 +402,7 @@ server <- function(input, output, session) {
                     zeroline = FALSE,
                     showline = FALSE)
 
-      colors2 <- c(brewer.pal(11, 'Paired'))
+      colors2 <- c(RColorBrewer::brewer.pal(11, 'Paired'))
 
             BOXPLOT <-
               plot_ly(dataBP2, x = ~RCP2, y = ~value, color = ~GCM, type = 'box',
@@ -458,7 +442,7 @@ server <- function(input, output, session) {
 
       # Var value from drop down / select Input - get variable ------------------------------------
       data <- data[data$variable %in% c(input$variables), ]
-      dataBP <- formatDataBP(data = data, variable = input$variables, time = input$times)
+      dataBP <- format_data_BP(data = data, variable = input$variables, time = input$times)
       dataBP$scenario <-  as.factor(paste(dataBP$RCP, dataBP$TP, dataBP$GCM, sep="_"))
       dataBP$TP <- factor(dataBP$TP, levels =c ('Current','Near', 'Late'))
       dataBP$Season <- factor(dataBP$Season, levels = c('Winter', 'Spring', 'Summer', 'Fall'))
@@ -506,7 +490,7 @@ server <- function(input, output, session) {
 
     dataSM2 <- dataSM[[2]][dataSM[[2]]$TP == 'Current',]
     print(summary(dataSM2))
-    
+
     dataSM2 <- rbind(dataSM2[1,], dataSM2, dataSM2[12,])
     dataSM2$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                          'August', 'September', 'October', 'November', 'December', 'December2')

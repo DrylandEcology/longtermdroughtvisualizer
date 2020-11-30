@@ -1,6 +1,10 @@
 FROM rocker/shiny-verse
 LABEL maintainer="candrews@usgs.com"
+
+### COPY SHINY SERVER CONFIGURATION FILE - NEED TO ACCESS THESE OUTSIDE OF DOCKER
 COPY longtermdroughtsimulator/shiny-server.conf /etc/shiny-server/shiny-server.conf
+
+### INSTALL Install system dependencies for R packages #########################
 
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
   && apt-get install -y libssl-dev  \
@@ -9,7 +13,14 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
   libproj-dev \
   gdal-bin
 
-RUN ["install2.r", "fastmatch", "iotools", "iotools", "Hmisc", "data.table", "gridExtra", "RColorBrewer", "Rcpp", "forcats", "Rcpp", "raster", "leaflet", "circular", "RSQLite", "rgdal", "rgeos", "ncdf4", "RCurl", "sp", "maps", "maptools", "shinydashboard", "httr", "hexbin", "rmarkdown", "zoo"]
+### INSTALL R PACKAGES ##################################################
+
+RUN ["install2.r", "shinydashboard", "leaflet", "ggplot2", "data.table", "ncdf4", "lubridate", "foreach", "doParallel", "RColorBrewer", "hexbin", "circular" ]
+# hexbin is a dependecy of plotly
+# circular is a dependecy of rSW2utils
+#"Rcpp", "forcats", "raster", "RSQLite", "rgdal", "rgeos", "RCurl", "httr",, "rmarkdown"]
+
+### R Packages installed from source ------------------------------------------
 
 COPY ./Packages /usr/local/app/LTDV/Packages
 
@@ -19,14 +30,18 @@ RUN R -e 'install.packages("/usr/local/app/LTDV/Packages/rSW2utils.tar.gz", repo
 RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSOILWAT2
 RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSFSW2
 
+### COPY SHINY APP ###########################################################
 COPY ./shiny-app/ /srv/shiny-server/
 
-VOLUME /usr/local/app/LTDV/Data:/srv/shiny-server/Data
+### MOUNT large dataset #######################################################
+VOLUME /usr/local/app/Data:/srv/shiny-server/Data
+
+### CHANGE PERMISSIONS TO SHINY FILES SO SHINY USER CAN ACCESS ################
+#https://serverfault.com/questions/772227/chmod-not-working-correctly-in-docker
+#https://support.rstudio.com/hc/en-us/articles/219044787-Root-requirements-for-Shiny-Server
 
 RUN usermod -aG shiny shiny
 
-#https://serverfault.com/questions/772227/chmod-not-working-correctly-in-docker
-#https://support.rstudio.com/hc/en-us/articles/219044787-Root-requirements-for-Shiny-Server
 RUN /bin/bash -c 'ls -la; chown -R root:shiny /srv/shiny-server/; ls -la'
 RUN /bin/bash -c 'ls -la; chmod -R g+rwx /srv/shiny-server/; ls -la'
 
@@ -39,3 +54,17 @@ RUN /bin/bash -c 'ls -la; chmod -R g+rw /opt/shiny-server/; ls -la'
 
 RUN /bin/bash -c 'ls -la; chown -R root:shiny /etc/shiny-server/; ls -la'
 RUN /bin/bash -c 'ls -la; chmod -R g+rw /etc/shiny-server/; ls -la'
+
+
+### Usage instructions ########################################################
+
+# Build the images with docker
+# > cd /usr/local/app/LTDV
+# > docker build --tag ltdv .
+
+# Build with docker compose
+
+
+# Look at image interactively to debug with
+
+# docker run -it --rm --entrypoint /bin/bash ltdv

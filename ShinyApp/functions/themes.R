@@ -32,7 +32,7 @@ x_DSMWL <- list(
   showgrid = FALSE,
   ticklen = 5,
   tickwidth = 1,
-  tickcolor = toRGB("black"),
+  tickcolor = plotly::toRGB("black"),
   linecolor = "black",
   linewidth = 0.5,
   #showticklabels = FALSE,
@@ -49,10 +49,10 @@ colors2 = c( '#FF7F50', '#99d594','#d53e4f','#3288bd')
 # Dail Soil Moisture theme
 legendbkrd <- adjustcolor(col = '#FFFFFF',alpha.f = 0)
 
-theme_DSM <- theme(legend.position = c(.855,0.125),
+theme_DSM <- ggplot2::theme(legend.position = c(.855,0.125),
                    legend.background = element_rect(fill = legendbkrd),
                    #legend.margin=unit(-0.6,"cm"),
                    legend.key.height=unit(0, "cm"),
                    legend.text=element_text(size=10,face='plain'))
 
-uniformTheme <- theme(panel.grid.minor = element_blank())
+uniformTheme <-  ggplot2::theme(panel.grid.minor = element_blank())
