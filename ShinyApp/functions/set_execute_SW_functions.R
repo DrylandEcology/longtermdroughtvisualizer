@@ -111,37 +111,37 @@ set_execute_SW <- function(lat, lng, futuresim,
     #source - https://climate.northwestknowledge.net/MACA/data_catalogs.php
     GCMs <- c( 'HadGEM2-CC365_r1i1p1_rcp45', 'bcc-csm1-1_r1i1p1_rcp45',
                'CNRM-CM5_r1i1p1_rcp45',  'MIROC5_r1i1p1_rcp45',
-               'NorESM1-M_r1i1p1_rcp45', 'GFDL-ESM2M_r1i1p1_rcp45',
-               'MRI-CGCM3_r1i1p1_rcp45', 'HadGEM2-ES365_r1i1p1_rcp45')
-               'CanESM2_r1i1p1_rcp45', 'CCSM4_r6i1p1_rcp45',
+               #'NorESM1-M_r1i1p1_rcp45', 'GFDL-ESM2M_r1i1p1_rcp45',
+               #'MRI-CGCM3_r1i1p1_rcp45', 'HadGEM2-ES365_r1i1p1_rcp45',
+               #'CanESM2_r1i1p1_rcp45', 'CCSM4_r6i1p1_rcp45',
+               'IPSL-CM5A-MR_r1i1p1_rcp45', 'CSIRO-Mk3-6-0_r1i1p1_rcp45',
+               'MIROC-ESM_r1i1p1_rcp45',
+               'HadGEM2-CC365_r1i1p1_rcp45', 'bcc-csm1-1_r1i1p1_rcp45',
+               'CNRM-CM5_r1i1p1_rcp45',  'MIROC5_r1i1p1_rcp45',
+               #'NorESM1-M_r1i1p1_rcp45', 'GFDL-ESM2M_r1i1p1_rcp45',
+               #'MRI-CGCM3_r1i1p1_rcp45', 'HadGEM2-ES365_r1i1p1_rcp45',
+               #'CanESM2_r1i1p1_rcp45', 'CCSM4_r6i1p1_rcp45',
                'IPSL-CM5A-MR_r1i1p1_rcp45', 'CSIRO-Mk3-6-0_r1i1p1_rcp45',
                'MIROC-ESM_r1i1p1_rcp45')
 
 
     indexes <- seq_along(GCMs)
 
-    cores <- 8
+    cores <- 14
     cl <- parallel::makeCluster(cores)
     doParallel::registerDoParallel(cl)
 
-    toEXPORT <- c('get_MACA_one_scenario', 'get_MACA_one_variable', 'get_output')
+    toEXPORT <- c('get_weath_and_run_future')
 
     AllVars <- foreach::foreach(g = indexes,
-                                .combine = rbind,
-                                .export = toEXPORT,
-                                .packages = c('lubridate', "data.table")) %dopar%
-    #foreach::`%dopar%`
+                                 .combine = rbind,
+                                 .export = toEXPORT,
+                                 .packages = c('lubridate', "data.table")) %dopar%
 
-      {
-        weath <- get_MACA_one_scenario(lat = lat, lng = lng2,
-                           url_main = 'http://thredds.northwestknowledge.net:8080/thredds/dodsC/agg_macav2metdata_',
-                           sc = GCMs[g])
-
-        sw_out2 <- rSOILWAT2::sw_exec(inputData = sw_in0,
-                                      weatherList = weath, quiet = FALSE)
-
-        cbind(do.call(get_output, list(sw_out2, soils_info, soils_info_avg,
-                                       Scenario = GCMs[g])))
+       {
+        rbind(do.call(get_weath_and_run_future, 
+                      list(g, lat, lng2, GCMs, sw_in0,
+                           soils_info, soils_info_avg)))
       }
 
     print(Sys.time())
@@ -234,4 +234,20 @@ set_comp <- function(sw_in, comp, trees, shrubs, grasses, forbs, bg, weath){
 
   return(sw_in)
 
+}
+
+get_weath_and_run_future <- function(g, lat, lng2, GCMs, sw_in0, 
+                                     soils_info, soils_info_avg) {
+  
+  weath <- get_MACA_one_scenario(lat = lat, lng = lng2,
+                                 url_main = 'http://thredds.northwestknowledge.net:8080/thredds/dodsC/agg_macav2metdata_',
+                                 sc = GCMs[g])
+
+  sw_out2 <- rSOILWAT2::sw_exec(inputData = sw_in0,
+                                weatherList = weath, quiet = FALSE)
+  
+  output <- get_output(sw_out2, soils_info, soils_info_avg,
+                       Scenario = GCMs[g])
+  
+  return(output)
 }
