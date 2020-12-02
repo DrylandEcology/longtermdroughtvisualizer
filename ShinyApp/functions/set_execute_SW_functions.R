@@ -108,14 +108,14 @@ set_execute_SW <- function(lat, lng, futuresim,
     # Runs 2: Parallel -  Future scenario data --------------------------------
     # --------------------------------------------------------------------------
     lng2 <- lng + 360
-
+    #source - https://climate.northwestknowledge.net/MACA/data_catalogs.php
     GCMs <- c( 'HadGEM2-CC365_r1i1p1_rcp45', 'bcc-csm1-1_r1i1p1_rcp45',
                'CNRM-CM5_r1i1p1_rcp45',  'MIROC5_r1i1p1_rcp45',
                'NorESM1-M_r1i1p1_rcp45', 'GFDL-ESM2M_r1i1p1_rcp45',
-               'MRI-CGCM3_r1i1p1_rcp45', 'HadGEM2-ES_r1i1p1_rcp45')
-              # 'CanESM2_r1i1p1_rcp45', 'CCSM4_r6i1p1_rcp45',
-               #'IPSL-CM5A-MR_r1i1p1_rcp45', 'CSIRO-Mk3-6-0_r1i1p1_rcp45',
-               #'MIROC-ESM_r1i1p1_rcp45')
+               'MRI-CGCM3_r1i1p1_rcp45', 'HadGEM2-ES365_r1i1p1_rcp45')
+               'CanESM2_r1i1p1_rcp45', 'CCSM4_r6i1p1_rcp45',
+               'IPSL-CM5A-MR_r1i1p1_rcp45', 'CSIRO-Mk3-6-0_r1i1p1_rcp45',
+               'MIROC-ESM_r1i1p1_rcp45')
 
 
     indexes <- seq_along(GCMs)

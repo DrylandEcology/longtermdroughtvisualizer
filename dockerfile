@@ -30,6 +30,9 @@ RUN R -e 'install.packages("/usr/local/app/LTDV/Packages/rSW2utils.tar.gz", repo
 RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSOILWAT2
 # RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSFSW2
 
+### CREATE VOLUME FOR LARGE DATASETS ##########################################
+VOLUME /srv/shiny-server/ltdv/Data/
+
 ### COPY SHINY APP ############################################################
 COPY ./shiny-app/ /srv/shiny-server/ltdv
 
@@ -59,16 +62,17 @@ RUN /bin/bash -c 'ls -la; chmod -R g+rw /etc/shiny-server/; ls -la'
 # > docker build --tag ltdv .
 
 # Run with dockerfile ---------------
-#            docker run -it \
-#              -p 3838:3838 \
-#              -v /srv/shinylog/:/var/log/shiny-server/ \
-#              --mount type=bind,source=/usr/local/app/Data/,target=/srv/shiny-server/ltdv/Data/ \
-#              ltdv
+# >           docker run -itd \
+# >              -p 3838:3838 \
+# >              -v /srv/shinylog/:/var/log/shiny-server/ \
+# >              -v /usr/local/app/Data/:/srv/shiny-server/ltdv/Data/ \
+# >              ltdv
 # then visit online at yourip:3838/ltdv
 
-# Build with docker compose
+# Build with docker compose -------------
 
 
-# Look at image interactively to debug with
+# to debug  ----------
+# > docker run -it --rm --entrypoint /bin/bash ltdv
 
-# docker run -it --rm --entrypoint /bin/bash ltdv
+# log files stored @ /srv/shinylog

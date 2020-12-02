@@ -84,7 +84,7 @@ server <- function(input, output, session) {
     #showModal(modalDialog("calculation running!"))
 
     run$outs <- set_execute_SW(input$lat, input$lng, input$future,
-                                 dir = ltdv/Data/WeatherData/www.northwestknowledge.net/metdata/data/",
+                                 dir = "Data/WeatherData/www.northwestknowledge.net/metdata/data/",
                                  input$soils, input$sand, input$clay,
                                  input$comp, input$trees, input$shrubs,
                                  input$grasses, input$forbs, input$bg) # the actual calculation
