@@ -163,16 +163,8 @@ format_data_WL <- function(data, future) {
 format_data_SM <- function(data, RCP) {
 
   data <- data[data$variable %in% 'Soil Moisture (SWP, -MPa)', ]
-  MonthDF <- data.frame(Month = 1:12,
-                        Month2 =  c( 'January', 'February', 'March',
-                                     'April', 'May', 'June', 'July',
-                                     'August', 'September', 'October',
-                                     'November', 'December' ))
-  data <- merge(data.frame(data), MonthDF)
-
-  data$Month2 <- factor(data$Month2, levels =c( 'January', 'February', 'March', 'April', 'May', 'June', 'July',
-                                                         'August', 'September', 'October', 'November', 'December'))
-
+  data$Month2 <- lubridate::month(data$Month, label = TRUE)
+  
   # Subset by RCP
   eval(parse(text = paste0("data <- data[data$RCP %in% c('Current','", RCP, "'), ]")))
 
@@ -180,18 +172,16 @@ format_data_SM <- function(data, RCP) {
   TP_DF <- data.frame(Year = c(1980:2019, 2020:2099), TP = c(rep('Current', 40), rep('Near',40), rep('Late', 40)))
   data <- merge(TP_DF, data)
 
-  DatGCM <- data.table::setDT(data)[,.(mean = mean(value)),
+  DatGCM <- data.table::setDT(data)[order(Month2),.(mean = mean(value)),
                         .(TP, RCP, GCM, Month, Month2, variable)]
 
-  DatEnsemb <- data.table::setDT(DatGCM)[,.(mean = mean(mean),
+  DatEnsemb <- data.table::setDT(DatGCM)[order(Month2),.(mean = mean(mean),
                                 median = median(mean),
                                 min = min(mean), #change ranks
                                 max = max(mean)),
                              .(TP, RCP, Month, Month2, variable)]
 
-
-  ### ysub for plotting
-  lowVal <- -8
+  lowVal <- -10
   ysub <- ceiling(min(DatEnsemb$median, na.rm = TRUE)) - 1
 
   if(ysub <= lowVal){

@@ -12,7 +12,7 @@
 #' @param bf logical. TRUE means future simulations will be executed.
 
 set_execute_SW <- function(lat, lng, futuresim,
-                           dir = "../../www.northwestknowledge.net/metdata/data/",
+                           dir ,
                            soils, sand = 33, clay = 33,
                            comp, trees = 0, shrubs = 0.5,
                            grasses = 0.5, forbs = 0, bg = 0,
@@ -116,13 +116,13 @@ set_execute_SW <- function(lat, lng, futuresim,
                #'CanESM2_r1i1p1_rcp45', 'CCSM4_r6i1p1_rcp45',
                'IPSL-CM5A-MR_r1i1p1_rcp45', 'CSIRO-Mk3-6-0_r1i1p1_rcp45',
                'MIROC-ESM_r1i1p1_rcp45',
-               'HadGEM2-CC365_r1i1p1_rcp45', 'bcc-csm1-1_r1i1p1_rcp45',
-               'CNRM-CM5_r1i1p1_rcp45',  'MIROC5_r1i1p1_rcp45',
+               'HadGEM2-CC365_r1i1p1_rcp85', 'bcc-csm1-1_r1i1p1_rcp85',
+               'CNRM-CM5_r1i1p1_rcp85',  'MIROC5_r1i1p1_rcp85',
                #'NorESM1-M_r1i1p1_rcp45', 'GFDL-ESM2M_r1i1p1_rcp45',
                #'MRI-CGCM3_r1i1p1_rcp45', 'HadGEM2-ES365_r1i1p1_rcp45',
                #'CanESM2_r1i1p1_rcp45', 'CCSM4_r6i1p1_rcp45',
-               'IPSL-CM5A-MR_r1i1p1_rcp45', 'CSIRO-Mk3-6-0_r1i1p1_rcp45',
-               'MIROC-ESM_r1i1p1_rcp45')
+               'IPSL-CM5A-MR_r1i1p1_rcp85', 'CSIRO-Mk3-6-0_r1i1p1_rcp85',
+               'MIROC-ESM_r1i1p1_rcp85')
 
 
     indexes <- seq_along(GCMs)
@@ -131,7 +131,8 @@ set_execute_SW <- function(lat, lng, futuresim,
     cl <- parallel::makeCluster(cores)
     doParallel::registerDoParallel(cl)
 
-    toEXPORT <- c('get_weath_and_run_future')
+    toEXPORT <- c('get_weath_and_run_future', 'get_MACA_one_scenario', 
+                  'get_MACA_one_variable', 'get_output')
 
     AllVars <- foreach::foreach(g = indexes,
                                  .combine = rbind,

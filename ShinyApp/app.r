@@ -485,7 +485,7 @@ server <- function(input, output, session) {
     dataWL2 <- dataWL[[1]]
 
     #  Soil Moisture Plot controls ---------------------------------------------
-    debug(format_data_SM)
+    #debug(format_data_SM)
     dataSM <- format_data_SM(data = data[[1]], RCP = input$RCP)
 
     dataSM2 <- dataSM[[2]][dataSM[[2]]$TP == 'Current',]
