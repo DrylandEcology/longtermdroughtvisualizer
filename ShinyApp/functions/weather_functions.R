@@ -29,9 +29,9 @@ get_gridMET_data <- function(lat, lng, curr_year, dir) {
     vals <- raster::extract(nc, matrix(c(lng, lat), ncol = 2))[1,]
 
     # determine "data of last weather" here
-    if(year == curr_year){
-      lastWeatherDate <- as.Date(length(vals), origin = paste0(curr_year,"-01-01"))
-    }
+   # if(year == curr_year){
+   #   lastWeatherDate <- as.Date(length(vals), origin = paste0(curr_year,"-01-01"))
+   # }
 
     wdata[wdata$Year == year, 'Tmax_C'][1:length(vals)] <- vals
   }
@@ -70,7 +70,7 @@ get_gridMET_data <- function(lat, lng, curr_year, dir) {
   wdata <- rSOILWAT2::dbW_dataframe_to_weatherData(
     wdata[,c('Year', 'DOY', 'Tmax_C', 'Tmin_C', 'PPT_cm')], round = 4)
 
-  return(list(wdata, lastWeatherDate))
+  return(list(wdata))
 }
 #https://climate.northwestknowledge.net/MACA/data_catalogs.php
 get_MACA_one_scenario_test <- function(lat, lng, url_main, sc) {

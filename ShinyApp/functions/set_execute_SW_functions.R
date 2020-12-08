@@ -12,11 +12,11 @@
 #' @param bf logical. TRUE means future simulations will be executed.
 
 set_execute_SW <- function(lat, lng, futuresim,
-                           dir ,
+                           dir,
                            soils, sand = 33, clay = 33,
                            comp, trees = 0, shrubs = 0.5,
                            grasses = 0.5, forbs = 0, bg = 0,
-                           verbose = TRUE){
+                           curr_year, verbose = TRUE){
 
   lat <- as.numeric(lat)
   lng <- as.numeric(lng)
@@ -24,13 +24,12 @@ set_execute_SW <- function(lat, lng, futuresim,
   sand <- as.numeric(sand)
   clay <- as.numeric(clay)
 
-  curr_year <- lubridate::year(Sys.Date())
   ################### ----------------------------------------------------------
   # Part 1 - Getting and formatting weather data for Current/Historical runs
   ################### ----------------------------------------------------------
   if(verbose) print(paste("Formatting Historical Weather Data", Sys.time()))
 
-  weath <- get_gridMET_data(lat, lng, curr_year,  dir)
+  weath <- get_gridMET_data(lat, lng, (curr_year - 1),  dir)
   #lastWeatherDate <- wdata[[2]]
   weath <- weath[[1]]
 
@@ -83,7 +82,7 @@ set_execute_SW <- function(lat, lng, futuresim,
   if(verbose) print(paste('Running Historical', Sys.time()))
 
   rSOILWAT2::swYears_StartYear(sw_in0) <- 1980
-  rSOILWAT2::swYears_EndYear(sw_in0) <- curr_year
+  rSOILWAT2::swYears_EndYear(sw_in0) <- (curr_year - 1)
 
   sw_out1 <- rSOILWAT2::sw_exec(inputData = sw_in0,
                                 weatherList = weath, quiet = FALSE)
@@ -101,9 +100,9 @@ set_execute_SW <- function(lat, lng, futuresim,
 
     if(verbose) print(paste('Running Futures', Sys.time()))
 
-    rSOILWAT2::swYears_StartYear(sw_in0) <- 2020
     rSOILWAT2::swYears_EndYear(sw_in0) <- 2099
-
+    rSOILWAT2::swYears_StartYear(sw_in0) <- 2020
+    
     # --------------------------------------------------------------------------
     # Runs 2: Parallel -  Future scenario data --------------------------------
     # --------------------------------------------------------------------------
@@ -168,10 +167,9 @@ set_execute_SW <- function(lat, lng, futuresim,
                                                       rep('Winter', 1)))
   #Variables
   VarDF <- data.frame(variable = c('Shallow', 'Intermediate', 'Deep',
-                                   'max_C', 'min_C', 'avg_C', 'ppt'),
+                                   'avg_C', 'ppt'),
                       variable2 = c('Shallow', 'Soil Moisture (SWP, -MPa)',
-                                    'Deep', 'max_C', 'min_C',
-                                    'Average Temperature (C)',
+                                    'Deep', 'Average Temperature (C)',
                                     'Precipitation (cm)'))
 
   AllVars2 <- merge(AllVars, SeasonsDF)

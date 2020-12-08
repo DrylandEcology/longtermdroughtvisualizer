@@ -15,7 +15,7 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
 
 ### INSTALL R PACKAGES ########################################################
 
-RUN ["install2.r", "shinydashboard", "leaflet", "ggplot2", "data.table", "ncdf4", "lubridate", "foreach", "doParallel", "RColorBrewer", "hexbin", "circular", "zoo"]
+RUN ["install2.r", "shinydashboard", "leaflet", "ggplot2", "data.table", "ncdf4", "lubridate", "foreach", "doParallel", "RColorBrewer", "hexbin", "circular", "zoo", "forcats"]
 # hexbin is a dependecy of plotly
 # circular is a dependecy of rSW2utils
 #"Rcpp", "forcats", "raster", "RSQLite", "rgdal", "rgeos", "RCurl", "httr", "rmarkdown"]

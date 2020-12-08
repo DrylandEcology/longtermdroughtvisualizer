@@ -21,8 +21,8 @@ get_output <- function(sw_out, soils_info, soils_info_avg,
       names(SWP)[3] <- 'variable'
 
       # Temperature
-      Temp <- data.table::data.table(sw_out@TEMP@Month)
-      Temp$surfaceTemp_C <- NULL
+      Temp <- data.table::data.table(sw_out@TEMP@Month)[,c('Year', 'Month',
+                                                           'avg_C')]
       Temp <- data.table::melt(Temp, id.vars = c('Year', 'Month'))
 
       PPT <- data.table::data.table(sw_out@PRECIP@Month)[,1:3]
@@ -44,27 +44,35 @@ get_output <- function(sw_out, soils_info, soils_info_avg,
   return(Vars)
 }
 
-format_data_TS <- function(data, variable, time){
+format_data_TS <- function(data, variable, time, curr_year) {
+  
+  if(!inherits(data, 'data.table')) data <- setDT(data)
+  
   #first subset just to historical/current!
-  data <- data[data$GCM == 'Current', ]
-  data <- data[data$Year <= 2013, ]
+  data <- data[Year <= curr_year & GCM == 'Current', ]
 
-  if(time == 'Season'){
+  if(time == 'Season') {
   # Get proper value - mean or sum - across TPs.
   if(variable == 'Precipitation (cm)'){
 
-    data2 <- data.table::setDT(data)[,.(value = sum(value)/10),.(Year, Season, variable)]
-  }else{
-    data2 <- data.table::setDT(data)[,.(value = mean(value)),.(Year, Season, variable)]
-  }
+    data2 <- data.table::setDT(data)[,.(value = sum(value)/10),
+                                     .(Year, Season, variable)]
+    
+  } else {
+    
+    data2 <- data.table::setDT(data)[,.(value = mean(value)),
+                                     .(Year, Season, variable)]
+    }
   }
 
-  if(time == 'Annual'){
+  if(time == 'Annual') {
     # Get proper value - mean or sum - across TPs.
-    if(variable == 'Precipitation (cm)'){
-      data2 <- data.table::setDT(data)[,.(value = sum(value)/10),.(Year, variable)]
-    }else{
-      data2 <- data.table::setDT(data)[,.(value = mean(value)),.(Year, variable)]
+    if(variable == 'Precipitation (cm)') {
+      data2 <- data.table::setDT(data)[,.(value = sum(value)/10),
+                                       .(Year, variable)]
+    } else {
+      data2 <- data.table::setDT(data)[,.(value = mean(value)),.
+                                       (Year, variable)]
     }
   }
 
@@ -74,14 +82,20 @@ format_data_TS <- function(data, variable, time){
 
 get_roll <- function(data, time){
 
-  if(time == 'Annual'){
-  data.table::setDT(data)[order(Year), MA := rollmean(value, 10, na.pad = TRUE)]
+  if(time == 'Annual') {
+  data.table::setDT(data)[order(Year), 
+                          MA := data.table::frollmean(value, 10,
+                                          align = 'center')]
   }
-  if(time == 'Month'){
-    data.table::setDT(data)[order(Month), MA := rollmean(value, 10, na.pad = TRUE), by = .(Month)]
+  if(time == 'Month') {
+    data.table::setDT(data)[order(Month), 
+                            MA := data.table::frollmean(value, 10,
+                                            align = 'center'), by = .(Month)]
   }
-  if(time == 'Season'){
-    data.table::setDT(data)[order(Season), MA := rollmean(value, 10, na.pad = TRUE), by = .(Season)]
+  if(time == 'Season') {
+    data.table::setDT(data)[order(Season), 
+                            MA := data.table::frollmean(value, 10,
+                                            align = 'center'), by = .(Season)]
   }
 
   return(data)
@@ -91,28 +105,28 @@ get_roll <- function(data, time){
 format_data_BP <- function(data, variable, time){
 
   #Step 1: Create TPs (Near: 2020 - 2059, 2060 - 2099) - Just data formatting, doesn't affect any aggreggations
-  TP_DF <- data.frame(Year = c(1974:2013,2020:2099), TP = c(rep('Current', 40), rep('Near',40), rep('Late', 40)))
-  data <- merge(TP_DF, data)
-  #data2 <- data[data$Year == 2015, ]
-  #data2 <- data2[data2$GCM == 'Current', ]
-  #data <- data[data$Year != 2015, ]
-  #data <- rbind(data, data2)
+  data$TP <- ifelse(data$Year <= 2059, 'Near', 'Late' )
+  data[data$GCM == 'Current', 'TP']  <-  'Current'
 
   if(time == 'Season'){
     # Get proper value - mean or sum - across TPs.
-    if(variable == 'Precipitation (cm)'){
-      data2 <- data.table::setDT(data)[,.(value = sum(value)/10),.(RCP, GCM, TP, Year, Season, variable)]
-    }else{
-      data2 <- data.table::setDT(data)[,.(value = mean(value)),.(RCP, GCM, TP, Year, Season, variable)]
+    if(variable == 'Precipitation (cm)') {
+      data2 <- data.table::setDT(data)[,.(value = sum(value)/10), 
+                                       .(RCP, GCM, TP, Year, Season, variable)]
+    } else {
+      data2 <- data.table::setDT(data)[,.(value = mean(value)), 
+                                       .(RCP, GCM, TP, Year, Season, variable)]
     }
   }
 
   if(time == 'Annual'){
     # Get proper value - mean or sum - across TPs.
     if(variable == 'Precipitation (cm)'){
-      data2 <- data.table::setDT(data)[,.(value = sum(value)/10),.(RCP, GCM, TP, Year, variable)]
-    }else{
-      data2 <- data.table::setDT(data)[,.(value = mean(value)),.(RCP, GCM, TP, Year, variable)]
+      data2 <- data.table::setDT(data)[,.(value = sum(value)/10),
+                                       .(RCP, GCM, TP, Year, variable)]
+    } else {
+      data2 <- data.table::setDT(data)[,.(value = mean(value)), 
+                                       .(RCP, GCM, TP, Year, variable)]
     }
   }
   data2$scenario <-  as.factor(paste(data2$RCP, data2$TP, data2$GCM, sep="_"))
@@ -123,73 +137,69 @@ format_data_BP <- function(data, variable, time){
 
 format_data_WL <- function(data, future) {
 
-  # need a numeric vector that 12 cols long and then ppt, min_C, max_C, min_C again
-  DataC <- data[data$Year %in% c(1980:2019), ]
-  DataC <- DataC[DataC$GCM %in% 'Current', ]
-  DataC <- DataC[DataC$variable %in% c('Precipitation (cm)', 'max_C', 'min_C'), ]
-  DataC <- reshape2::dcast(DataC, Month ~ variable, value.var = "value", fun.aggregate = mean)
-  names(DataC)[4] <- 'PPT'
-  DataC$Temp <- rowMeans(DataC[,2:3])
-
-  DataC <- rbind(DataC[1,], DataC, DataC[12,])
-  DataC$Month2 <- c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
-                                     'August', 'September', 'October', 'November', 'December', 'December2')
-  DataC$Month2 <- factor(DataC$Month2, levels =c('January1', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
-                                                   'August', 'September', 'October', 'November', 'December', 'December2'))
-
-
-  if(future == 1) {
-    ##### Future data
-    dataFut <- data[data$Year %in% c(2020:2099), ]
-    TP_DF <- data.frame(Year = c(2020:2099), TP = c(rep('Near',40), rep('Late', 40)))
-    dataFut <- merge(dataFut, TP_DF)
-
-    DatGCM <- data.table::setDT(dataFut)[,.(mean = mean(value)),
-                          .(TP, RCP, GCM, Month, variable)]
-
-    DatEnsemb <- data.table::setDT(DatGCM)[,.(mean = mean(mean),
-                                median = median(mean),
-                                min = min(mean), #change ranks
-                                max = max(mean)),
-                             .(TP, RCP, Month, variable)]
-
-    return(list(DataC, DatGCM, DatEnsemb))
-  } else {
-    return(list(DataC))
-  }
-
-}
-
-format_data_SM <- function(data, RCP) {
-
-  data <- data[data$variable %in% 'Soil Moisture (SWP, -MPa)', ]
-  data$Month2 <- lubridate::month(data$Month, label = TRUE)
+  if(!inherits(data, 'data.table')) data <- setDT(data)
   
-  # Subset by RCP
-  eval(parse(text = paste0("data <- data[data$RCP %in% c('Current','", RCP, "'), ]")))
-
-  # Get TPs
-  TP_DF <- data.frame(Year = c(1980:2019, 2020:2099), TP = c(rep('Current', 40), rep('Near',40), rep('Late', 40)))
-  data <- merge(TP_DF, data)
-
-  DatGCM <- data.table::setDT(data)[order(Month2),.(mean = mean(value)),
-                        .(TP, RCP, GCM, Month, Month2, variable)]
-
-  DatEnsemb <- data.table::setDT(DatGCM)[order(Month2),.(mean = mean(mean),
-                                median = median(mean),
-                                min = min(mean), #change ranks
-                                max = max(mean)),
-                             .(TP, RCP, Month, Month2, variable)]
-
+  # Sub  extremely low SWP values to lower lim -------------------------------
   lowVal <- -10
-  ysub <- ceiling(min(DatEnsemb$median, na.rm = TRUE)) - 1
-
+  ysub <- min(data[variable %in% c('Soil Moisture (SWP, -MPa)'), value])
+  
   if(ysub <= lowVal){
-    DatEnsemb$median <- ifelse(DatEnsemb$median <= lowVal,lowVal, DatEnsemb$median)
-    ysub <- lowVal
+    data.table::set(data, 
+        i = which(data[variable %in% c('Soil Moisture (SWP, -MPa)'), 'value']
+                  <= lowVal), j = 'value',  value = lowVal)  
   }
+  
+  # Grab monthly temperature and precipitation values from hist scenario
+  DataC <- data[Year %in% c(1980:2019) & GCM == 'Current' &
+                  variable  %in% c('Precipitation (cm)', 
+                                   'Average Temperature (C)', 
+                                   'Soil Moisture (SWP, -MPa)'), ]
 
-  ### return
-  return(list(DatGCM, DatEnsemb, ysub))
+  # format for WL calc
+  DataC <- data.table::dcast(DataC, Month ~ variable, value.var = "value", 
+                             fun.aggregate = mean)
+  
+  t_idx <- grep('Temperature', names(DataC))
+  names(DataC)[t_idx] <- 'Temp'
+  
+  p_idx <- grep('Precipitation', names(DataC))
+  names(DataC)[p_idx] <- 'PPT'
+  
+  s_idx <- grep('Soil', names(DataC))
+  names(DataC)[s_idx] <- 'SWP'
+  
+  ## need a numeric vector that is 14 rows long - Jan appended to the top and
+  ### December to the bottom
+  DataC <- rbind(DataC[1,], DataC, DataC[12,])
+  DataC$Month[c(1,14)] <- c(.5, 12.5)
+
+  ## IF future is true, format for WL
+  if(future == 1) {
+
+    dataFut <- data[Year %in% c(2020:2099) & RCP != 'Current' &
+                      variable %in% c('Precipitation (cm)', 
+                                      'Average Temperature (C)',
+                                      "Soil Moisture (SWP, -MPa)"), ]
+    
+    dataFut$TP <- ifelse(dataFut$Year %in% 2020:2059, 'Near', 'Late')
+
+    DatGCM <- data.table::setDT(dataFut)[order(Month),
+                                         .(mean = mean(value)),
+                                         .(TP, RCP, GCM, Month, variable)]
+    
+    DatEnsemb <- data.table::setDT(DatGCM)[order(Month),
+                                           .(mean = mean(mean),
+                                             median = median(mean),
+                                             min = min(mean), #change ranks
+                                             max = max(mean)),
+                                           .(TP, RCP, Month, variable)]
+    
+    return(list(DataC, DatGCM, DatEnsemb))
+    
+  } else {
+    
+    return(list(DataC))
+    
+  }
 
 }
