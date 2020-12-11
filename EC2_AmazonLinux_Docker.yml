@@ -325,7 +325,7 @@ Resources:
           #https://support.rstudio.com/hc/en-us/articles/219044787-Root-requirements-for-Shiny-Server
 
           # run
-          docker run -it \
+          docker run -itd \
              -p 3838:3838 \
              -v /srv/shinylog/:/var/log/shiny-server/ \
              -v /usr/local/app/Data/:/srv/shiny-server/ltdv/Data/ \

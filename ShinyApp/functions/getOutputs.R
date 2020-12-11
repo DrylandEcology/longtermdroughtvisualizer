@@ -35,12 +35,19 @@ get_output <- function(sw_out, soils_info, soils_info_avg,
       #   Vars2 <- Vars[Year != curr_year && Month != curr_month, ]
 
       # Details -------------------------------------------------------------
-      Vars$GCM <-  if(Scenario == 'Current') 'Current' else substr(Scenario, 1, (nchar(Scenario) - 13))
-      Vars$RCP <- if(Scenario == 'Current') 'Current'else substr(Scenario, (nchar(Scenario) - 4), nchar(Scenario))
-    } else {
+      Vars$GCM <-  if(Scenario == 'Current') 'Current' else 
+        substr(Scenario, 1, (nchar(Scenario) - 13))
+      Vars$RCP <- if(Scenario == 'Current') 'Current' else 
+        substr(Scenario, (nchar(Scenario) - 4), nchar(Scenario))
+    
+      # Remove initialization year
+      min_year <- min(Vars$Year)
+
+      Vars <- Vars[Year != min_year, ]
+      } else {
       stop('SW output error')
     }
-
+  
   return(Vars)
 }
 

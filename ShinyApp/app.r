@@ -7,17 +7,15 @@ library(plotly)
 
 source('functions/set_execute_SW_functions.R')
 source('functions/getOutputs.R')
-source('functions/MiscFunctions.R')
 source('functions/themes.R')
 source('functions/weather_functions.R')
 
-my_names <- list('HadGEM2-CC365' = 'HadGEM2-CC',
+my_names <- list('HadGEM2-CC' = 'HadGEM2-CC365',
                  'CNRM-CM5' = 'CNRM-CM5',
-                 #'MIROC5' = 'MIROC5',
+                 'MIROC5' = 'MIROC5',
                  'bcc-csm1-1' = 'bcc-csm1-1',
-                 'HadGEM2-ES365' = 'HadGEM2-ES',
-                 'CanESM2' = 'CanESM2',
-                 'CCSM4' = 'CCSM4',
+                 'MIROC-ESM' = 'MIROC-ESM',
+                 'CSIRO-Mk3-6-0' = 'CSIRO-Mk3-6-0',
                  'IPSL-CM5A-MR' = 'IPSL-CM5A-MR'
                  )
 
@@ -25,8 +23,9 @@ my_colors <-  c("#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99", "#E31A1C"
                 "#FDBF6F", "#FF7F00", "#CAB2D6", "#6A3D9A", "#FFFF99")
 
 my_selected <- c('HadGEM2-CC365', 'CNRM-CM5',
-                  'bcc-csm1-1', 'HadGEM2-ES',
-                  'CanESM2', 'CCSM4', 'IPSL-CM5A-MR')
+                'bcc-csm1-1', 'HadGEM2-ES',
+                'CanESM2', 'CCSM4', 
+                 'IPSL-CM5A-MR')
 
 
 ui <- fluidPage(
@@ -321,15 +320,16 @@ server <- function(input, output, session) {
     data_WL_SM <- format_data_WL(data = data, future = input$future)
     data_WL_SM_curr <- data_WL_SM[[1]]
 
-    y_SM <- list( # Need this year because range argument can't be populated until now
-      title = "soil water potential (-MPa)",
-      range = c(-4, 0),
-      showgrid = FALSE,
-      linecolor = "black",
-      linewidth = 0.5)
-
     # PLOTTING    --------------------------------------------------------------
     if(input$future == 2){
+      
+      mSWP <- min(data_WL_SM_curr$SWP)
+      y_SM <- list( # Need this year because range argument can't be populated until now
+        title = "soil water potential (-MPa)",
+        range = c(mSWP + (.5 * mSWP), 0),
+        showgrid = FALSE,
+        linecolor = "black",
+        linewidth = 0.5)
 
       # Walter-Leith Plot ----------------------------------
       topTextWL <- list(
@@ -381,6 +381,13 @@ server <- function(input, output, session) {
 
       data_WL_SM_fut_ensemble_format <-
         format_future_WL_plotly(data_WL_SM_fut_ensemble)
+      
+      y_SM <- list( # Need this year because range argument can't be populated until now
+        title = "soil water potential (-MPa)",
+        range = c(min(data_WL_SM_fut_ensemble_format$SWP), 0),
+        showgrid = FALSE,
+        linecolor = "black",
+        linewidth = 0.5)
 
       topTextWL <- list(
         x = rep(c(2.4, 10.5),3),

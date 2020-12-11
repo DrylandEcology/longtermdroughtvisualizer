@@ -2,7 +2,7 @@
 #'
 #'  @param lat latitude. degrees_north
 #'  @param lng longitude. degrees_west + 360
-#'  @param dir currYear path to where gridMET data is stored.
+#'  @param curr_year numeric.
 #'  @param dir path. path to where gridMET data is stored.
 #'
 #'  @return data.frame
@@ -70,31 +70,9 @@ get_gridMET_data <- function(lat, lng, curr_year, dir) {
   wdata <- rSOILWAT2::dbW_dataframe_to_weatherData(
     wdata[,c('Year', 'DOY', 'Tmax_C', 'Tmin_C', 'PPT_cm')], round = 4)
 
-  return(list(wdata))
+  return(wdata)
 }
 #https://climate.northwestknowledge.net/MACA/data_catalogs.php
-get_MACA_one_scenario_test <- function(lat, lng, url_main, sc) {
-
-  # Make data.frame of just years and days -------------------------------------------
-  wdata_fut<- data.frame(Date = seq(from = as.Date('2020-01-01'),
-                                    to = as.Date('2099-12-31'), by="day"))
-  wdata_fut$Year <- lubridate::year(wdata_fut$Date)
-  wdata_fut$DOY <- lubridate::yday(wdata_fut$Date)
-
-  #  test ----------------------------------------------------------------
-  url_one_scenario <- paste0(url_main, 'tasmax_', sc, '_2006_2099_CONUS_daily.nc')
-  nc <- suppressWarnings( raster::brick(url_one_scenario, varname = 'air_temperature'))
-  vals <- raster::extract(nc, matrix(c(lng, lat), ncol = 2))[1,]
-
-  url_one_scenario <- paste0(url_main, 'tasmin_', sc, '_2006_2099_CONUS_daily.nc')
-  nc <- suppressWarnings( raster::brick(url_one_scenario, varname = 'air_temperature'))
-  vals <-  raster::extract(nc, matrix(c(lng, lat), ncol = 2))[1,]
-
-  url_one_scenario <- paste0(url_main, 'pr_', sc, '_2006_2099_CONUS_daily.nc')
-  nc <- suppressWarnings( raster::brick(url_one_scenario, varname = 'precipitation'))
-  vals <-  raster::extract(nc, matrix(c(lng, lat), ncol = 2))[1,]
-
-}
 
 #' get and organize MACA data for one site and scenario
 #'
@@ -108,10 +86,8 @@ get_MACA_one_scenario_test <- function(lat, lng, url_main, sc) {
 get_MACA_one_scenario <- function(lat, lng, url_main, sc) {
 
   print(sc)
-  lng <- -112.2 + 360
-
   # Make data.frame of just years and days -------------------------------------------
-  wdata_fut<- data.frame(Date = seq(from = as.Date('2020-01-01'),
+  wdata_fut <- data.frame(Date = seq(from = as.Date('2019-01-01'),
                                  to = as.Date('2099-12-31'), by="day"))
   wdata_fut$Year <- lubridate::year(wdata_fut$Date)
   wdata_fut$DOY <- lubridate::yday(wdata_fut$Date)
@@ -160,7 +136,8 @@ get_MACA_one_variable <- function(nc, lat, lng, variable) {
   lng <- as.numeric(lng)
 
   v3 <- nc$var[[1]] ## NOTE: FILE DIMENSIONS ARE lon,lat,time
-  endcount <- v3$varsize[3]
+  time_endcount <- v3$varsize[3] # last day of records
+  time_begincount <- 4749 # number of days between 2006-01-01 and 2019-01-01. 
 
   # find the lat and long index -----------------------------------------------
   all_lng <- ncdf4::ncvar_get(nc, "lon")
@@ -170,16 +147,14 @@ get_MACA_one_variable <- function(nc, lat, lng, variable) {
   lat_idx <- which.min(abs(all_lat - lat))
 
   # get variable data ---------------------------------------------------------
-
   data <- ncdf4::ncvar_get(nc, variable,
-                           start=c(lng_idx, lat_idx, 1),
-                           count=c(1, 1, endcount))
-
+                           start = c(lng_idx, lat_idx, time_begincount),
+                           count = c(1, 1, time_endcount - time_begincount + 1))
+  
   # get time data -------------------------------------------------------------
-  Date <- ncdf4::ncvar_get(nc, "time", start=c(1),count=c(endcount))
-  ##note: assumes leap years!
-  ### http://stat.ethz.ch/R-manual/R-patched/library/base/html/as.Date.html
-  Date = as.Date(Date, origin="1900-01-01")
+  Date <- ncdf4::ncvar_get(nc, "time", start = time_begincount, 
+                           count = (time_endcount  - time_begincount + 1))
+  Date <- as.Date(Date, origin= "1900-01-01")  ##note: assumes leap years!
 
   # format and organize --------------------------------------------------------
   if(variable == 'precipitation') {

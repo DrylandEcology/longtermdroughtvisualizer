@@ -10,12 +10,12 @@ curr_year <- lubridate::year(Sys.Date())
 data <- fread('~/Documents/Git/longtermdroughtsimulator/test/AllData.csv')
 
 #debugonce(format_data_WL)
-data_WL_SM <- format_data_WL(data = data, future = 1, curr_year = curr_year)
+data_WL_SM <- format_data_WL(data = AllVars2, future = 2)
 data_WL_SM_curr <- data_WL_SM[[1]]
 
 y_SM <- list( # Need this year because range argument can't be populated until now
     title = "soil water potential (-MPa)",
-    range = c(-8, 0),
+    range = c(min(data_WL_SM_curr$SWP), 0),
     showgrid = FALSE,
     linecolor = "black",
     linewidth = 0.5)
