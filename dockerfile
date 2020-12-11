@@ -15,10 +15,10 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
 
 ### INSTALL R PACKAGES ########################################################
 
-RUN ["install2.r", "shinydashboard", "leaflet", "ggplot2", "data.table", "ncdf4", "lubridate", "foreach", "doParallel", "RColorBrewer", "hexbin", "circular", "zoo", "forcats"]
+RUN ["install2.r", "shinydashboard", "leaflet", "ggplot2", "data.table", "ncdf4", "lubridate", "foreach", "doParallel", "RColorBrewer", "hexbin", "circular", "zoo", "forcats", "rgeos", "soilDB"]
 # hexbin is a dependecy of plotly
 # circular is a dependecy of rSW2utils
-#"Rcpp", "forcats", "raster", "RSQLite", "rgdal", "rgeos", "RCurl", "httr", "rmarkdown"]
+# rgeos and soilDB for soils in rSW2exter
 
 ### R Packages installed from source ------------------------------------------
 
@@ -27,8 +27,11 @@ COPY ./Packages /usr/local/app/LTDV/Packages
 RUN R CMD INSTALL /usr/local/app/LTDV/Packages/htmlwidgets
 RUN R CMD INSTALL --library= /usr/lib64/R/library /usr/local/app/LTDV/Packages/plotly
 RUN R -e 'install.packages("/usr/local/app/LTDV/Packages/rSW2utils.tar.gz", repos = NULL, type = "source")'
+RUN R -e 'install.packages("/usr/local/app/LTDV/Packages/rSW2st.tar.gz", repos = NULL, type = "source")'
+RUN R -e 'install.packages("/usr/local/app/LTDV/Packages/rSW2Data.tar.gz", repos = NULL, type = "source")'
+RUN R -e 'install.packages("/usr/local/app/LTDV/Packages/rSW2exter.tar.gz", repos = NULL, type = "source")'
+
 RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSOILWAT2
-# RUN R CMD INSTALL /usr/local/app/LTDV/Packages/rSFSW2
 
 ### CREATE VOLUME FOR LARGE DATASETS ##########################################
 VOLUME /srv/shiny-server/ltdv/Data/

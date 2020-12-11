@@ -251,15 +251,24 @@ Resources:
           mkdir Packages
 
           # clone  rSOILWAT2
-          git clone -b master --single-branch --recursive https://github.com/DrylandEcology/rSOILWAT2.git Packages/rSOILWAT2
-
-          # clone  rSFSW2
-          git clone -b feature_CDIfixes --single-branch https://github.com/DrylandEcology/rSFSW2.git Packages/rSFSW2
+          git clone -b reorganize_rSW2 --single-branch --recursive https://github.com/DrylandEcology/rSOILWAT2.git Packages/rSOILWAT2
 
           # clone ‘rSW2utils’
           cd Packages
           wget --no-check-certificate https://github.com/DrylandEcology/rSW2utils/archive/master.tar.gz
           mv master.tar.gz rSW2utils.tar.gz
+
+          # clone ‘rSW2data’
+          wget --no-check-certificate https://github.com/DrylandEcology/rSW2Data/archive/master.tar.gz
+          mv master.tar.gz rSW2Data.tar.gz
+
+          # clone ‘rSW2st’
+          wget --no-check-certificate https://github.com/DrylandEcology/rSW2st/archive/master.tar.gz
+          mv master.tar.gz rSW2st.tar.gz
+
+          # clone ‘rSW2exter’
+          wget --no-check-certificate https://github.com/DrylandEcology/rSW2exter/archive/master.tar.gz
+          mv master.tar.gz rSW2exter.tar.gz
 
           #plotly
           git clone 'https://github.com/ropensci/plotly'
@@ -290,13 +299,7 @@ Resources:
           wget -r -l1 -np "https://www.northwestknowledge.net/metdata/data" -P . -A "pr_*.nc"
 
           cd ../../LTDV
-          # --------------------------------------------------------------------
-          #  Shiny proxy set up
-          # --------------------------------------------------------------------
-          #yum install java-1.8.0-openjdk
-          #cd ../
-          #wget https://www.shinyproxy.io/downloads/shinyproxy-2.4.1.jarD
-
+         
           # --------------------------------------------------------------------
           # Docker !
           # --------------------------------------------------------------------
