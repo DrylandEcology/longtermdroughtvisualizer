@@ -240,7 +240,7 @@ function validateInputs(){
     "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Silt: <span id='imp'>" + silt + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span></pre><br><br>";
   }
   else{
-    soilsTxt = "<pre>Soils composition will be obtained from ISRIC dataset</pre>";
+    soilsTxt = "<pre>Soils composition will be obtained from gSSURGO dataset</pre>";
 
   }
   if (chooseComp == 2){
@@ -293,10 +293,10 @@ function sendToR(){
       "</span><br>Sand: <span id='imp'>" + sand + "</span><br>Clay: <span id='imp'>" + clay + "</span><br>Silt: <span id='imp'>" + silt + "</span><br>Type: <span id='imp'>" + calcSoilType(sand, clay, silt) + "</span></pre><br><br>";
     }
     else{
-      soilsTxt = "<pre>Obtaining soils composition from ISRIC dataset</pre>";
+      soilsTxt = "<pre>Obtaining soils composition from gSSURGO dataset</pre>";
     }
     if (chooseComp == 2){
-      compTxt = "<pre>   Vegetation composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
+      compTxt = "<pre> Vegetation composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
                 "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
                 "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span></pre><br>";
     }
@@ -313,40 +313,24 @@ function sendToR(){
     // Give the user feedback in realtime
     // given the async nature of javascript, time should be absolute not relative
     if (calcFutures == 1){
-      if (chooseSoils == 2){
-        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 5000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 10000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Simulating future ecohydrology...", true)}, 25000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 80000, 1);
-        repeatWithTimer(function(){toggleSimButtonActive()}, 80000, 1);
-      }
-      else{
-        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Obtaining Soils...", true)}, 10000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 15000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 20000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Simulating future ecohydrology...", true)}, 35000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 90000, 1);
-        repeatWithTimer(function(){toggleSimButtonActive()}, 90000, 1);
-      }
+      repeatWithTimer(function(){changeFeedbackText("Formatting inputs...", true)}, 2500, 1);
+      repeatWithTimer(function(){changeFeedbackText("Gathering historical climatology...", true)}, 5000, 1);
+      repeatWithTimer(function () { changeFeedbackText("Simulating historical ecohydrology...", true); }, 10000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Gathering future climatology...", true)}, 15000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Gathering future climatology...", true)}, 45000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Gathering future climatology...", true)}, 75000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Gathering future climatology...", true)}, 105000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Gathering future climatology...", true)}, 135000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Gathering future climatology...", true)}, 165000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Gathering future climatology...", true)}, 195000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Gathering of climate data is taking longer than usual. Rest assurred the app is still working.", true)}, 230000, 1);
     }
     else if (calcFutures == 2){
-      if (chooseSoils == 2){
-        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 10000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 15000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 20000, 1);
-        repeatWithTimer(function(){toggleSimButtonActive()}, 20000, 1);
-      }
-      else{
-        repeatWithTimer(function(){changeFeedbackText("Gathering Inputs...", true)}, 5000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Obtaining Soils...", true)}, 10000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Setting up simulation infrastructure...", true)}, 15000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 20000, 1);
-        repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 25000, 1);
-        repeatWithTimer(function(){toggleSimButtonActive()}, 25000, 1);
-      }
+      repeatWithTimer(function(){changeFeedbackText("Formatting inputs...", true)}, 2500, 1);
+      repeatWithTimer(function(){changeFeedbackText("Gathering historical climatology...", true)}, 5000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Simulating historical ecohydrology...", true)}, 10000, 1);
+      repeatWithTimer(function(){changeFeedbackText("Formatting results...", true)}, 15000, 1);
+      repeatWithTimer(function(){toggleSimButtonActive()}, 15000, 1);
     }
   }
 }

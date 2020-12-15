@@ -80,8 +80,7 @@
                     <p>
                     Location is designated as coordinates (lat, long) in the WGS84 coordinate reference system. <br><br>
                     Select your location by either clicking on the map or by entering coordinates into the latitude and
-                    longitude boxes provided.<br><br>
-                    <i>Note: Currently, only locations in Arizona, New Mexico, Colorado, and Utah are operational.</i>
+                    longitude boxes provided.
                   </p>
                   </div>
                 </div>
@@ -90,12 +89,16 @@
                   <div class="accordionItemContent">
                     <!-- Dropdown expanded text (text you see pop down when you click the dropdown)-->
                     <p>
-                      Users have the option of selecting to simulate long-term historical (1916 – 2013) patterns of
+                      Users have the option of selecting to simulate long-term historical (1979 – 2019) patterns of
                       water availability alone or to simulate both historical and future (2020 – 2099) water availability.
-                      Future simulations occur for 11 different general circulation models (GCMs), that are believed to
-                      best predict future climate in the American Southwest.<br><br>
-                      Selecting <b>Historical & Future</b> to simulate future simulations increase simulation time approximately from 30
-                      seconds to 1 minute and 30 seconds.
+                      Future simulations occur for 7 different general circulation models (GCMs), that are believed to
+                      best predict future climate in the American West. 
+                      <br><br>
+                      All weather data in this app is provided by the <a href="http://www.climatologylab.org/" target="_blank"> 
+                      Climatology Lab</a> at the University of California Merced. <br><br>                  
+                      <br><br>
+                      Selecting <b>Historical & Future</b> to simulate future simulations increases simulation time 
+                      from approximately 1 minute to potentially 5 minutes.
                     </p>
                   </div>
                 </div>
@@ -110,7 +113,7 @@
                       enter specific texture values in the input boxes provide.
                       <br><br>Otherwise, select <b>obtain</b>. Selecting obtain will grab soil texture values for the latitude and
                       longitude provided from gridded soils data
-                      <a href="https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/dc7b283a-8f19-45e1-aaed-e9bd515119bc" target="_blank">(ISRIC WISE30sec)</a>.
+                      <a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs142p2_053628" target="_blank">(SSURGO)</a>.
 
                     </p>
                   </div>
@@ -374,14 +377,19 @@
             model, driven by daily meteorology, as well as site soil texture, soil depth, and
             vegetation.
             <br><br>
-            Daily meteorology includes historical weather data from <a href="http://ciresgroups.colorado.edu/livneh/data/daily-obserational-hydrometeorology-data-set-conus-extent-canadian-extent-columbia-river-basin" target="_blank"> University of Colorado’s Water and
-            Climate Research Group Laboratory</a>, derived from observed data at weather stations, as well as
-            predictions derived from projections of future climate. The tool shows projections for two
-            possible climate futures, one in which emissions peak around 2040 and then decline (RCP 4.5)
-            and another in which emissions continue to rise throughout the 21st century (RCP 8.5). Both
-            futures are considered possible depending on hypothetical trajectories of greenhouse
-            gases. These climate projections have been downscaled on a temporal and spatial from 11 global
-            climate models from the <a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Complete%20Archives" target="_blank">CMIP5</a> archive, using a hybrid-delta downscaling technique.
+            Daily meteorology includes historical weather data from <a href="http://www.climatologylab.org/gridmet.html" target="_blank"> 
+            gridMET</a>. gridMET is a dataset of daily high-spatial resolution (~4-km, 1/24th degree) surface
+            meteorological data covering the contiguous US from 1979-yesterday. Daily future weather data is 
+            downloaded from the <a href="http://www.climatologylab.org/maca.html" target="_blank"> MACA v2 daily dataset</a>. 
+            Multivariate Adaptive Constructed Analogs (MACA) is a statistical method for downscaling Global 
+            Climate Models (GCMs) from their native coarse resolution to a higher spatial resolution that
+            reflects observed patterns of daily near-surface meteorology and simulated changes in GCMs experiments. 
+            gridMET is used as the native coarse resolution for this MACA dataset. 
+            <br><br> 
+            The tool shows projections for seven GCMs and two possible climate futures, one in which emissions 
+            peak around 2040 and then decline (RCP 4.5) and another in which emissions continue to rise 
+            throughout the 21st century (RCP 8.5). Both futures are considered possible depending on hypothetical
+            trajectories of greenhouse gases. 
             <br><br>
             <p style="font-size:18px">Guidance on using results</p>
             The results generated and presented here provide a long-term historical and future perspective on
@@ -391,7 +399,7 @@
             Projections are based on GCMs that were were selected from all models that participated in the
             fifth phase of the Climate Model Intercomparison Project (Taylor et al. 2011; CMIP5) to include
             both the most independent (Knutti et al. 2013) and best performing subset (for the western
-            United States; Rupp et al. 2013) of GCMs.. While users can explore projected climate and soil
+            United States; Rupp et al. 2013) of GCMs. While users can explore projected climate and soil
             moisture conditions from individual climate models, ensembles are also presented to represent
             the mean consensus amongst models.
         </div>
@@ -401,49 +409,29 @@
           <hr>
           <h2 id="dataSources"> Data Sources </h2>
           <div style="word-wrap: break-word">
-            <img class="floatLeft" src="images/universityColoradoLogo.png" alt="no logo" style="margin-right: 40px;height: 100px;width:100px;">
+            <img class="floatLeft" src="images/universityMercedLogo.png" alt="no logo" style="margin-right: 40px;height: 100px;width:100px;">
             <ul class="noStyle" style="margin-left: 20px;">
-              <li><h3 style="margin-top: 0px;">Gridded Historical Observed Meteorological and Hydrological Data</h3></li>
-              <li><h4><a href="http://ciresgroups.colorado.edu/livneh/" target="_blank">University of Colorado, Boulder </a></h4></li>
+              <li><h3 style="margin-top: 0px;">Gridded Historical and Future Meteorological Data</h3></li>
+              <li><h4><a href="http://www.climatologylab.org/datasets.html" target="_blank">University of Califonia, Merced </a></h4></li>
               <li>
                 <!-- Description of data source -->
                 <p style="margin-left: 120px;">
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-                 sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                 All weather data in this app was provided by the <a href="http://www.climatologylab.org/" target="_blank"> 
+                 Climatology Lab</a> at the University of California Merced. gridMET data was used for historical simulations 
+                 (1979-yesterday) and the MACA v2 daily dataset was used for all future climate data. Seven GCMs (HadGEM2-CC,
+                 bcc-csm1-1, CNRM-CM5, MIROC5, IPSL-CM5A-MR, CSIRO-Mk3-6-0, & MIROC-ESM) and two RCPS (4.5 and 8.5) are 
+                 currently simulated with the app.
                 </p>
               </li>
             </ul><br><br><br>
-            <img class="floatLeft" src="images/livermoreLogo.png" alt="no logo" style="margin-right: 20px;height: 100px;width:120px;">
-            <ul class="noStyle">
-              <li><h3 style="margin-top: 0px;">LOCA Downscaled CMIP5 Climate Daily Projections</a></h3></li>
-              <li><h4><a href="https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#Projections:%20Complete%20Archives">Green Data Oasis, Lawrence Livermore National Laboratory, Livermore, CA</a></h4></li>
-              <li>
-                <p style="margin-left: 140px;">
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-                 sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                </p>
-              </li>
-            </ul><br><br><br>
-            <img class="floatLeft" src="images/isricLogo.png" alt="no logo" style="margin-right: 40px;height: 100px;width:100px;">
+            <img class="floatLeft" src="images/USDAlogo.png" alt="no logo" style="margin-right: 40px;height: 100px;width:100px;">
             <ul class="noStyle" style="margin-left: 20px;">
-              <li><h3 style="margin-top: 0px;">Harmonized Dataset of Derived Soil Properties for the World (WISE30sec)</h3></li>
-              <li><h4><a href="https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/dc7b283a-8f19-45e1-aaed-e9bd515119bc" target="_blank">ISRIC, World Soil Information, Wageningen, the Netherlands</a></h4></li>
+              <li><h3 style="margin-top: 0px;">Gridded Soil Survey Geographic Database (gSSURGO)</h3></li>
+              <li><h4><a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs142p2_053628" target="_blank">Natural Resources Conservation Service, United States Department of Agriculture</a></h4></li>
               <li>
                 <p style="margin-left: 120px;">
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-                 sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                Gridded SSURGO soil data is utilized to inform the soil moisture model when soil properties information is 
+                not provided by the user. If SSURGO data is not available for a specific site, STATSGO is used instead.
                 </p>
               </li>
             </ul><br><br><br>
@@ -453,12 +441,7 @@
               <li><h4><a href="https://github.com/DrylandEcology/SOILWAT2" target="_blank">Southwest Biological Science Center, USGS, Flagstaff, AZ</a></h4></li>
               <li>
                 <p style="margin-left: 120px;">
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-                 sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-                 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                 SOILWAT2, is a daily, site-specific, multi soil layer, water-balance model, used to generate soil moisture results.
                 </p>
               </li>
             </ul>
@@ -498,11 +481,6 @@
               </li>
               <br>
               <li>
-                Schlaepfer, D. R., and C. A. Andrews. 2018. rSFSW2: Simulation Framework for SOILWAT2.
-                R package version 3.0.0. <a href="https://github.com/DrylandEcology/rSFSW2" target="_blank">https://github.com/DrylandEcology/rSFSW2</a>
-              </li>
-              <br>
-              <li>
                 Schlaepfer, D. R., and R. Murphy. 2018. rSOILWAT2: An Ecohydrological Ecosystem-Scale
                 Water Balance Simulation Model. R package version 2.3.2.
                 <a href="https://github.com/DrylandEcology/rSOILWAT2" target="_blank">https://github.com/DrylandEcology/rSOILWAT2</a>
@@ -529,12 +507,18 @@
                 Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, C. B. Yackulic, M. Duniway,
                 S. Hall, G. Jia, K. Jamiyansharav, S. M. Munson, S. D. Wilson, and B. Tietjen. 2017.
                 Future soil moisture and temperature extremes imply expanding suitability for rainfed
-                agriculture in temperate drylands. Scientific Reports 7:12923
+                agriculture in temperate drylands. Scientific Reports 7:12923.
+              </li>
+              <br>
+              <li>
+                Bradford, J. B., D. R. Schlaepfer, W. K. Lauenroth, K.A. Palmquist. 2020. Robust
+                ecological drought projections for drylands in the 21st century. Global Change Biology 26:
+                3906-3919.
               </li>
               <br>
               <li>
                 Lauenroth, W. K., D. R. Schlaepfer, and J. B. Bradford. 2014. Ecohydrology
-                of Dry Regions: Storage versus Pulse Soil Water Dynamics. Ecosystems 17:1469-1479
+                of Dry Regions: Storage versus Pulse Soil Water Dynamics. Ecosystems 17:1469-1479.
               </li>
               <br>
               <li>

@@ -251,15 +251,24 @@ Resources:
           mkdir Packages
 
           # clone  rSOILWAT2
-          git clone -b master --single-branch --recursive https://github.com/DrylandEcology/rSOILWAT2.git Packages/rSOILWAT2
-
-          # clone  rSFSW2
-          git clone -b feature_CDIfixes --single-branch https://github.com/DrylandEcology/rSFSW2.git Packages/rSFSW2
+          git clone -b reorganize_rSW2 --single-branch --recursive https://github.com/DrylandEcology/rSOILWAT2.git Packages/rSOILWAT2
 
           # clone ‘rSW2utils’
           cd Packages
           wget --no-check-certificate https://github.com/DrylandEcology/rSW2utils/archive/master.tar.gz
           mv master.tar.gz rSW2utils.tar.gz
+
+          # clone ‘rSW2data’
+          wget --no-check-certificate https://github.com/DrylandEcology/rSW2Data/archive/master.tar.gz
+          mv master.tar.gz rSW2Data.tar.gz
+
+          # clone ‘rSW2st’
+          wget --no-check-certificate https://github.com/DrylandEcology/rSW2st/archive/master.tar.gz
+          mv master.tar.gz rSW2st.tar.gz
+
+          # clone ‘rSW2exter’
+          wget --no-check-certificate https://github.com/DrylandEcology/rSW2exter/archive/master.tar.gz
+          mv master.tar.gz rSW2exter.tar.gz
 
           #plotly
           git clone 'https://github.com/ropensci/plotly'
@@ -269,7 +278,7 @@ Resources:
 
           # clone  App Code
           cd ../
-          git clone -b master --single-branch https://code.chs.usgs.gov/sbsc/longtermdroughtsimulator longtermdroughtsimulator
+          git clone -b version2_integrateMACA --single-branch https://code.chs.usgs.gov/sbsc/longtermdroughtsimulator longtermdroughtsimulator
 
           # mv dockerfile above short term app files
           mv longtermdroughtsimulator/dockerfile .   # Create docker file https://o2r.info/containerit/articles/basic.html
@@ -278,20 +287,19 @@ Resources:
           #mv longtermdroughtsimulator/nginx.conf ../
 
           # --------------------------------------------------------------------
-          # Transfer Weather DBs from S3 -------------------
+          # Download data from external soruces  -------------------
           # --------------------------------------------------------------------
-          #yum install -y s3cmd
-          #cd /srv/shiny-server/longtermdroughtsimulator
-          # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonS3.html
-          #aws s3  sync --region us-west-2 s3://sbsc-upload-data/Data .
-
-          # --------------------------------------------------------------------
-          #  Shiny proxy set up
-          # --------------------------------------------------------------------
-          yum install java-1.8.0-openjdk
           cd ../
-          wget https://www.shinyproxy.io/downloads/shinyproxy-2.4.1.jarD
+          mkdir Data
+          cd Data
+          mkdir WeatherData
+          cd WeatherData
+          wget -r -l1 -np "https://www.northwestknowledge.net/metdata/data" -P . -A "tmmn_*.nc"
+          wget -r -l1 -np "https://www.northwestknowledge.net/metdata/data" -P . -A "tmmx_*.nc"
+          wget -r -l1 -np "https://www.northwestknowledge.net/metdata/data" -P . -A "pr_*.nc"
 
+          cd ../../LTDV
+         
           # --------------------------------------------------------------------
           # Docker !
           # --------------------------------------------------------------------
@@ -300,10 +308,9 @@ Resources:
           amazon-linux-extras install docker
           service docker start
 
-          # install docker-compose - https://docs.docker.com/compose/install/
-          #curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-          #chmod +x /usr/local/bin/docker-compose
-
+          #install docker-compose - https://docs.docker.com/compose/install/
+          curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
           # --------------------------------------------------------------------
           # Get Docker set up for app
           # --------------------------------------------------------------------
@@ -318,32 +325,17 @@ Resources:
           # test interactively
           # # docker run -it --rm --entrypoint /bin/bash ltdv
           #https://github.com/rocker-org/shiny/issues/86
-#https://support.rstudio.com/hc/en-us/articles/219044787-Root-requirements-for-Shiny-Server
+          #https://support.rstudio.com/hc/en-us/articles/219044787-Root-requirements-for-Shiny-Server
+
           # run
-           docker run -it \
-              -p 3838:3838 \
-              -v /srv/shinylog/:/var/log/shiny-server/ \
-              ltdv
-            #  -v "$(pwd)/shiny-app":/srv/shiny-server \
-              -v /srv/shinylog/:/var/log/shiny-server/ \
-              ltdv
-
-docker run --rm -p 3838:3838 \
-    -v /srv/shinyapps/:/srv/shiny-server/ \
-    -v /srv/shinylog/:/var/log/shiny-server/ \
-    rocker/shiny
-
-          docker run --user shiny -p 3838:3838 --rm rocker/shiny
-          docker run --user shiny -p 3838:3838   -v /srv/shinylog/:/var/log/shiny-server/ /usr/bin/shiny-server
-            # --mount source=/ltdv,target=/home/data
-          #docker run -t -i -p 3838:3838 -v "$(pwd)/shiny-app":/srv/shiny-server ltdv
-
-
-          #docker run -dP --mount source=/ltdv,target=/home/data -v "$(pwd)/shiny-app":/srv/shiny-server/
+          docker run -itd \
+             -p 3838:3838 \
+             -v /srv/shinylog/:/var/log/shiny-server/ \
+             -v /usr/local/app/Data/:/srv/shiny-server/ltdv/Data/ \
+             ltdv
 
           cd ../
           docker-compose up --scale stdf=4 -d
-
           # copy awslog conf file, get latest awslog agents, enable cloud watch agents, setup to start on boot
           #cp /srv/shiny-server/shorttermdroughtforecaster/awslogs.conf /etc/awslogs/awslogs.conf
           #apt-get install -y awslogs
