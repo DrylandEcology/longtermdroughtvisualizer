@@ -296,7 +296,7 @@ function sendToR(){
       soilsTxt = "<pre>Obtaining soils composition from gSSURGO dataset</pre>";
     }
     if (chooseComp == 2){
-      compTxt = "<pre>  Vegetation composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
+      compTxt = "<pre> Vegetation composition set to:</pre> <br>Trees: <span id='imp'>" + trees +
                 "</span><br>Shrubs: <span id='imp'>" + shrubs + "</span><br>Grasses: <span id='imp'>" + grasses +
                 "</span><br>Forbs: <span id='imp'>" + forbs + "</span><br>Bareground: <span id='imp'>" + bareground + "</span></pre><br>";
     }

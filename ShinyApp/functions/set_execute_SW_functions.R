@@ -67,9 +67,10 @@ set_execute_SW <- function(lat, lng, futuresim,
   sw_in0 <- set_comp_roots(sw_in0, comp, trees, shrubs, grasses, 
                             forbs, bg, weath, soils_df)
 
-  # Set transpration ------------------------------------------------------
+  # Set transpiration ------------------------------------------------------
   tr <- rSOILWAT2::prepare_TranspirationRegions(tr_lyrs = tr_layers)
   rSOILWAT2::swSite_TranspirationRegions(sw_in0) <- data.matrix(tr)
+  
   # Make necessary adjustments based on soil depth and rooting profiles
   rSOILWAT2::swSite_TranspirationRegions(sw_in0) <- 
     rSOILWAT2::adjust_TranspirationRegions(sw_in0)
@@ -81,15 +82,16 @@ set_execute_SW <- function(lat, lng, futuresim,
 
   ################### ----------------------------------------------------------
   # Part 3 - Set up for outputs
-  ################### -----------------------------------------------------------
+  ################### ----------------------------------------------------------
 
-  # Soils info formatting ----------------------------------------------------
+  # Soils info formatting ------------------------------------------------------
   soils_info0 <- data.frame(depth_cm = c(1:200),
                             Depth = c(rep('Shallow', 20), 
                                       rep('Intermediate', 80),
                                       rep('Deep',100)))
 
-  soils_info <- data.frame(sw_in0@soils@Layers)[,c('depth_cm', 'sand_frac', 'clay_frac')]
+  soils_info <- data.frame(sw_in0@soils@Layers)[,c('depth_cm', 'sand_frac', 
+                                                   'clay_frac')]
   soils_info$width <- diff(c(0, soils_info$depth_cm))
   soils_info <- merge(soils_info, soils_info0, by = 'depth_cm')
   soils_info$variable <- paste0('Lyr_',1:dim(soils_info)[1])
@@ -107,10 +109,12 @@ set_execute_SW <- function(lat, lng, futuresim,
   # Run 1 - with gridMET  data ------------------------------------
   # --------------------------------------------------------------------------
   if(verbose) print(paste('Running Historical', Sys.time()))
-
-  rSOILWAT2::swYears_StartYear(sw_in0) <- 1980
+  
+  rSOILWAT2::set_WeatherHistory(sw_in0) <- weath
+  rSOILWAT2::swWeather_FirstYearHistorical(sw_in0) <- 1979
   rSOILWAT2::swYears_EndYear(sw_in0) <- (curr_year - 1)
-
+  rSOILWAT2::swYears_StartYear(sw_in0) <- 1979
+  
   sw_out1 <- rSOILWAT2::sw_exec(inputData = sw_in0,
                                 weatherList = weath, quiet = FALSE)
 

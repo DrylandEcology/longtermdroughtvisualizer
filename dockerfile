@@ -15,10 +15,11 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
 
 ### INSTALL R PACKAGES ########################################################
 
-RUN ["install2.r", "shinydashboard", "leaflet", "ggplot2", "data.table", "ncdf4", "lubridate", "foreach", "doParallel", "RColorBrewer", "hexbin", "circular", "zoo", "forcats", "rgeos", "soilDB"]
+RUN ["install2.r", "shinydashboard", "leaflet", "ggplot2", "data.table", "ncdf4", "lubridate", "foreach", "doParallel", "RColorBrewer", "hexbin", "circular", "zoo", "forcats", "rgeos", "soilDB", "sf", "rgdal"]
 # hexbin is a dependecy of plotly
 # circular is a dependecy of rSW2utils
-# rgeos and soilDB for soils in rSW2exter
+# rgeos and soilDB for soils are dependecies of rSW2exter
+# sf and rgdal are dependecies of rSW2st
 
 ### R Packages installed from source ------------------------------------------
 
