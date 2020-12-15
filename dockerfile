@@ -11,7 +11,8 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
   libxml2-dev \
   libgdal-dev \
   libproj-dev \
-  gdal-bin
+  gdal-bin \
+  libudunits2-dev
 
 ### INSTALL R PACKAGES ########################################################
 
