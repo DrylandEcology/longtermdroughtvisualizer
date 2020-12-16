@@ -16,5 +16,6 @@
 **/SFSW2_project_descriptions_OneSite.rds
 **/cluster.txt
 **/.DS_Store
-test/
+**/*
+.csv
 ltdv.code-workspace
