@@ -1,8 +1,0 @@
-Steps taken to manually get S3 .sql files to function with long term drought simulator (from session terminal):
-	
-	1) Navigate to home/devel/
-	2) Download database files: aws s3 sync s3://sbsc-upload-data .
-		
-Note: If you run into permissions issues with navigating to that directory you can replace the . at the end of 2 with the path in 1.
-
-After running these commands you should be able to run the app from the devel account on the RStudio server without any errors related to the databases.
